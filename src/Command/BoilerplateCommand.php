@@ -41,11 +41,12 @@ class BoilerplateCommand extends Command
 
         $this->io = new SymfonyStyle($input, $output);
 
-        $question = $isUser
-            ? 'Class name of the user entity'
-            : 'Class name of the entity';
-
-        $className = $this->io->ask($question);
+        if ($isUser) {
+            $className = 'User';
+        }
+        else {
+            $className = $this->io->ask('Class name of the entity');
+        }
 
         if (!$className) {
             $this->io->error('Please provide the class name');
@@ -72,9 +73,11 @@ class BoilerplateCommand extends Command
 
         if ($isUser) {
             $entityTemplate = 'User.php.tpl';
+            $voterTemplate = 'UserVoter.php.tpl';
         }
         else {
             $entityTemplate = 'Entity.php.tpl';
+            $voterTemplate = 'Voter.php.tpl';
         }
 
         $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
@@ -92,7 +95,7 @@ class BoilerplateCommand extends Command
             ->generateFile('Provider.php.tpl', $providerFile)
             ->generateFile('Controller.php.tpl', $controllerFile)
             ->generateFile('routes.yaml.tpl', $routesFile)
-            ->generateFile('Voter.php.tpl', $voterFile)
+            ->generateFile($voterTemplate, $voterFile)
         ;
 
         return Command::SUCCESS;

@@ -15,8 +15,9 @@ Create your user class using the boilerplate command and the user flag:
 php bin/console ohmedia:security:boilerplate --user
 ```
 
-_**Note:** the rest of the installation instructions assume you will call your user
-class `User`._
+_**Note:** this will generate an Entity class called `User` but is not quite
+the same as running the boilerplate command without the --user flag and manually
+calling the entity "User"._
 
 For every login form you need, extend
 `OHMedia\SecurityBundle\Security\AbstractUserAuthenticator`.
