@@ -4,25 +4,29 @@ services:
         arguments: ["@router", "@security.authorization_checker"]
         tags:
             - { name: twig.extension }
-    
+
     ohmedia_security.form.type.actions:
         class: OHMedia\SecurityBundle\Form\Type\ActionsType
         tags:
             - { name: form.type }
-    
+
     ohmedia_security.timezone_listener:
         class: OHMedia\SecurityBundle\EventListener\TimezoneListener
         arguments: ["@security.token_storage", "%ohmedia_security.timezone%"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-    
+
     ohmedia_security.blameable_subscriber:
         class: OHMedia\SecurityBundle\EventListener\BlameableSubscriber
         arguments: ["@security.token_storage"]
         tags:
             - { name: doctrine.event_subscriber }
-    
+
     ohmedia_security.provider_handler:
         class: OHMedia\SecurityBundle\Provider\ProviderHandler
         arguments:
             - !tagged_iterator ohmedia_security.provider
+
+    OHMedia\SecurityBundle\Command\BoilerplateCommand:
+        arguments: ["@maker.generator"]
+        tags: ["console.command"]
