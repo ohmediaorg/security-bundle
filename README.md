@@ -70,7 +70,7 @@ security:
             algorithm: auto
 
     providers:
-        ohmedia_security_user_provider:
+        oh_media_security_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
@@ -78,16 +78,16 @@ security:
         # ...
         main:
             # ...
-            provider: ohmedia_security_user_provider
+            provider: oh_media_security_user_provider
             guard:
                 authenticators:
                     - App\Security\LoginAuthenticator
 ```
 
-Override the default timezone `config/packages/ohmedia_security.yml`:
+Override the default timezone `config/packages/oh_media_security.yml`:
 
 ```yaml
-ohmedia_security:
+oh_media_security:
     timezone: America/Regina # this is the default
 ```
 
@@ -196,7 +196,7 @@ You can use twig helpers for rendering action links on existing entities.
 Links are only rendered if the voting passes.
 
 ```twig
-{{ ohmedia_entity_action(action, entity, route, label, attributes) }}
+{{ oh_media_entity_action(action, entity, route, label, attributes) }}
 ```
 
 These will only work if the value for 'action' is the same in both

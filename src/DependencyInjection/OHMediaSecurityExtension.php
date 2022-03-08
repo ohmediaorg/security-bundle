@@ -23,13 +23,13 @@ class OHMediaSecurityExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('ohmedia_security.timezone', $config['timezone']);
+        $container->setParameter('oh_media_security.timezone', $config['timezone']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
         $container->registerForAutoconfiguration(AbstractEntityProvider::class)
-            ->addTag('ohmedia_security.provider');
+            ->addTag('oh_media_security.provider');
 
         $this->registerWidget($container);
     }

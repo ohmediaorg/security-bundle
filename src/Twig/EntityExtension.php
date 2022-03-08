@@ -23,7 +23,7 @@ class EntityExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ohmedia_entity_action', [$this, 'entityAction'], [
+            new TwigFunction('oh_media_entity_action', [$this, 'entityAction'], [
                 'is_safe' => ['html']
             ])
         ];
