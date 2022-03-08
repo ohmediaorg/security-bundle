@@ -167,7 +167,7 @@ trait LockingController
      */
     protected function entityUnlockNoticeMessage()
     {
-        return sprintf('The %s was unlocked successfully!', $this->human_readable);
+        return sprintf('The %s was unlocked successfully!', $this->provider->getHumanReadable());
     }
 
     /**
@@ -177,7 +177,7 @@ trait LockingController
     {
         return sprintf(
             'This %s may now be unlocked, but "%s" may still be working on it. <a href="%s">Click here to unlock.</a>',
-            $this->human_readable,
+            $this->provider->getHumanReadable(),
             $this->entity->getLockedBy(),
             $this->generateActionUrl('unlock')
         );
@@ -199,7 +199,7 @@ trait LockingController
 
         return sprintf(
             'This %s is locked to "%s" and will be unlockable in %s.',
-            $this->human_readable,
+            $this->provider->getHumanReadable(),
             $this->entity->getLockedBy(),
             $locked_for
         );
@@ -215,7 +215,7 @@ trait LockingController
 
         return sprintf(
             'This %s is locked to you for %s minutes and will become unlockable after %s minutes.',
-            $this->human_readable,
+            $this->provider->getHumanReadable(),
             $locked/60,
             $unlock/60
         );
@@ -226,7 +226,7 @@ trait LockingController
      */
     protected function entityLockTakenMessage()
     {
-        return sprintf('It appears another user has taken your lock on this %s.', $this->human_readable);
+        return sprintf('It appears another user has taken your lock on this %s.', $this->provider->getHumanReadable());
     }
 
     /**
@@ -234,6 +234,6 @@ trait LockingController
      */
     protected function entityNotLockableMessage()
     {
-        return sprintf('This %s cannot be locked, so make sure no other users are making changes.', $this->human_readable);
+        return sprintf('This %s cannot be locked, so make sure no other users are making changes.', $this->provider->getHumanReadable());
     }
 }
