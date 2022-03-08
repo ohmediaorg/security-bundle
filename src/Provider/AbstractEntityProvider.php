@@ -27,7 +27,7 @@ abstract class AbstractEntityProvider
     {
         $actions = array_merge(
             $this->getCustomActions(),
-            ['create', 'view', 'edit', 'delete']
+            ['create', 'read', 'update', 'delete']
         );
 
         return array_unique($actions);

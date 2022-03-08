@@ -169,7 +169,7 @@ use OHMedia\SecurityBundle\Entity\Entity;
 class MyEntity extends Entity
 {
     // optionally, use this trait to enable locking
-    // (on the 'edit' action by default)
+    // (on the 'update' action by default)
     use \OHMedia\SecurityBundle\Entity\Traits\Lockable;
 }
 ```
@@ -338,13 +338,13 @@ class MyEntityController extends EntityController
     
     protected function redirectUnlockAction()
     {
-        return $this->redirectToAction('edit');
+        return $this->redirectToAction('update');
     }
     
     protected function redirectCancelAction()
     {
         if ($this->entity->getId()) {
-            return $this->redirectToAction('view');
+            return $this->redirectToAction('read');
         }
         else {
             // redirect to list page
@@ -353,7 +353,7 @@ class MyEntityController extends EntityController
     
     protected function redirectSaveAction()
     {
-        return $this->redirectToAction('view');
+        return $this->redirectToAction('read');
     }
     
     protected function renderSaveAction(FormView $formView)
@@ -379,11 +379,11 @@ my_entity_create:
     path: /my-entity/create
     controller: App\Controller\MyEntityController::createAction
 
-# will handle several actions: 'view', 'edit', 'delete', etc.
+# will handle several actions: 'read', 'update', 'delete', etc.
 my_entity_action:
     path: /my-entity/{id}/{action}
     controller: App\Controller\MyEntityController::actionAction
-    defaults: { action: view }
+    defaults: { action: read }
     requirements:
         id: \d+
 ```
