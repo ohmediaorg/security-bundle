@@ -1,6 +1,6 @@
 <?php
 
-namespace JstnThms\SecurityBundle\DependencyInjection;
+namespace OHMedia\SecurityBundle\DependencyInjection;
 
 use DateTimeZone;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('jstnthms_security');
+        $treeBuilder = new TreeBuilder('ohmedia_security');
         
         $treeBuilder->getRootNode()
             ->children()

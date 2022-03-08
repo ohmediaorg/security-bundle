@@ -1,8 +1,8 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Twig;
+namespace OHMedia\SecurityBundle\Twig;
 
-use JstnThms\SecurityBundle\Entity\Entity;
+use OHMedia\SecurityBundle\Entity\Entity;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -23,7 +23,7 @@ class EntityExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('jstnthms_entity_action', [$this, 'entityAction'], [
+            new TwigFunction('ohmedia_entity_action', [$this, 'entityAction'], [
                 'is_safe' => ['html']
             ])
         ];

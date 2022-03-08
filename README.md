@@ -6,12 +6,12 @@ Enable the bundle in `config/bundles.php`:
 ```php
 return [
     // ...
-    JstnThms\SecurityBundle\JstnThmsSecurityBundle::class => ['all' => true],
+    OHMedia\SecurityBundle\OHMediaSecurityBundle::class => ['all' => true],
 ];
 ```
 
 For every login form you need,
-extend `JstnThms\SecurityBundle\Security\AbstractUserAuthenticator`.
+extend `OHMedia\SecurityBundle\Security\AbstractUserAuthenticator`.
 
 ```php
 <?php
@@ -19,7 +19,7 @@ extend `JstnThms\SecurityBundle\Security\AbstractUserAuthenticator`.
 namespace App\Security;
 
 use App\Entity\User;
-use JstnThms\SecurityBundle\Security\AbstractUserAuthenticator;
+use OHMedia\SecurityBundle\Security\AbstractUserAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class LoginAuthenticator extends AbstractUserAuthenticator
@@ -50,7 +50,7 @@ Create your user class:
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JstnThms\SecurityBundle\Entity\User as EntityUser;
+use OHMedia\SecurityBundle\Entity\User as EntityUser;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -104,7 +104,7 @@ doctrine:
   orm:
     # ...
     resolve_target_entities:
-        JstnThms\SecurityBundle\Entity\User: App\Entity\User
+        OHMedia\SecurityBundle\Entity\User: App\Entity\User
 ```
 
 Update `config/packages/security.yml`:
@@ -116,7 +116,7 @@ security:
             algorithm: auto
 
     providers:
-        jstnthms_security_user_provider:
+        ohmedia_security_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
@@ -124,16 +124,16 @@ security:
         # ...
         main:
             # ...
-            provider: jstnthms_security_user_provider
+            provider: ohmedia_security_user_provider
             guard:
                 authenticators:
                     - App\Security\LoginAuthenticator
 ```
 
-Override the default timezone `config/packages/jstnthms_security.yml`:
+Override the default timezone `config/packages/ohmedia_security.yml`:
 
 ```yaml
-jstnthms_security:
+ohmedia_security:
     timezone: America/Regina # this is the default
 ```
 
@@ -160,7 +160,7 @@ Create your entity's class:
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JstnThms\SecurityBundle\Entity\Entity;
+use OHMedia\SecurityBundle\Entity\Entity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MyEntityRepository")
@@ -170,7 +170,7 @@ class MyEntity extends Entity
 {
     // optionally, use this trait to enable locking
     // (on the 'edit' action by default)
-    use \JstnThms\SecurityBundle\Entity\Traits\Lockable;
+    use \OHMedia\SecurityBundle\Entity\Traits\Lockable;
 }
 ```
 
@@ -245,7 +245,7 @@ class MyEntityType extends AbstractType
 Provider
 --------
 
-Extend `JstnThms\SecurityBundle\Provider\AbstractEntityProvider`:
+Extend `OHMedia\SecurityBundle\Provider\AbstractEntityProvider`:
 
 ```php
 <?php
@@ -253,7 +253,7 @@ Extend `JstnThms\SecurityBundle\Provider\AbstractEntityProvider`:
 namespace App\Provider;
 
 use App\Entity\MyEntity;
-use JstnThms\SecurityBundle\Provider\AbstractEntityProvider;
+use OHMedia\SecurityBundle\Provider\AbstractEntityProvider;
 
 class MyEntityProvider extends AbstractEntityProvider
 {
@@ -281,7 +281,7 @@ class MyEntityProvider extends AbstractEntityProvider
 Controller & Routing
 --------------------
 
-Extend `JstnThms\SecurityBundle\Controller\EntityController`:
+Extend `OHMedia\SecurityBundle\Controller\EntityController`:
 
 ```php
 <?php
@@ -290,7 +290,7 @@ namespace App\Controller;
 
 use App\Form\MyEntityType;
 use App\Provider\MyEntityProvider;
-use JstnThms\SecurityBundle\Controller\EntityController;
+use OHMedia\SecurityBundle\Controller\EntityController;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -394,7 +394,7 @@ The name of your generic action should match what's returned by
 Voter
 -----
 
-Extend `JstnThms\SecurityBundle\Security\Voter\EntityVoter`:
+Extend `OHMedia\SecurityBundle\Security\Voter\EntityVoter`:
 
 ```php
 <?php
@@ -404,7 +404,7 @@ namespace App\Security\Voter;
 use App\Entity\MyEntity;
 use App\Entity\User;
 use App\Provider\MyEntityProvider;
-use JstnThms\SecurityBundle\Security\Voter\EntityVoter;
+use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class MyEntityVoter extends EntityVoter
 {
@@ -450,7 +450,7 @@ You can use twig helpers for rendering action links on existing entities.
 Links are only rendered if the voting passes.
 
 ```twig
-{{ jstnthms_entity_action(action, entity, route, label, attributes) }}
+{{ ohmedia_entity_action(action, entity, route, label, attributes) }}
 ```
 
 These will only work if the value for 'action' is the same in both

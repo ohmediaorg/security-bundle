@@ -1,9 +1,9 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Provider;
+namespace OHMedia\SecurityBundle\Provider;
 
 use Doctrine\ORM\EntityManagerInterface;
-use JstnThms\SecurityBundle\Entity\Entity;
+use OHMedia\SecurityBundle\Entity\Entity;
 
 use function Symfony\Component\String\u;
 

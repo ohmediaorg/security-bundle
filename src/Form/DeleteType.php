@@ -1,6 +1,6 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Form;
+namespace OHMedia\SecurityBundle\Form;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;

@@ -1,10 +1,10 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Controller;
+namespace OHMedia\SecurityBundle\Controller;
 
-use JstnThms\SecurityBundle\Form\DeleteType;
-use JstnThms\SecurityBundle\Form\Type\ActionsType;
-use JstnThms\SecurityBundle\Provider\AbstractEntityProvider;
+use OHMedia\SecurityBundle\Form\DeleteType;
+use OHMedia\SecurityBundle\Form\Type\ActionsType;
+use OHMedia\SecurityBundle\Provider\AbstractEntityProvider;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;

@@ -1,10 +1,10 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Controller\Traits;
+namespace OHMedia\SecurityBundle\Controller\Traits;
 
 use DateTime;
 use DateTimeZone;
-use JstnThms\SecurityBundle\Entity\Traits\Lockable;
+use OHMedia\SecurityBundle\Entity\Traits\Lockable;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

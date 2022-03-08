@@ -1,10 +1,10 @@
 <?php
 
-namespace JstnThms\SecurityBundle\EventListener;
+namespace OHMedia\SecurityBundle\EventListener;
 
 use DateTime;
-use JstnThms\SecurityBundle\Entity\Traits\Blameable as BlameableTrait;
-use JstnThms\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Entity\Traits\Blameable as BlameableTrait;
+use OHMedia\SecurityBundle\Entity\User;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;

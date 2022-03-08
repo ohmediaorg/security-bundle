@@ -1,6 +1,6 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Entity;
+namespace OHMedia\SecurityBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,7 +38,7 @@ abstract class User extends Entity implements UserInterface
     protected $enabled;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\JstnThms\SecurityBundle\Entity\UserRole", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="\OHMedia\SecurityBundle\Entity\UserRole", inversedBy="users")
      */
     protected $user_roles;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Security;
+namespace OHMedia\SecurityBundle\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

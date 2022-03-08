@@ -1,9 +1,9 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Entity;
+namespace OHMedia\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JstnThms\SecurityBundle\Entity\Traits\Blameable;
+use OHMedia\SecurityBundle\Entity\Traits\Blameable;
 
 /**
  * @ORM\MappedSuperclass

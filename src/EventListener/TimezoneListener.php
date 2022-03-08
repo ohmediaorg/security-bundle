@@ -1,8 +1,8 @@
 <?php
 
-namespace JstnThms\SecurityBundle\EventListener;
+namespace OHMedia\SecurityBundle\EventListener;
 
-use JstnThms\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Entity\User;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Provider;
+namespace OHMedia\SecurityBundle\Provider;
 
 class ProviderHandler
 {

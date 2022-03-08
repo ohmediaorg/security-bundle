@@ -1,10 +1,10 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Entity\Traits;
+namespace OHMedia\SecurityBundle\Entity\Traits;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use JstnThms\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Entity\User;
 
 trait Lockable
 {

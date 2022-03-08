@@ -1,11 +1,11 @@
 <?php
 
-namespace JstnThms\SecurityBundle\Security\Voter;
+namespace OHMedia\SecurityBundle\Security\Voter;
 
-use JstnThms\SecurityBundle\Entity\Entity;
-use JstnThms\SecurityBundle\Entity\Traits\Lockable as LockableTrait;
-use JstnThms\SecurityBundle\Entity\User;
-use JstnThms\SecurityBundle\Provider\AbstractEntityProvider;
+use OHMedia\SecurityBundle\Entity\Entity;
+use OHMedia\SecurityBundle\Entity\Traits\Lockable as LockableTrait;
+use OHMedia\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Provider\AbstractEntityProvider;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
