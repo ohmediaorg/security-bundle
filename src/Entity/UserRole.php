@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'user_roles')]
 class UserRole extends Entity
 {
     #[ORM\Column(type: 'string', length: 50, unique: true)]
