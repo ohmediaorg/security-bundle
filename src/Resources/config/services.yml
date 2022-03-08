@@ -28,5 +28,5 @@ services:
             - !tagged_iterator ohmedia_security.provider
 
     OHMedia\SecurityBundle\Command\BoilerplateCommand:
-        arguments: ["@maker.generator"]
+        arguments: ["%kernel.project_dir%"]
         tags: ["console.command"]
