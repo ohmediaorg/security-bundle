@@ -13,13 +13,13 @@ class EntityExtension extends AbstractExtension
 {
     private $router;
     private $security;
-    
+
     public function __construct(Router $router, AuthorizationCheckerInterface $security)
     {
         $this->router = $router;
         $this->security = $security;
     }
-    
+
     public function getFunctions()
     {
         return [
@@ -28,7 +28,7 @@ class EntityExtension extends AbstractExtension
             ])
         ];
     }
-    
+
     public function entityAction($action, $entity, $route, $text, array $attributes = [])
     {
         if (!$entity instanceof Entity) {
@@ -37,39 +37,39 @@ class EntityExtension extends AbstractExtension
                 Entity::class
             ));
         }
-        
+
         if (null === $this->security) {
             return null;
         }
-        
-        if ($this->security->isGranted($action, $entity)) {
-            $href = $this->router->generate($route, [
-                'id' => $entity->getId(),
-                'action' => $action
-            ]);
-            
-            if (!array_key_exists('class', $attributes)) {
-                $attributes['class'] = '';
-            }
-            
-            $attributes['class'] .= sprintf(' entity-%s', $action);
-            
-            $attributes['href'] = $href;
-            
-            $attributesString = [];
-            foreach ($attributes as $attribute => $value) {
-                $attributesString[] = sprintf(
-                    '%s="%s"', 
-                    $attribute,
-                    htmlspecialchars($value)
-                );
-            }
-            
-            $attributesString = implode(' ', $attributesString);
-            
-            return "<a $attributesString>$text</a>";
+
+        if (!$this->security->isGranted($action, $entity)) {
+            return null;
         }
-        
-        return null;
+
+        $href = $this->router->generate($route, [
+            'id' => $entity->getId(),
+            'action' => $action
+        ]);
+
+        if (!array_key_exists('class', $attributes)) {
+            $attributes['class'] = '';
+        }
+
+        $attributes['class'] .= sprintf(' entity-%s', $action);
+
+        $attributes['href'] = $href;
+
+        $attributesString = [];
+        foreach ($attributes as $attribute => $value) {
+            $attributesString[] = sprintf(
+                '%s="%s"',
+                $attribute,
+                htmlspecialchars($value)
+            );
+        }
+
+        $attributesString = implode(' ', $attributesString);
+
+        return "<a $attributesString>$text</a>";
     }
 }
