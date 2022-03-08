@@ -6,30 +6,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="user_roles")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'user_roles')]
 class UserRole extends Entity
 {
-    /**
-     * @ORM\Column(type="string", length=50, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 50, unique: true)]
     private $name;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $actions = [];
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $system_generated;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="user_roles")
-     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'user_roles')]
     private $users;
 
     public function __construct()

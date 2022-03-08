@@ -5,20 +5,16 @@ namespace OHMedia\SecurityBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\Blameable;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class Entity
 {
     use Blameable;
-    
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+
+    #[ORM\Id()]
+    #[ORM\GeneratedValue()]
+    #[ORM\Column(type: 'integer')]
     protected $id;
-  
+
     public function __clone()
     {
         $this->id = null;

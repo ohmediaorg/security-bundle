@@ -8,14 +8,10 @@ use OHMedia\SecurityBundle\Entity\User;
 
 trait Lockable
 {
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $locked_at;
 
-    /**
-     * @ORM\Column(type="string", length=180, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
     protected $locked_by;
 
     /**

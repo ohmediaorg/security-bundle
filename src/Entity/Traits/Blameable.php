@@ -7,24 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Blameable
 {
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $created_at;
 
-    /**
-     * @ORM\Column(type="string", length=180, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
     protected $created_by;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected $updated_at;
 
-    /**
-     * @ORM\Column(type="string", length=180, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
     protected $updated_by;
 
     public function getCreatedAt(): ?DateTimeInterface

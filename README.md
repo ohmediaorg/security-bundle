@@ -49,13 +49,12 @@ Create your user class:
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\User as EntityUser;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(name="users")
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'users')]
 class User extends EntityUser
 {
 }
@@ -159,13 +158,12 @@ Create your entity's class:
 
 namespace App\Entity;
 
+use App\Repository\MyEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Entity;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\MyEntityRepository")
- * @ORM\Table(name="my_entities")
- */
+#[ORM\Entity(repositoryClass: MyEntityRepository::class)]
+#[ORM\Table(name: 'my_entities')]
 class MyEntity extends Entity
 {
     // optionally, use this trait to enable locking
