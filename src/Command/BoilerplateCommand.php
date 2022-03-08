@@ -45,31 +45,31 @@ class BoilerplateCommand extends Command
             return Command::INVALID;
         }
 
-        if ($input->getOption('user')) {
-            $extend = 'EntityUser';
-            $extendUse = 'OHMedia\SecurityBundle\Entity\User as EntityUser';
-        }
-        else {
-            $extend = 'Entity';
-            $extendUse = 'OHMedia\SecurityBundle\Entity\Entity';
-        }
-
         $camelCase = u($className)->camel();
         $snakeCase = u($className)->snake();
         $pascalCase = u($camelCase)->title();
+        $kebabCase = u($snakeCase)->replace('_', '-');
         $readable = u($snakeCase)->replace('_', ' ');
 
         $findReplace = [
-            '__ENTITYEXTEND' => $extend,
-            '__ENTITYEXTENDUSE' => $extendUse,
             '__CAMELCASE__' => $camelCase,
             '__SNAKECASE__' => $snakeCase,
             '__PASCALCASE__' => $pascalCase,
+            '__KEBABCASE__' => $kebabCase,
             '__READABLE__' => $readable,
         ];
 
         $this->find = array_keys($findReplace);
         $this->replace = array_values($findReplace);
+
+        if ($input->getOption('user')) {
+            $entityTemplate = 'User.php.tpl';
+            $repositoryTemplate = 'UserRepository.php.tpl';
+        }
+        else {
+            $entityTemplate = 'Entity.php.tpl';
+            $repositoryTemplate = 'Repository.php.tpl';
+        }
 
         $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
         $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
@@ -80,8 +80,8 @@ class BoilerplateCommand extends Command
         $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
 
         $this
-            ->generateFile('Entity.php.tpl', $entityFile)
-            ->generateFile('Repository.php.tpl', $repositoryFile)
+            ->generateFile($entityTemplate, $entityFile)
+            ->generateFile($repositoryTemplate, $repositoryFile)
             ->generateFile('Form.php.tpl', $formFile)
             ->generateFile('Provider.php.tpl', $providerFile)
             ->generateFile('Controller.php.tpl', $controllerFile)
