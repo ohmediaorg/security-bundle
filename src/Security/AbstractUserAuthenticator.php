@@ -19,7 +19,9 @@ use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticato
 use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-abstract class AbstractUserAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
+abstract class AbstractUserAuthenticator
+extends AbstractFormLoginAuthenticator
+implements PasswordAuthenticatedInterface
 {
     use TargetPathTrait;
 
@@ -27,12 +29,17 @@ abstract class AbstractUserAuthenticator extends AbstractFormLoginAuthenticator 
     private $urlGenerator;
     private $csrfTokenManager;
     private $passwordEncoder;
-    
+
     abstract protected function getLoginRoute();
     abstract protected function getLoginSuccessRoute(TokenInterface $token);
     abstract protected function getUserClass();
 
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        UserPasswordEncoderInterface $passwordEncoder
+    )
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
@@ -40,7 +47,7 @@ abstract class AbstractUserAuthenticator extends AbstractFormLoginAuthenticator 
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         return $this->getLoginRoute() === $request->attributes->get('_route')
             && $request->isMethod('POST');
@@ -53,7 +60,7 @@ abstract class AbstractUserAuthenticator extends AbstractFormLoginAuthenticator 
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
-        
+
         $request->getSession()->set(
             Security::LAST_USERNAME,
             $credentials['email']
@@ -101,11 +108,11 @@ abstract class AbstractUserAuthenticator extends AbstractFormLoginAuthenticator 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
-        
+
         if (!$targetPath) {
             $targetPath = $this->urlGenerator->generate($this->getLoginSuccessRoute($token));
         }
-        
+
         return new RedirectResponse($targetPath);
     }
 
