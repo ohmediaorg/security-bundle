@@ -15,29 +15,29 @@ use function Symfony\Component\String\u;
 abstract class EntityVoter extends Voter
 {
     protected $provider;
-    
-    protected function setProvider(AbstractEntityProvider $provider)
+
+    protected function setProvider(AbstractEntityProvider $provider): self
     {
         $this->provider = $provider;
-        
+
         return $this;
     }
-    
-    protected function subjectSupported($subject)
+
+    protected function subjectSupported($subject): bool
     {
         $class = $this->provider->getEntityClass();
-        
+
         return $subject instanceof $class;
     }
 
-    protected function supports($action, $subject)
+    protected function supports($action, $subject): bool
     {
         return $subject instanceof Entity
             && $this->actionSupported($action)
             && $this->subjectSupported($subject);
     }
 
-    protected function actionSupported($action)
+    protected function actionSupported($action): bool
     {
         $actions = $this->provider->getActions();
         $actions[] = 'unlock';
@@ -45,12 +45,12 @@ abstract class EntityVoter extends Voter
         return in_array($action, $actions);
     }
 
-    protected function isActionAccessibleByUser($action, User $loggedIn)
+    protected function isActionAccessibleByUser($action, User $loggedIn): bool
     {
         if ($loggedIn->isDeveloper()) {
             return true;
         }
-        
+
         $entity_action = $this->provider->getEntityAction($action);
 
         foreach ($loggedIn->getUserRoles() as $role) {
@@ -62,7 +62,7 @@ abstract class EntityVoter extends Voter
         return false;
     }
 
-    protected function voteOnAttribute($action, $entity, TokenInterface $token)
+    protected function voteOnAttribute($action, $entity, TokenInterface $token): bool
     {
         $loggedIn = $token->getUser();
 
@@ -86,7 +86,7 @@ abstract class EntityVoter extends Voter
         throw new LogicException(sprintf('Your voter "\%s" should implement %s()', static::class, $method));
     }
 
-    final protected function canUnlock($entity, User $loggedIn)
+    final protected function canUnlock($entity, User $loggedIn): bool
     {
         if (!in_array(LockableTrait::class, class_uses($entity))) {
             return false;
@@ -106,7 +106,7 @@ abstract class EntityVoter extends Voter
     /**
      * Override this for additional custom unlock checking
      */
-    protected function canUnlockEntity($entity, User $loggedIn)
+    protected function canUnlockEntity($entity, User $loggedIn): bool
     {
         return true;
     }
