@@ -66,9 +66,9 @@ class UserRole extends Entity
         return $this->system_generated;
     }
 
-    public function setSystemGenerated(?bool $system_generated): self
+    public function setSystemGenerated(?bool $systemGenerated): self
     {
-        $this->system_generated = $system_generated;
+        $this->system_generated = $systemGenerated;
 
         return $this;
     }
@@ -98,7 +98,7 @@ class UserRole extends Entity
 
         return $this;
     }
-    
+
     public function __toString()
     {
         return $this->name;

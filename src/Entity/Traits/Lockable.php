@@ -12,48 +12,48 @@ trait Lockable
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $locked_at;
-    
+
     /**
      * @ORM\Column(type="string", length=180, nullable=true)
      */
     protected $locked_by;
-    
+
     /**
      * Set locked_at
      *
      * @param \DateTime locked_at
      * @return Entity
      */
-    public function setLockedAt(DateTime $locked_at = null)
+    public function setLockedAt(DateTime $lockedAt = null)
     {
-        $this->locked_at = $locked_at;
-    
+        $this->locked_at = $lockedAt;
+
         return $this;
     }
-    
+
     /**
      * Get locked_at
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLockedAt()
     {
         return $this->locked_at;
     }
-    
+
     /**
      * Set locked_by
      *
      * @param string
      * @return Entity
      */
-    public function setLockedBy($locked_by)
+    public function setLockedBy($lockedBy)
     {
-        $this->locked_by = $locked_by;
-    
+        $this->locked_by = $lockedBy;
+
         return $this;
     }
-    
+
     /**
      * Get locked_by
      *
@@ -63,25 +63,25 @@ trait Lockable
     {
         return $this->locked_by;
     }
-    
+
     public function isUserLocked(User $user)
     {
         if ($this->locked_at && $this->getTimeDiff() < $this->lockExpiresAfter()) {
             return $user->getEmail() !== $this->locked_by;
         }
-        
+
         return false;
     }
-    
+
     public function isUnlockable()
     {
         if ($this->locked_at) {
             return ($this->getTimeDiff() >= $this->unlockableAfter());
         }
-        
+
         return true;
     }
-    
+
     /**
      * Returns the time in seconds an entity should be locked
      *
@@ -91,7 +91,7 @@ trait Lockable
     {
         return 900; // 15 minutes
     }
-    
+
     /**
      * Returns the time in seconds after which
      * an entity's lock becomes unlockable.
@@ -104,7 +104,7 @@ trait Lockable
     {
         return 300; // 5 minutes
     }
-    
+
     /**
      * Get the difference in seconds between now and when the entity was locked
      *
@@ -113,7 +113,7 @@ trait Lockable
     final public function getTimeDiff()
     {
         $now = new DateTime();
-            
+
         return $now->getTimestamp() - $this->locked_at->getTimestamp();
     }
 }

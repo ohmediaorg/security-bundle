@@ -46,7 +46,7 @@ abstract class User extends Entity implements UserInterface
     {
         $this->user_roles = new ArrayCollection();
     }
-    
+
     public function getEmail(): string
     {
         return (string) $this->email;
@@ -58,12 +58,12 @@ abstract class User extends Entity implements UserInterface
 
         return $this;
     }
-    
+
     public function getUsername(): string
     {
         return $this->getEmail();
     }
-    
+
     public function getPassword(): string
     {
         return (string) $this->password;
@@ -75,7 +75,7 @@ abstract class User extends Entity implements UserInterface
 
         return $this;
     }
-    
+
     public function isDeveloper(): bool
     {
         return (bool) $this->developer;
@@ -87,7 +87,7 @@ abstract class User extends Entity implements UserInterface
 
         return $this;
     }
-    
+
     public function getTimezone(): string
     {
         return (string) $this->timezone;
@@ -120,35 +120,35 @@ abstract class User extends Entity implements UserInterface
         return $this->user_roles;
     }
 
-    public function addUserRole(UserRole $user_role): self
+    public function addUserRole(UserRole $userRole): self
     {
-        if (!$this->user_roles->contains($user_role)) {
-            $this->user_roles[] = $user_role;
+        if (!$this->user_roles->contains($userRole)) {
+            $this->user_roles[] = $userRole;
         }
 
         return $this;
     }
 
-    public function removeUserRole(UserRole $user_role): self
+    public function removeUserRole(UserRole $userRole): self
     {
-        if ($this->user_roles->contains($user_role)) {
-            $this->user_roles->removeElement($user_role);
+        if ($this->user_roles->contains($userRole)) {
+            $this->user_roles->removeElement($userRole);
         }
 
         return $this;
     }
-    
+
     public function hasUserRole($name)
     {
-        foreach ($this->user_roles as $user_role) {
-            if ($user_role->getName() === $name) {
+        foreach ($this->user_roles as $userRole) {
+            if ($userRole->getName() === $name) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public function getRoles(): array
     {
         return ['ROLE_USER'];

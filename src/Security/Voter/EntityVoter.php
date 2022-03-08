@@ -51,10 +51,10 @@ abstract class EntityVoter extends Voter
             return true;
         }
 
-        $entity_action = $this->provider->getEntityAction($action);
+        $entityAction = $this->provider->getEntityAction($action);
 
         foreach ($loggedIn->getUserRoles() as $role) {
-            if (in_array($entity_action, $role->getActions())) {
+            if (in_array($entityAction, $role->getActions())) {
                 return true;
             }
         }

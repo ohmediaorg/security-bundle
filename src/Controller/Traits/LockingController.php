@@ -13,19 +13,19 @@ use Symfony\Component\HttpFoundation\Request;
 trait LockingController
 {
     abstract protected function redirectUnlockAction();
-    
+
     public function unlockAction(Request $request)
     {
         $this->preActionSetup($request, 'unlock');
-        
+
         $this->unlockEntity();
         $this->em->flush();
-        
+
         $this->addFlashNotice($this->entityUnlockNoticeMessage());
-          
+
         return $this->redirectUnlockAction();
     }
-    
+
     /**
      * Does a variety of lock checking, setting appropriate flash messages.
      * Automatically locks the entity to the current user if possible.
@@ -36,7 +36,7 @@ trait LockingController
     {
         $message = $type = null;
         $locked = false;
-        
+
         // check if the entity has locking functionality
         if ($this->hasLockable()) {
             // check if the entity is locked to a different user
@@ -50,14 +50,14 @@ trait LockingController
                     $type = 'warning';
                     $message = $this->entityStillLockedMessage();
                 }
-                    
+
                 // this entity is locked to someone else
                 $locked = true;
             }
             else {
                 // lock the entity to the current user
                 $this->lockEntityRaw();
-                
+
                 $type = 'notice';
                 $message = $this->entityLockedCurrentMessage();
             }
@@ -67,99 +67,101 @@ trait LockingController
             $type = 'warning';
             $message = $this->entityNotLockableMessage();
         }
-        
+
         // only show locking messages on get requests
-        $show_message = $get_request = $this->request->isMethod('GET');
-        
+        $showMessage = $get_request = $this->request->isMethod('GET');
+
         // but also show a specific message if a lock
         // was taken before changes could be saved
         if (!$get_request && $locked) {
-            $show_message = true;
+            $showMessage = true;
             $type = 'error';
             $message = $this->entityLockTakenMessage();
         }
-        
-        if ($show_message && $message) {
+
+        if ($showMessage && $message) {
             call_user_func_array([$this, 'addFlash' . ucfirst($type)], [$message]);
         }
-        
+
         return $locked;
     }
-  
+
     protected function showNotLockableMessage()
     {
         return false;
     }
-    
+
     protected function hasLockable()
     {
         return in_array(Lockable::class, class_uses($this->entity));
     }
-    
+
     private function isUnlockable()
     {
         return $this->entity->isUnlockable() || $this->isDeveloper();
     }
-    
+
     protected function lockEntity()
     {
         $this->entityLock(true);
     }
-    
+
     protected function unlockEntity()
     {
         $this->entityLock(false);
     }
-    
+
     private function entityLock($locking = true)
     {
         if ($this->hasLockable()) {
             $locked = $locking ? new DateTime() : null;
-            $locked_by = $locking ? $this->user->getEmail() : null;
-            
+            $lockedBy = $locking ? $this->user->getEmail() : null;
+
             $this->entity
                 ->setLockedAt($locked)
-                ->setLockedBy($locked_by)
+                ->setLockedBy($lockedBy)
             ;
         }
     }
-  
+
     protected function lockEntityRaw()
     {
         $this->entityLockRaw(true);
     }
-    
+
     protected function unlockEntityRaw()
     {
         $this->entityLockRaw(false);
     }
-    
+
     private function entityLockRaw($locking = true)
     {
-        if ($this->hasLockable()) {
-            $table = $this->em
-                ->getClassMetadata($this->getEntityClass())
-                ->getTableName();
-          
-            $locked_at = $locking
-                ? (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s')
-                : null;
-                
-            $locked_by = $locking
-                ? $this->user->getId()
-                : null;
-            
-            $sql = "UPDATE $table SET locked_at = :locked_at, locked_by = :locked_by WHERE id = :id";
-            
-            $stmt = $this->em->getConnection()->prepare($sql);
-            $stmt->execute([
-                ':locked_at' => $locked_at,
-                ':locked_by' => $locked_by,
-                ':id' => $this->entity->getId(),
-            ]);
+        if (!$this->hasLockable()) {
+            return;
         }
+
+        $table = $this->em
+            ->getClassMetadata($this->getEntityClass())
+            ->getTableName();
+
+        $lockedAt = $locking
+            ? (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s')
+            : null;
+
+        $lockedBy = $locking
+            ? $this->user->getId()
+            : null;
+
+        $sql = "UPDATE $table SET locked_at = :lockedAt, locked_by = :lockedBy WHERE id = :id";
+
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->execute([
+            ':lockedAt' => $lockedAt,
+            ':lockedBy' => $lockedBy,
+            ':id' => $this->entity->getId(),
+        ]);
     }
-    
+
     /**
      * Get the notice message to display in unlockAction()
      */
@@ -167,7 +169,7 @@ trait LockingController
     {
         return sprintf('The %s was unlocked successfully!', $this->human_readable);
     }
-    
+
     /**
      * Get the warning message to display if the entity cannot be locked
      */
@@ -180,21 +182,21 @@ trait LockingController
             $this->generateActionUrl('unlock')
         );
     }
-    
+
     /**
      * Get the warning message to display if the entity is still locked
      */
     protected function entityStillLockedMessage()
     {
         $locked_for = $this->entity->unlockableAfter() - $this->entity->getTimeDiff();
-        
+
         $m = $locked_for > 60
             ? floor($locked_for / 60) . 'm'
             : '';
         $s = ($locked_for % 60) . 's';
-        
+
         $locked_for = "$m$s";
-        
+
         return sprintf(
             'This %s is locked to "%s" and will be unlockable in %s.',
             $this->human_readable,
@@ -202,7 +204,7 @@ trait LockingController
             $locked_for
         );
     }
-    
+
     /**
      * Get the message to display if the entity was locked to the current user
      */
@@ -210,7 +212,7 @@ trait LockingController
     {
         $locked = $this->entity->lockExpiresAfter();
         $unlock = $this->entity->unlockableAfter();
-        
+
         return sprintf(
             'This %s is locked to you for %s minutes and will become unlockable after %s minutes.',
             $this->human_readable,
@@ -218,7 +220,7 @@ trait LockingController
             $unlock/60
         );
     }
-    
+
     /**
      * Get the error message to display if the lock was taken
      */
@@ -226,7 +228,7 @@ trait LockingController
     {
         return sprintf('It appears another user has taken your lock on this %s.', $this->human_readable);
     }
-    
+
     /**
      * Get the warning message to display if the entity cannot be locked
      */

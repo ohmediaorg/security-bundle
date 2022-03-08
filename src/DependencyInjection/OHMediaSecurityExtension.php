@@ -24,13 +24,13 @@ class OHMediaSecurityExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('ohmedia_security.timezone', $config['timezone']);
-        
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        
+
         $container->registerForAutoconfiguration(AbstractEntityProvider::class)
             ->addTag('ohmedia_security.provider');
-        
+
         $this->registerWidget($container);
     }
 
@@ -39,15 +39,11 @@ class OHMediaSecurityExtension extends Extension
      */
     protected function registerWidget(ContainerBuilder $container)
     {
-        //$templating_engines = $container->getParameter('templating.engines');
+        $resource = '@OHMediaSecurity/Form/actions_widget.html.twig';
 
-        //if (in_array('twig', $templating_engines)) {
-            $resource = '@OHMediaSecurity/Form/actions_widget.html.twig';
-
-            $container->setParameter('twig.form.resources', array_merge(
-                $container->getParameter('twig.form.resources'),
-                [$resource]
-            ));
-        //}
+        $container->setParameter('twig.form.resources', array_merge(
+            $container->getParameter('twig.form.resources'),
+            [$resource]
+        ));
     }
 }

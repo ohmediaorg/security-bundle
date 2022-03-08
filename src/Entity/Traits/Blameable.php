@@ -32,9 +32,9 @@ trait Blameable
         return $this->created_at;
     }
 
-    public function setCreatedAt(?DateTimeInterface $created_at): self
+    public function setCreatedAt(?DateTimeInterface $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->created_at = $createdAt;
 
         return $this;
     }
@@ -44,9 +44,9 @@ trait Blameable
         return $this->created_by;
     }
 
-    public function setCreatedBy(?string $created_by): self
+    public function setCreatedBy(?string $createdBy): self
     {
-        $this->created_by = $created_by;
+        $this->created_by = $createdBy;
 
         return $this;
     }
@@ -56,9 +56,9 @@ trait Blameable
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?DateTimeInterface $updated_at): self
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = $updatedAt;
 
         return $this;
     }
@@ -68,9 +68,9 @@ trait Blameable
         return $this->updated_by;
     }
 
-    public function setUpdatedBy(?string $updated_by): self
+    public function setUpdatedBy(?string $updatedBy): self
     {
-        $this->updated_by = $updated_by;
+        $this->updated_by = $updatedBy;
 
         return $this;
     }
