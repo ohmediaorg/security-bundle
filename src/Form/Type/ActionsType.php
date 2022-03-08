@@ -15,17 +15,17 @@ class ActionsType extends AbstractType
         if (!isset($options['cancel_options']['attr'])) {
             $options['cancel_options']['attr'] = [];
         }
-        
+
         if (!isset($options['cancel_options']['attr']['formnovalidate'])) {
             $options['cancel_options']['attr']['formnovalidate'] = '';
         }
-        
+
         $builder
             ->add('save', SubmitType::class, $options['save_options'])
             ->add('cancel', SubmitType::class, $options['cancel_options'])
         ;
     }
-    
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -36,7 +36,7 @@ class ActionsType extends AbstractType
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return FormType::class;
     }
