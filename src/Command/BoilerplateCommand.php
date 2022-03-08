@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 use function Symfony\Component\String\u;
 
@@ -16,10 +17,11 @@ class BoilerplateCommand extends Command
 
     public function __construct(string $projectDir)
     {
-        $this->projectDir = $projectDir;
+        $this->projectDir = $projectDir . '/';
         $this->templateDir = __DIR__ . '/../../boilerplate/';
         $this->find = [];
         $this->replace = [];
+        $this->filesystem = new Filesystem();
 
         parent::__construct();
     }
@@ -35,9 +37,15 @@ class BoilerplateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $isUser = $input->getOption('user');
+
         $this->io = new SymfonyStyle($input, $output);
 
-        $className = $this->io->ask('Class name of the entity to create');
+        $question = $isUser
+            ? 'Class name of the user entity'
+            : 'Class name of the entity';
+
+        $className = $this->io->ask($question);
 
         if (!$className) {
             $this->io->error('Please provide the class name');
@@ -62,13 +70,11 @@ class BoilerplateCommand extends Command
         $this->find = array_keys($findReplace);
         $this->replace = array_values($findReplace);
 
-        if ($input->getOption('user')) {
+        if ($isUser) {
             $entityTemplate = 'User.php.tpl';
-            $repositoryTemplate = 'UserRepository.php.tpl';
         }
         else {
             $entityTemplate = 'Entity.php.tpl';
-            $repositoryTemplate = 'Repository.php.tpl';
         }
 
         $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
@@ -81,7 +87,7 @@ class BoilerplateCommand extends Command
 
         $this
             ->generateFile($entityTemplate, $entityFile)
-            ->generateFile($repositoryTemplate, $repositoryFile)
+            ->generateFile('Repository.php.tpl', $repositoryFile)
             ->generateFile('Form.php.tpl', $formFile)
             ->generateFile('Provider.php.tpl', $providerFile)
             ->generateFile('Controller.php.tpl', $controllerFile)
@@ -94,13 +100,30 @@ class BoilerplateCommand extends Command
 
     private function generateFile(string $template, string $destination)
     {
+        $absoluteDestination = $this->projectDir . $destination;
+
+        if (file_exists($absoluteDestination)) {
+            $continue = $this->io->confirm(sprintf(
+                'The destination file %s exists. Do you want to overwrite it?',
+                $destination
+            ));
+
+            if (!$continue) {
+                return $this;
+            }
+        }
+
         $contents = str_replace(
             $this->find,
             $this->replace,
             file_get_contents($this->templateDir . $template)
         );
 
-        file_put_contents($this->projectDir . $destination, $contents);
+        $this->filesystem->mkdir(\dirname($absoluteDestination));
+
+        file_put_contents($absoluteDestination, $contents);
+
+        $this->io->success(sprintf('Generated %s', $destination));
 
         return $this;
     }

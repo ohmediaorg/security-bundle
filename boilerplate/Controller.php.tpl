@@ -53,12 +53,12 @@ class __PASCALCASE__Controller extends EntityController
     protected function renderSaveAction(FormView $formView)
     {
         // Symfony\Bundle\FrameworkBundle\Controller\Controller::render()
-        return $this->render(...);
+        // return $this->render(...);
     }
 
     protected function renderDeleteAction(FormView $formView)
     {
         // Symfony\Bundle\FrameworkBundle\Controller\Controller::render()
-        return $this->render(...);
+        // return $this->render(...);
     }
 }
