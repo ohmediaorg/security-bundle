@@ -317,6 +317,11 @@ abstract class EntityController extends AbstractController
         return $entity;
     }
 
+    protected function redirectUnlockAction()
+    {
+        return $this->redirectToAction('update');
+    }
+
     /**
      * Helper for redirecting to an action url on the entity
      *
