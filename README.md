@@ -9,69 +9,32 @@ return [
 ];
 ```
 
+## User Files
+
 Create your user class using the boilerplate command and the user flag:
 
 ```bash
 php bin/console ohmedia:security:boilerplate --user
 ```
 
-_**Note:** this will generate an Entity class called `User` but is not quite
-the same as running the boilerplate command without the --user flag and manually
-calling the entity "User"._
+This will generate all the Entity classes for `App\Entity\User`, as well as some
+additional files needed to kickstart logging in.
 
-For every login form you need, extend
-`OHMedia\SecurityBundle\Security\AbstractUserAuthenticator`.
+The file `templates/security/login.html.twig` will contain the minimum form
+needed for logging in. Feel free to style this as needed. The important part is
+making sure the 3 inputs are named `email`, `password`, and `_csrf_token`.
 
-```php
-<?php
+The file `App/Controller/LoginController.php` will handle displaying the login
+form to the user. The submission and redirection of this form is handled by
+`App/Security/LoginAuthenticator.php`.
 
-namespace App\Security;
+The authenticator and controller will use predetermined routes. Feel free
+to change these.
 
-use App\Entity\User;
-use OHMedia\SecurityBundle\Security\AbstractUserAuthenticator;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+The last thing generated is a migration for creating your first user. This will
+be addressed later.
 
-class LoginAuthenticator extends AbstractUserAuthenticator
-{
-    protected function getLoginRoute()
-    {
-        return 'login';
-    }
-    
-    protected function getLoginSuccessRoute(TokenInterface $token)
-    {
-        return 'home';
-    }
-    
-    protected function getUserClass()
-    {
-        return User::class;
-    }
-}
-
-```
-
-This is the minimum implementation of a login form for use with the above
-`LoginAuthenticator`:
-
-```twig
-<form method="post">
-  {% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-  {% endif %}
-
-  <label for="inputEmail">Email</label>
-  <input type="email" value="{{ last_username }}" name="email" id="inputEmail" required autofocus>
-  
-  <label for="inputPassword">Password</label>
-  <input type="password" name="password" id="inputPassword" required>
-
-  <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-  <input type="submit" value="Sign In" />
-</form>
-
-```
+## Config
 
 Update `config/packages/doctrine.yml`:
 
@@ -114,6 +77,8 @@ oh_media_security:
     timezone: America/Regina # this is the default
 ```
 
+## Migrations
+
 Add custom fields to your user class using the maker command:
 
 ```bash
@@ -123,10 +88,16 @@ $ php bin/console make:entity
  > User
 ```
 
-Make and run the migration:
+Make the migration:
 
 ```bash
 $ php bin/console make:migration
+```
+
+Before running the migration, you will need to make sure the migration generated
+by the boilerplate is updated as needed.
+
+```bash
 $ php bin/console doctrine:migrations:migrate
 ```
 
