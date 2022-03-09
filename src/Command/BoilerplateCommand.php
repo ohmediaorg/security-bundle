@@ -98,6 +98,25 @@ class BoilerplateCommand extends Command
             ->generateFile($voterTemplate, $voterFile)
         ;
 
+        if ($isUser) {
+            $loginFile = 'templates/security/login.php';
+
+            $this
+                ->generateFile(
+                    'security/login.html.twig.tpl',
+                    'templates/security/login.html.twig'
+                )
+                ->generateFile(
+                    'security/LoginController.php.tpl',
+                    'src/Controller/LoginController.php'
+                )
+                ->generateFile(
+                    'security/LoginAuthenticator.php.tpl',
+                    'src/Security/LoginAuthenticator.php'
+                )
+            ;
+        }
+
         return Command::SUCCESS;
     }
 
