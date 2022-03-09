@@ -107,9 +107,9 @@ class BoilerplateCommand extends Command
 
         if (file_exists($absoluteDestination)) {
             $continue = $this->io->confirm(sprintf(
-                'The destination file %s exists. Do you want to overwrite it?',
+                'The destination file <fg=yellow>%s</> exists. Do you want to overwrite it?',
                 $destination
-            ));
+            ), false);
 
             if (!$continue) {
                 return $this;
