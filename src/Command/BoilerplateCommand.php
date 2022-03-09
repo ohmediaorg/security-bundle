@@ -60,12 +60,15 @@ class BoilerplateCommand extends Command
         $kebabCase = u($snakeCase)->replace('_', '-');
         $readable = u($snakeCase)->replace('_', ' ');
 
+        $migrationClass = 'Version' . date('YmdHis', strtotime('+100 years'));
+
         $findReplace = [
             '__CAMELCASE__' => $camelCase,
             '__SNAKECASE__' => $snakeCase,
             '__PASCALCASE__' => $pascalCase,
             '__KEBABCASE__' => $kebabCase,
             '__READABLE__' => $readable,
+            '__MIGRATIONCLASS__' => $migrationClass
         ];
 
         $this->find = array_keys($findReplace);
@@ -99,7 +102,7 @@ class BoilerplateCommand extends Command
         ;
 
         if ($isUser) {
-            $loginFile = 'templates/security/login.php';
+            $migrationFile = sprintf('migrations/%s.php', $migrationClass);
 
             $this
                 ->generateFile(
@@ -113,6 +116,10 @@ class BoilerplateCommand extends Command
                 ->generateFile(
                     'security/LoginAuthenticator.php.tpl',
                     'src/Security/LoginAuthenticator.php'
+                )
+                ->generateFile(
+                    'security/Migration.php.tpl',
+                    $migrationFile
                 )
             ;
         }
