@@ -51,6 +51,28 @@ class LoginAuthenticator extends AbstractUserAuthenticator
 
 ```
 
+This is the minimum implementation of a login form for use with the above
+`LoginAuthenticator`:
+
+```twig
+<form method="post">
+  {% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+  {% endif %}
+
+  <label for="inputEmail">Email</label>
+  <input type="email" value="{{ last_username }}" name="email" id="inputEmail" required autofocus>
+  
+  <label for="inputPassword">Password</label>
+  <input type="password" name="password" id="inputPassword" required>
+
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+  <input type="submit" value="Sign In" />
+</form>
+
+```
+
 Update `config/packages/doctrine.yml`:
 
 ```yaml
@@ -107,6 +129,75 @@ Make and run the migration:
 $ php bin/console make:migration
 $ php bin/console doctrine:migrations:migrate
 ```
+
+## First User
+
+To create the first user, generate an empty migration. Update it as follows:
+
+1. Rename the migration file and class so it is always guaranteed to run last.
+In other words, change `Version20221025053121` to `Version21221025053121`.
+
+1. Add these includes:
+
+```php
+use App\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+```
+
+1. Make the migration implement the ContainerAwareInterface interface:
+
+```php
+final class Version21221025053121
+extends AbstractMigration
+implements ContainerAwareInterface
+```
+
+1. Add the $container property and setter:
+
+```php
+private $container;
+
+public function setContainer(ContainerInterface $container = null)
+{
+    $this->container = $container;
+}
+
+public function getDescription() : string
+{
+    return '';
+}
+```
+
+1. Finally, implement the postUp function:
+
+```php
+public function postUp(Schema $schema) : void
+{
+    $em = $this->container->get('doctrine.orm.entity_manager');
+    $encoder = $this->container->get('security.password_encoder');
+    
+    $user = new User();
+    
+    // set the default password to something easy
+    // with the intent to change it immediately after
+    $encoded = $encoder->encodePassword($user, '123456');
+    
+    $user
+        // set the email you want to log in with
+        ->setEmail('email@website.com')
+        ->setPassword($encoded)
+        // set other fields as needed
+    ;
+    
+    $em->persist($user);
+    $em->flush();
+}
+```
+
+The up and down functions should remain empty.
+
+After this migration is ran, you can log in with the user you created.
 
 # Entities
 
