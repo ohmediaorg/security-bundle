@@ -7,11 +7,11 @@ namespace DoctrineMigrations;
 use App\Entity\__PASCALCASE__;
 use OHMedia\SecurityBundle\Doctrine\Migrations\AbstractUserMigration;
 use OHMedia\SecurityBundle\Entity\User as EntityUser;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 
 final class __MIGRATIONCLASS__ extends AbstractUserMigration
 {
-    protected function getUser(UserPasswordHasherInterface $hasher): EntityUser
+    protected function getUser(UserPasswordHasher $hasher): EntityUser
     {
         $__CAMELCASE__ = new __PASCALCASE__();
 
