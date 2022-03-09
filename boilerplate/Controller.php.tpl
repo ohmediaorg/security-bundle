@@ -30,11 +30,6 @@ class __PASCALCASE__Controller extends EntityController
         // redirect to list page
     }
 
-    protected function redirectUnlockAction()
-    {
-        return $this->redirectToAction('update');
-    }
-
     protected function redirectCancelAction()
     {
         if ($this->entity->getId()) {
@@ -52,13 +47,15 @@ class __PASCALCASE__Controller extends EntityController
 
     protected function renderSaveAction(FormView $formView)
     {
-        // Symfony\Bundle\FrameworkBundle\Controller\Controller::render()
-        // return $this->render(...);
+        return $this->render('__CAMELCASE__/form.html.twig', [
+            'form' => $formView
+        ]);
     }
 
     protected function renderDeleteAction(FormView $formView)
     {
-        // Symfony\Bundle\FrameworkBundle\Controller\Controller::render()
-        // return $this->render(...);
+        return $this->render('__CAMELCASE__/delete.html.twig', [
+            'form' => $formView
+        ]);
     }
 }
