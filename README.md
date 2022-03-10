@@ -251,6 +251,26 @@ protected function canMyCustomAction(MyEntity $myEntity, User $loggedIn)
 }
 ```
 
+## Events
+
+The `EntityController` calls various overridable methods. These are:
+
+1. `entityPostFormBuild`
+1. `entityPreValidate`
+1. `entityPreSave`
+1. `entityPostSave`
+
+It may be tempting to put certain logic here. Keep in mind, these methods are
+only called for the create/update actions through your entity controller. The
+logic should only specifically apply to the controller.
+
+If you need certain things to happen no matter where your entity is saved, you
+should be hooking into Doctrine Events.
+
+If you need common logic for both your controller and your event subscriber, you
+can create common functions in your entity provider. The provider is already
+available in your controller, and can be injected into your subscriber.
+
 ## Locking
 
 An entity can become lockable if it uses the trait
@@ -276,7 +296,7 @@ the route AND the voter.
 ## Rendering Entity Create Links
 
 Determining if a 'create' link should be shown requires some setup,
-because you need to create an entity so it can be passed to the voter.
+because you need to have an entity to pass to the voter.
 Just make sure not to persist that new entity!
 
 ```php
