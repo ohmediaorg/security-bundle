@@ -102,7 +102,7 @@ class BoilerplateCommand extends Command
             $this
                 ->generateFile(
                     'user/login.html.twig.tpl',
-                    'templates/seurity/login.html.twig'
+                    'templates/security/login.html.twig'
                 )
                 ->generateFile(
                     'user/LoginController.php.tpl',
