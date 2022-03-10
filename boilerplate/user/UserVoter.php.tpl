@@ -18,12 +18,12 @@ class __PASCALCASE__Voter extends EntityVoter
         return true;
     }
 
-    protected function canView(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
+    protected function canRead(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
     {
         return true;
     }
 
-    protected function canEdit(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
+    protected function canUpdate(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
     {
         return true;
     }
