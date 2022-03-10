@@ -251,6 +251,14 @@ protected function canMyCustomAction(MyEntity $myEntity, User $loggedIn)
 }
 ```
 
+## Locking
+
+An entity can become lockable if it uses the trait
+`OHMedia\SecurityBundle\Entity\Traits\Lockable`. By default, this happens on the
+`update` action in order to prevent two people from updating the same thing.
+
+Check out how the `EntityController` utilizes the `LockingController` trait.
+
 # Template Helpers
 
 ## Rendering Entity Action Links 
