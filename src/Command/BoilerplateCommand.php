@@ -60,23 +60,20 @@ class BoilerplateCommand extends Command
         $kebabCase = u($snakeCase)->replace('_', '-');
         $readable = u($snakeCase)->replace('_', ' ');
 
-        $migrationClass = 'Version' . date('YmdHis', strtotime('+100 years'));
-
         $findReplace = [
             '__CAMELCASE__' => $camelCase,
             '__SNAKECASE__' => $snakeCase,
             '__PASCALCASE__' => $pascalCase,
             '__KEBABCASE__' => $kebabCase,
-            '__READABLE__' => $readable,
-            '__MIGRATIONCLASS__' => $migrationClass
+            '__READABLE__' => $readable
         ];
 
         $this->find = array_keys($findReplace);
         $this->replace = array_values($findReplace);
 
         if ($isUser) {
-            $entityTemplate = 'User.php.tpl';
-            $voterTemplate = 'UserVoter.php.tpl';
+            $entityTemplate = 'user/User.php.tpl';
+            $voterTemplate = 'user/UserVoter.php.tpl';
         }
         else {
             $entityTemplate = 'Entity.php.tpl';
@@ -102,24 +99,22 @@ class BoilerplateCommand extends Command
         ;
 
         if ($isUser) {
-            $migrationFile = sprintf('migrations/%s.php', $migrationClass);
-
             $this
                 ->generateFile(
-                    'security/login.html.twig.tpl',
-                    'templates/security/login.html.twig'
+                    'user/login.html.twig.tpl',
+                    'templates/seurity/login.html.twig'
                 )
                 ->generateFile(
-                    'security/LoginController.php.tpl',
+                    'user/LoginController.php.tpl',
                     'src/Controller/LoginController.php'
                 )
                 ->generateFile(
-                    'security/LoginAuthenticator.php.tpl',
+                    'user/LoginAuthenticator.php.tpl',
                     'src/Security/LoginAuthenticator.php'
                 )
                 ->generateFile(
-                    'security/Migration.php.tpl',
-                    $migrationFile
+                    'user/UserCreateCommand.php.tpl',
+                    'src/Command/UserCreateCommand.php'
                 )
             ;
         }
