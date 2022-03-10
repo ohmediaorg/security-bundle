@@ -12,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCreateCommand extends Command
 {
-    private $provider;
+    private $__CAMELCASE__Provider;
     private $passwordHasher;
 
     public function __construct(
@@ -21,7 +21,7 @@ class UserCreateCommand extends Command
     )
     {
         $this->passwordHasher = $passwordHasher;
-        $this->provider = $__CAMELCASE__Provider;
+        $this->__CAMELCASE__Provider = $__CAMELCASE__Provider;
 
         parent::__construct();
     }
@@ -40,7 +40,9 @@ class UserCreateCommand extends Command
 
         $email = $this->io->ask('Email');
 
-        $password = $this->io->askHidden('Password');
+        $password = $this->io->askHidden('Password (hidden)');
+
+        $developer = $this->io->confirm('Is this user a developer?');
 
         // if you need to populate more fields, ask for them here
         // or simply provide sensible defaults below
@@ -55,6 +57,8 @@ class UserCreateCommand extends Command
         $__CAMELCASE__
             ->setEmail($email)
             ->setPassword($hashed)
+            ->setDeveloper($developer)
+            ->setEnabled(true)
 
             // ... set other fields as needed
         ;
