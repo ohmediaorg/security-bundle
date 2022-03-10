@@ -121,8 +121,8 @@ abstract class EntityController extends AbstractController
         $method = u($action)->camel() . 'Action';
         $callable = "$controller::$method";
 
-        if (!is_callable($callable)) {
-            throw $this->createNotFoundException();
+        if (!method_exists($controller, $method)) {
+            throw $this->createNotFoundException($callable);
         }
 
         $params = $request->attributes->get('_route_params');
