@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Provider\__PASCALCASE__Provider;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,8 +13,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCreateCommand extends Command
 {
-    private $__CAMELCASE__Provider;
     private $passwordHasher;
+    private $__CAMELCASE__Provider;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
@@ -42,7 +43,13 @@ class UserCreateCommand extends Command
 
         $password = $this->io->askHidden('Password (hidden)');
 
-        $developer = $this->io->confirm('Is this user a developer?');
+        if (!$email || !$password) {
+            $this->io->error('Please provide an email and password');
+
+            return Command::INVALID;
+        }
+
+        $developer = $this->io->confirm('Flag this user as a developer');
 
         // if you need to populate more fields, ask for them here
         // or simply provide sensible defaults below
@@ -56,14 +63,22 @@ class UserCreateCommand extends Command
 
         $__CAMELCASE__
             ->setEmail($email)
-            ->setPassword($hashed)
+            ->setPassword($hashedPassword)
             ->setDeveloper($developer)
             ->setEnabled(true)
 
             // ... set other fields as needed
         ;
 
-        $this->__CAMELCASE__Provider->save($__CAMELCASE__);
+        try {
+            $this->__CAMELCASE__Provider->save($__CAMELCASE__);
+        } catch(Exception $e) {
+            $this->io->error($e->getMessage());
+
+            return Command::FAILURE;
+        }
+
+        $this->io->success(sprintf('User %s created successfully', $email));
 
         return Command::SUCCESS;
     }
