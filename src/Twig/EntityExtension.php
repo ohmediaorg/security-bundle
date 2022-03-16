@@ -23,13 +23,13 @@ class EntityExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('oh_media_entity_action', [$this, 'entityAction'], [
+            new TwigFunction('entity_action', [$this, 'getEntityAction'], [
                 'is_safe' => ['html']
             ])
         ];
     }
 
-    public function entityAction($action, $entity, $route, $text, array $attributes = [])
+    public function getEntityAction($action, $entity, $route, $text, array $attributes = [])
     {
         if (!$entity instanceof Entity) {
             throw new LogicException(sprintf(

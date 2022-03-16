@@ -287,7 +287,7 @@ You can use twig helpers for rendering action links on existing entities.
 Links are only rendered if the voting passes.
 
 ```twig
-{{ oh_media_entity_action(action, entity, route, label, attributes) }}
+{{ entity_action(action, entity, route, label, attributes) }}
 ```
 
 These will only work if the value for 'action' is the same in both
