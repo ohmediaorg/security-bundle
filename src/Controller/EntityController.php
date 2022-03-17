@@ -43,7 +43,7 @@ abstract class EntityController extends AbstractController
     {
         $this->preActionSetup($request, 'read');
 
-        return $this->renderViewAction();
+        return $this->renderReadAction();
     }
 
     public function updateAction(Request $request)
@@ -223,7 +223,7 @@ abstract class EntityController extends AbstractController
         return isset($inputs['actions']['cancel']);
     }
 
-    protected function renderViewAction()
+    protected function renderReadAction()
     {
         throw new LogicException(sprintf('Please override \%s() or %s()', __METHOD__, '::readAction'));
     }
