@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('oh_media_security');
-        
+
         $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('timezone')
@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-        
+
         return $treeBuilder;
     }
 }
