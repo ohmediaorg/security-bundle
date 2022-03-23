@@ -23,26 +23,31 @@ abstract class EntityVoter extends Voter
         return $this;
     }
 
+    public function supportsAttribute(string $attribute): bool
+    {
+        $actions = $this->provider->getActions();
+        $actions[] = 'unlock';
+
+        return in_array($attribute, $actions);
+    }
+
+    public function supportsType(string $subjectType): bool
+    {
+        return $subjectType === $this->provider->getEntityClass();
+    }
+
+    protected function supports(string $attribute, $subject): bool
+    {
+        return $subject instanceof Entity
+            && $this->supportsAttribute($attribute)
+            && $this->subjectSupported($subject);
+    }
+
     protected function subjectSupported($subject): bool
     {
         $class = $this->provider->getEntityClass();
 
         return $subject instanceof $class;
-    }
-
-    protected function supports($action, $subject): bool
-    {
-        return $subject instanceof Entity
-            && $this->actionSupported($action)
-            && $this->subjectSupported($subject);
-    }
-
-    protected function actionSupported($action): bool
-    {
-        $actions = $this->provider->getActions();
-        $actions[] = 'unlock';
-
-        return in_array($action, $actions);
     }
 
     protected function isActionAccessibleByUser($action, User $loggedIn): bool
