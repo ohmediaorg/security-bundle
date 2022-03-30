@@ -5,11 +5,14 @@ namespace OHMedia\SecurityBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\MappedSuperclass]
 abstract class User extends Entity implements UserInterface
 {
+    use TimezoneUser;
+
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     protected $email;
 
@@ -18,9 +21,6 @@ abstract class User extends Entity implements UserInterface
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected $developer;
-
-    #[ORM\Column(type: 'string', length: 64, nullable: true)]
-    protected $timezone;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected $enabled;
@@ -70,18 +70,6 @@ abstract class User extends Entity implements UserInterface
     public function setDeveloper(?bool $developer): self
     {
         $this->developer = $developer;
-
-        return $this;
-    }
-
-    public function getTimezone(): string
-    {
-        return (string) $this->timezone;
-    }
-
-    public function setTimezone(?string $timezone): self
-    {
-        $this->timezone = $timezone;
 
         return $this;
     }

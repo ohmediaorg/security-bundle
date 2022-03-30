@@ -1,5 +1,7 @@
 # Installation
 
+Make sure `justin-oh/timezone-bundle` is set up.
+
 Enable the bundle in `config/bundles.php`:
 
 ```php
@@ -68,13 +70,6 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginAuthenticator
-```
-
-Override the default timezone `config/packages/oh_media_security.yml`:
-
-```yaml
-oh_media_security:
-    timezone: America/Regina # this is the default
 ```
 
 ## Migrations

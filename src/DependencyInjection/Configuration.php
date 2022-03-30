@@ -2,7 +2,6 @@
 
 namespace OHMedia\SecurityBundle\DependencyInjection;
 
-use DateTimeZone;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -19,18 +18,6 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('oh_media_security');
-
-        $treeBuilder->getRootNode()
-            ->children()
-                ->scalarNode('timezone')
-                    ->defaultValue('America/Regina')
-                    ->validate()
-                    ->ifNotInArray(DateTimeZone::listIdentifiers())
-                        ->thenInvalid('Invalid timezone "%s"')
-                    ->end()
-                ->end()
-            ->end()
-        ;
 
         return $treeBuilder;
     }

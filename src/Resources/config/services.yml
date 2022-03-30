@@ -10,12 +10,6 @@ services:
         tags:
             - { name: form.type }
 
-    oh_media_security.timezone_listener:
-        class: OHMedia\SecurityBundle\EventListener\TimezoneListener
-        arguments: ["@security.token_storage", "%oh_media_security.timezone%"]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
     oh_media_security.blameable_subscriber:
         class: OHMedia\SecurityBundle\EventListener\BlameableSubscriber
         arguments: ["@security.token_storage"]
