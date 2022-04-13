@@ -19,22 +19,13 @@ Create your user class using the boilerplate command and the user flag:
 php bin/console ohmedia:security:boilerplate --user
 ```
 
-This will generate all the Entity classes for `App\Entity\User`, as well as some
-additional files needed to kickstart logging in.
+This will generate all the Entity classes for `App\Entity\User`, including a
+command for creating your first user. Update this as needed.
 
-The file `templates/security/login.html.twig` will contain the minimum form
-needed for logging in. Feel free to style this as needed. The important part is
-making sure the 3 inputs are named `email`, `password`, and `_csrf_token`.
+### User Login
 
-The file `App/Controller/LoginController.php` will handle displaying the login
-form to the user. The submission and redirection of this form is handled by
-`App/Security/LoginAuthenticator.php`.
-
-The authenticator and controller will use predetermined routes. Feel free
-to change these.
-
-The last thing generated is a migration for creating your first user. This will
-be addressed later.
+Follow the steps at https://symfony.com/doc/current/security.html#form-login for
+creating a login form.
 
 ## Config
 
@@ -53,12 +44,10 @@ Update `config/packages/security.yml`:
 
 ```yaml
 security:
-    encoders:
-        App\Entity\User:
-            algorithm: auto
+    # ...
 
     providers:
-        oh_media_security_user_provider:
+        app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
@@ -66,10 +55,7 @@ security:
         # ...
         main:
             # ...
-            provider: oh_media_security_user_provider
-            guard:
-                authenticators:
-                    - App\Security\LoginAuthenticator
+            provider: app_user_provider
 ```
 
 ## Migrations

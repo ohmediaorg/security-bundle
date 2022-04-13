@@ -6,10 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUser;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\MappedSuperclass]
-abstract class User extends Entity implements UserInterface
+abstract class User extends Entity implements PasswordAuthenticatedUserInterface
 {
     use TimezoneUser;
 

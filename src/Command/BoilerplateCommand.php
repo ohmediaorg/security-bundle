@@ -101,18 +101,6 @@ class BoilerplateCommand extends Command
         if ($isUser) {
             $this
                 ->generateFile(
-                    'user/login.html.twig.tpl',
-                    'templates/security/login.html.twig'
-                )
-                ->generateFile(
-                    'user/LoginController.php.tpl',
-                    'src/Controller/LoginController.php'
-                )
-                ->generateFile(
-                    'user/LoginAuthenticator.php.tpl',
-                    'src/Security/LoginAuthenticator.php'
-                )
-                ->generateFile(
                     'user/UserCreateCommand.php.tpl',
                     'src/Command/UserCreateCommand.php'
                 )
