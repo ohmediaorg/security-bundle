@@ -15,6 +15,23 @@ class __PASCALCASE__Controller extends EntityController
         $this->setProvider($provider);
     }
 
+    #[Route('/__KEBABCASE__/create', name: '__SNAKECASE___create')]
+    public function createAction(Request $request)
+    {
+        return parent::createAction($request);
+    }
+
+    #[Route(
+        '/__KEBABCASE__/{id}/{action}',
+        name: '__SNAKECASE___action',
+        defaults: ['action' => 'read'],
+        requirements: ['id' => '\d+']
+    )]
+    public function actionAction(Request $request, $action)
+    {
+        return parent::actionAction($request, $action);
+    }
+
     protected function getActionRoute()
     {
         return '__SNAKECASE___action';

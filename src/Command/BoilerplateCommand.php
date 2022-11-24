@@ -85,7 +85,6 @@ class BoilerplateCommand extends Command
         $formFile = sprintf('src/Form/%sType.php', $pascalCase);
         $providerFile = sprintf('src/Provider/%sProvider.php', $pascalCase);
         $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
-        $routesFile = sprintf('config/routes/%s.yaml', $snakeCase);
         $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
 
         $this
@@ -94,7 +93,6 @@ class BoilerplateCommand extends Command
             ->generateFile('Form.php.tpl', $formFile)
             ->generateFile('Provider.php.tpl', $providerFile)
             ->generateFile('Controller.php.tpl', $controllerFile)
-            ->generateFile('routes.yaml.tpl', $routesFile)
             ->generateFile($voterTemplate, $voterFile)
         ;
 
