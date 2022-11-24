@@ -7,6 +7,7 @@ use App\Provider\__PASCALCASE__Provider;
 use OHMedia\SecurityBundle\Controller\EntityController;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class __PASCALCASE__Controller extends EntityController
 {
