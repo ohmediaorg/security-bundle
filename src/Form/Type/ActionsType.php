@@ -29,6 +29,7 @@ class ActionsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'row_attr' => ['class' => 'actions-type'],
             'mapped' => false,
             'label' => false,
             'save_options' => [],
