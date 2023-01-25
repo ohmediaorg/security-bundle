@@ -1,6 +1,6 @@
 # Installation
 
-Make sure `justin-oh/timezone-bundle` is set up.
+Make sure `ohmediaorg/timezone-bundle` is set up.
 
 Enable the bundle in `config/bundles.php`:
 
