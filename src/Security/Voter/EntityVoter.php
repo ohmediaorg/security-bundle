@@ -116,3 +116,12 @@ abstract class EntityVoter extends Voter
         return true;
     }
 }
+
+// TODO: look into passing fully-qualified class names as voter attributes
+
+/*interface VoterAttributeInterface
+{
+    public function getName(): string;
+    public function getDescription(): string;
+    public function vote(Entity $entity, EntityUser $user): bool;
+}*/
