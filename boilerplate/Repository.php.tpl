@@ -20,4 +20,22 @@ class __PASCALCASE__Repository extends ServiceEntityRepository
     {
         parent::__construct($registry, __PASCALCASE__::class);
     }
+
+    public function save(__PASCALCASE__ $__CAMELCASE__, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($__CAMELCASE__);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(__PASCALCASE__ $__CAMELCASE__, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($__CAMELCASE__);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }
