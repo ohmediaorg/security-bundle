@@ -9,27 +9,42 @@ use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class __PASCALCASE__Voter extends EntityVoter
 {
-    public function __construct(__PASCALCASE__Provider $provider)
+    const CREATE = 'create';
+    const VIEW = 'view';
+    const EDIT = 'edit';
+    const DELETE = 'delete';
+
+    protected function getAttributes(): array
     {
-        $this->setProvider($provider);
+        return [
+            self::CREATE,
+            self::VIEW,
+            self::EDIT,
+            self::DELETE,
+        ];
     }
 
-    protected function canCreate(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
+    protected function getEntityClass(): string
+    {
+        return __PASCALCASE__::class;
+    }
+
+    protected function canCreate(__PASCALCASE__ $__CAMELCASE__, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canRead(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
+    protected function canView(__PASCALCASE__ $__CAMELCASE__, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canUpdate(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
+    protected function canEdit(__PASCALCASE__ $__CAMELCASE__, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canDelete(__PASCALCASE__ $__CAMELCASE__, User $loggedIn)
+    protected function canDelete(__PASCALCASE__ $__CAMELCASE__, User $loggedIn): bool
     {
         return true;
     }

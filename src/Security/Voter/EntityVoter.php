@@ -2,7 +2,6 @@
 
 namespace OHMedia\SecurityBundle\Security\Voter;
 
-use OHMedia\SecurityBundle\Entity\Entity;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Provider\AbstractEntityProvider;
 use LogicException;
@@ -13,59 +12,27 @@ use function Symfony\Component\String\u;
 
 abstract class EntityVoter extends Voter
 {
-    protected $provider;
-
-    protected function setProvider(AbstractEntityProvider $provider): self
-    {
-        $this->provider = $provider;
-
-        return $this;
-    }
+    abstract public function getAttributes(): array;
+    abstract public function getEntityClass(): array;
 
     public function supportsAttribute(string $attribute): bool
     {
-        $actions = $this->provider->getActions();
-
-        return in_array($attribute, $actions);
+        return in_array($attribute, $this->getAttributes());
     }
 
     public function supportsType(string $subjectType): bool
     {
-        return $subjectType === $this->provider->getEntityClass();
+        return $this->getEntityClass() === $subjectType;
     }
 
     protected function supports(string $attribute, $subject): bool
     {
-        return $subject instanceof Entity
-            && $this->supportsAttribute($attribute)
-            && $this->subjectSupported($subject);
+        $class = $this->getEntityClass();
+
+        return $subject instanceof $class && $this->supportsAttribute($attribute);
     }
 
-    protected function subjectSupported($subject): bool
-    {
-        $class = $this->provider->getEntityClass();
-
-        return $subject instanceof $class;
-    }
-
-    protected function isActionAccessibleByUser($action, User $loggedIn): bool
-    {
-        if ($loggedIn->isDeveloper()) {
-            return true;
-        }
-
-        $entityAction = $this->provider->getEntityAction($action);
-
-        foreach ($loggedIn->getUserRoles() as $role) {
-            if (in_array($entityAction, $role->getActions())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function voteOnAttribute($action, $entity, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $loggedIn = $token->getUser();
 
@@ -73,19 +40,70 @@ abstract class EntityVoter extends Voter
             return false;
         }
 
-        //if (!$this->isActionAccessibleByUser($action, $loggedIn)) {
-        //    return false;
-        //}
+        if (!$this->isAttributeAccessibleByUser($attribute, $loggedIn)) {
+            return false;
+        }
 
-        $method = 'can' . u($action)->camel()->title();
+        $method = 'can' . u($attribute)->camel()->title();
 
         if (method_exists($this, $method)) {
             return call_user_func_array(
                 [$this, $method],
-                [$entity, $loggedIn]
+                [$subject, $loggedIn]
             );
         }
 
         throw new LogicException(sprintf('Your voter "\%s" should implement %s()', static::class, $method));
+    }
+
+    protected function isAttributeAccessibleByUser(string $attribute, User $loggedIn): bool
+    {
+        if ($loggedIn->isDeveloper()) {
+            return true;
+        }
+
+        $entityAttribute = $this->getEntityAttribute($attribute);
+
+        foreach ($loggedIn->getUserRoles() as $role) {
+            if (in_array($entityAttribute, $role->getAttributes())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function getEntityAttributes(): array
+    {
+        $entityAttributes = [];
+
+        foreach ($this->getAttributes() as $attribute) {
+            $entityAttributes[] = $this->getEntityAttribute($attribute);
+        }
+
+        return $entityAttributes;
+    }
+
+    final public function getEntityAttribute(string $attribute): string
+    {
+        $className = $this->getClassName();
+
+        return sprintf('%s_%s', u($className)->snake(), $attribute);
+    }
+
+    final public function getClassName(): string
+    {
+        $entityName = explode('\\', $this->getEntityClass());
+
+        $entityName = array_pop($entityName);
+
+        return $entityName;
+    }
+
+    final public function getEntityName(): string
+    {
+        $className = $this->getClassName();
+
+        return u($className)->title(true);
     }
 }

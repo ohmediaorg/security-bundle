@@ -65,7 +65,7 @@ class BoilerplateCommand extends Command
             '__SNAKECASE__' => $snakeCase,
             '__PASCALCASE__' => $pascalCase,
             '__KEBABCASE__' => $kebabCase,
-            '__READABLE__' => $readable
+            '__READABLE__' => $readable,
         ];
 
         $this->find = array_keys($findReplace);
@@ -83,7 +83,6 @@ class BoilerplateCommand extends Command
         $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
         $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
         $formFile = sprintf('src/Form/%sType.php', $pascalCase);
-        $providerFile = sprintf('src/Provider/%sProvider.php', $pascalCase);
         $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
         $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
 
@@ -91,7 +90,6 @@ class BoilerplateCommand extends Command
             ->generateFile($entityTemplate, $entityFile)
             ->generateFile('Repository.php.tpl', $repositoryFile)
             ->generateFile('Form.php.tpl', $formFile)
-            ->generateFile('Provider.php.tpl', $providerFile)
             ->generateFile('Controller.php.tpl', $controllerFile)
             ->generateFile($voterTemplate, $voterFile)
         ;
