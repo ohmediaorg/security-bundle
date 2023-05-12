@@ -3,7 +3,6 @@
 namespace OHMedia\SecurityBundle\Security\Voter;
 
 use OHMedia\SecurityBundle\Entity\Entity;
-use OHMedia\SecurityBundle\Entity\Traits\Lockable as LockableTrait;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Provider\AbstractEntityProvider;
 use LogicException;
@@ -26,7 +25,6 @@ abstract class EntityVoter extends Voter
     public function supportsAttribute(string $attribute): bool
     {
         $actions = $this->provider->getActions();
-        $actions[] = 'unlock';
 
         return in_array($attribute, $actions);
     }
@@ -90,38 +88,4 @@ abstract class EntityVoter extends Voter
 
         throw new LogicException(sprintf('Your voter "\%s" should implement %s()', static::class, $method));
     }
-
-    final protected function canUnlock($entity, User $loggedIn): bool
-    {
-        if (!in_array(LockableTrait::class, class_uses($entity))) {
-            return false;
-        }
-
-        if ($loggedIn->isDeveloper()) {
-            return true;
-        }
-
-        if ($entity->isUserLocked($loggedIn) && !$entity->isUnlockable()) {
-            return false;
-        }
-
-        return $this->canUnlockEntity($entity, $loggedIn);
-    }
-
-    /**
-     * Override this for additional custom unlock checking
-     */
-    protected function canUnlockEntity($entity, User $loggedIn): bool
-    {
-        return true;
-    }
 }
-
-// TODO: look into passing fully-qualified class names as voter attributes
-
-/*interface VoterAttributeInterface
-{
-    public function getName(): string;
-    public function getDescription(): string;
-    public function vote(Entity $entity, EntityUser $user): bool;
-}*/

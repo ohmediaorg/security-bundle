@@ -15,8 +15,6 @@ use function Symfony\Component\String\u;
 
 abstract class EntityController extends AbstractController
 {
-    use Traits\LockingController;
-
     protected $ajax;
     protected $em;
     protected $entity;
@@ -49,10 +47,6 @@ abstract class EntityController extends AbstractController
     public function updateAction(Request $request)
     {
         $this->preActionSetup($request, 'update');
-
-        if ($locked = $this->doLocking()) {
-            return $this->redirectSaveAction();
-        }
 
         return $this->saveAction();
     }
@@ -177,10 +171,6 @@ abstract class EntityController extends AbstractController
         if ($this->isSubmitCancelled($form)) {
             $this->addFlashWarning($this->entityCancelSaveWarningMessage());
 
-            if (!$creating && $this->hasLockable()) {
-                $this->lockEntityRaw();
-            }
-
             return $this->redirectCancelAction();
         }
 
@@ -190,8 +180,6 @@ abstract class EntityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityPreSave($form);
-
-            $this->unlockEntity();
 
             $this->provider->save($this->entity);
 
@@ -315,11 +303,6 @@ abstract class EntityController extends AbstractController
         }
 
         return $entity;
-    }
-
-    protected function redirectUnlockAction()
-    {
-        return $this->redirectToAction('update');
     }
 
     /**
