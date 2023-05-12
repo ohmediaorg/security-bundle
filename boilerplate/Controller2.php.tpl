@@ -21,8 +21,8 @@ class __PASCALCASE__Controller extends AbstractController
     public function index(__PASCALCASE__Repository $__CAMELCASE__Repository): Response
     {
         $this->denyAccessUnlessGranted(
-            __PASCALCASE__Voter::CREATE,
-            $__CAMELCASE__,
+            __PASCALCASE__Voter::INDEX,
+            null,
             'You cannot create a new __READABLE__.'
         );
 
