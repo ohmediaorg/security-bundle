@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\<?= $singular['pascal_case'] ?>;
 use App\Repository\<?= $singular['pascal_case'] ?>Repository;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -54,14 +55,14 @@ class UserCreateCommand extends Command
         // if you need to populate more fields, ask for them here
         // or simply provide sensible defaults below
 
-        $<?= $singular['camel_case'] ?> = new <?= $singular['camel_case'] ?>();
+        $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
             $<?= $singular['camel_case'] ?>,
             $password
         );
 
-        $<?= $singular['camel_case'] ?>
+        $<?= $singular['camel_case'] . "\n" ?>
             ->setEmail($email)
             ->setPassword($hashedPassword)
             ->setDeveloper($developer)
