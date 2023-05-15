@@ -16,7 +16,7 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
     const EDIT = '<?= $singular['snake_case'] ?>_edit';
     const DELETE = '<?= $singular['snake_case'] ?>_delete';
 
-    protected function getAttributes(): array
+    public function getAttributes(): array
     {
         return [
             self::INDEX,
@@ -27,7 +27,7 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
         ];
     }
 
-    protected function getEntityClass(): string
+    public function getEntityClass(): string
     {
         return <?= $singular['pascal_case'] ?>::class;
     }
