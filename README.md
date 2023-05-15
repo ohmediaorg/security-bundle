@@ -96,13 +96,13 @@ to your User entity.
 
 # Entities
 
-Create your other entities class using the boilerplate command with no flag:
+Create your other entity classes using the boilerplate command with no flag:
 
 ```bash
 php bin/console ohmedia:security:boilerplate
 
  Class name of the entity:
- > MyEntity
+ > Post
 ```
 
 then add your custom fields using the maker command:
@@ -111,144 +111,62 @@ then add your custom fields using the maker command:
 $ php bin/console make:entity
 
  Class name of the entity to create or update (e.g. TinyGnome):
- > MyEntity
+ > Post
 ```
 
 You may want to represent some of these custom fields in the
-`App\Form\MyEntityType` class that was auto-generated.
+`App\Form\PostType` class that was auto-generated.
 
-## Custom Actions
+## Custom Attributes
 
-Add the custom action to your provider:
+Add the custom attribute to your voter:
 
 ```php
-// App/Provider/MyEntityProvider.php
+namespace App\Security\Voter;
 
-public function getCustomActions(): array
+use App\Entity\Post;
+use App\Entity\User;
+
+// ...
+
+class PostVoter extend Voter
 {
-    $actions = [
-        'my-custom-action',
-    ];
+    // NOTE: attribute value is prefixed for uniqueness
+    const PUBLISH = 'post_publish';
     
-    return $actions;
+    // ...
+
+    public static function getAttributes(): array
+    {
+        return [
+            // ...
+            'publish' => self::PUBLISH,
+        ];
+    }
+    
+    // ...
+    
+    // this function is expected to be the camel-case of 'can' . self::PUBLISH
+    protected function canPostPublish(Post $post, User $loggedIn): bool
+    {
+    }
 }
 ```
 
-By convention, this string should be kebab case.
-
-If you are using the default routes, you will need to handle this action in your
-controller. The name of the controller function should match the camel-cased of
-your action string appended by the word "Action".
+Utilize the custom attribute, like in a controller:
 
 ```php
-// App/Controller/MyEntityController.php
+// App/Controller/PostController.php
 
-public function myEntityActionAction(Request $request)
+#[Route('/post/{id}/publish', name: 'post_publish', methods: ['GET', 'POST'])]
+public function publish(Post $post, Request $request)
 {
-    $this->preActionSetup($request, 'my-entity-action');
+    $this->denyAccessUnlessGranted(
+        PostVoter::PUBLISH,
+        $post,
+        'You cannot publish this post.'
+    );
     
-    // preActionSetup() will call all the "voters" in the system
-    
-    // if preActionSetup() is successful, the following are available:
-    // $this->em - the entity manager
-    // $this->request - the current Request
-    // $this->user - the currently logged-in user
-    // $this->entity - the entity the action is being performed on
-    // $this->provider - your Provider class
-    
-    // do stuff
-    
-    return $this->render(...);
+    // ...
 }
-```
-
-Manage the permissions for this custom action in your voter. The name of the
-voter function should match the pascal-case of your action string prepend by
-the word "can".
-
-```php
-// App/Security/Voter/MyEntityVoter.php
-
-protected function canMyCustomAction(MyEntity $myEntity, User $loggedIn)
-{
-    // return true or false
-}
-```
-
-## Events
-
-The `EntityController` calls various overridable methods. These are:
-
-1. `entityPostFormBuild`
-1. `entityPreValidate`
-1. `entityPreSave`
-1. `entityPostSave`
-
-It may be tempting to put certain logic here. Keep in mind, these methods are
-only called for the create/update actions through your entity controller. The
-logic should only specifically apply to the controller.
-
-If you need certain things to happen no matter where your entity is saved, you
-should be hooking into Doctrine Events.
-
-If you need common logic for both your controller and your event subscriber, you
-can create common functions in your entity provider. The provider is already
-available in your controller, and can be injected into your subscriber.
-
-# Template Helpers
-
-## Rendering Entity Action Links 
-
-You can use twig helpers for rendering action links on existing entities.
-Links are only rendered if the voting passes.
-
-```twig
-{{ entity_action(action, entity, route, label, attributes) }}
-```
-
-These will only work if the value for 'action' is the same in both
-the route AND the voter.
-
-## Rendering Entity Create Links
-
-Determining if a 'create' link should be shown requires some setup,
-because you need to have an entity to pass to the voter.
-Just make sure not to persist that new entity!
-
-```php
-<?php
-
-use App\Provider\MyOtherEntityProvider;
-
-class MyEntityController extends EntityController {
-  
-  // ...
-  
-  public function someOtherAction(Request $request, OtherEntityProvider $otherEntityProvider)
-  {
-      // ...
-      
-      // to create a new entity matching this controller
-      $new_my_entity = $this->getEntityNew();
-      
-      // to create a new entity unrelated to this controller
-      // you can autowire its provider into the action
-      $new_other_entity = $otherEntityProvider->create();
-      
-      /// ...
-      
-  }
-}
-```
-
-then in the template:
-
-```twig
-{% if is_granted('create', new_entity) %}
-  {# render a link using the create route for this entity #}
-{% endif %}
-
-{% if is_granted('create', new_other_entity) %}
-  {# render a link using the create route for this entity #}
-{% endif %}
 ```
