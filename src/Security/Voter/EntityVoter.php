@@ -3,7 +3,6 @@
 namespace OHMedia\SecurityBundle\Security\Voter;
 
 use OHMedia\SecurityBundle\Entity\User;
-use OHMedia\SecurityBundle\Provider\AbstractEntityProvider;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

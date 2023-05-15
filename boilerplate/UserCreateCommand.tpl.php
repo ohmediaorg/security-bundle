@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Provider\<?= $singular['pascal_case'] ?>Provider;
+use App\Repository\<?= $singular['pascal_case'] ?>Repository;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +14,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserCreateCommand extends Command
 {
     private $passwordHasher;
-    private $<?= $singular['camel_case'] ?>Provider;
+    private $<?= $singular['camel_case'] ?>Repository;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
-        <?= $singular['pascal_case'] ?>Provider $<?= $singular['camel_case'] ?>Provider
+        <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
     )
     {
         $this->passwordHasher = $passwordHasher;
-        $this-><?= $singular['camel_case'] ?>Provider = $<?= $singular['camel_case'] ?>Provider;
+        $this-><?= $singular['camel_case'] ?>Repository = $<?= $singular['camel_case'] ?>Repository;
 
         parent::__construct();
     }
@@ -54,7 +54,7 @@ class UserCreateCommand extends Command
         // if you need to populate more fields, ask for them here
         // or simply provide sensible defaults below
 
-        $<?= $singular['camel_case'] ?> = $this-><?= $singular['camel_case'] ?>Provider->create();
+        $<?= $singular['camel_case'] ?> = new <?= $singular['camel_case'] ?>();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
             $<?= $singular['camel_case'] ?>,
@@ -71,7 +71,7 @@ class UserCreateCommand extends Command
         ;
 
         try {
-            $this-><?= $singular['camel_case'] ?>Provider->save($<?= $singular['camel_case'] ?>);
+            $this-><?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
         } catch(Exception $e) {
             $this->io->error($e->getMessage());
 
