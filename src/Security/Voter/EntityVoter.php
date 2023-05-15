@@ -28,6 +28,10 @@ abstract class EntityVoter extends Voter
     {
         $class = $this->getEntityClass();
 
+        if (!$subject && $attribute === static::INDEX) {
+            return true;
+        }
+
         return $subject instanceof $class && $this->supportsAttribute($attribute);
     }
 
