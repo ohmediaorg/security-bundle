@@ -59,8 +59,8 @@ class BoilerplateCommand extends Command
             return Command::INVALID;
         }
 
-        $singular = $this->inflector->singularize($className);
-        $plural = $this->inflector->pluralize($className);
+        $singular = $this->inflector->singularize($className)[0];
+        $plural = $this->inflector->pluralize($className)[0];
 
         $this->parameters = [
             'singular' => $this->generateCases($singular),
@@ -113,7 +113,7 @@ class BoilerplateCommand extends Command
         ];
     }
 
-    private function generateFile(string $template, string $destination, array $parameters)
+    private function generateFile(string $template, string $destination)
     {
         $absoluteDestination = $this->projectDir . $destination;
 
