@@ -1,8 +1,8 @@
-<?php
+<?= "<?php\n" ?>
 
 namespace App\Command;
 
-use App\Provider\__PASCALCASE__Provider;
+use App\Provider\<?= $singular['pascal_case'] ?>Provider;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +14,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserCreateCommand extends Command
 {
     private $passwordHasher;
-    private $__CAMELCASE__Provider;
+    private $<?= $singular['camel_case'] ?>Provider;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
-        __PASCALCASE__Provider $__CAMELCASE__Provider
+        <?= $singular['pascal_case'] ?>Provider $<?= $singular['camel_case'] ?>Provider
     )
     {
         $this->passwordHasher = $passwordHasher;
-        $this->__CAMELCASE__Provider = $__CAMELCASE__Provider;
+        $this-><?= $singular['camel_case'] ?>Provider = $<?= $singular['camel_case'] ?>Provider;
 
         parent::__construct();
     }
@@ -54,14 +54,14 @@ class UserCreateCommand extends Command
         // if you need to populate more fields, ask for them here
         // or simply provide sensible defaults below
 
-        $__CAMELCASE__ = $this->__CAMELCASE__Provider->create();
+        $<?= $singular['camel_case'] ?> = $this-><?= $singular['camel_case'] ?>Provider->create();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
-            $__CAMELCASE__,
+            $<?= $singular['camel_case'] ?>,
             $password
         );
 
-        $__CAMELCASE__
+        $<?= $singular['camel_case'] ?>
             ->setEmail($email)
             ->setPassword($hashedPassword)
             ->setDeveloper($developer)
@@ -71,7 +71,7 @@ class UserCreateCommand extends Command
         ;
 
         try {
-            $this->__CAMELCASE__Provider->save($__CAMELCASE__);
+            $this-><?= $singular['camel_case'] ?>Provider->save($<?= $singular['camel_case'] ?>);
         } catch(Exception $e) {
             $this->io->error($e->getMessage());
 
