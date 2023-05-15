@@ -19,6 +19,7 @@ class BoilerplateCommand extends Command
     private Filesystem $filesystem;
     private EnglishInflector $inflector;
     private array $parameters;
+    private SymfonyStyle $io;
 
     public function __construct(string $projectDir)
     {
