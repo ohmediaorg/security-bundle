@@ -68,6 +68,32 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         return $this->form($request, $<?= $singular['camel_case'] ?>, $<?= $singular['camel_case'] ?>Repository);
     }
 
+    private function form(
+        Request $request,
+        <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
+        <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
+    ): Response
+    {
+        $form = $this->createForm(<?= $singular['pascal_case'] ?>Type::class, $<?= $singular['camel_case'] ?>);
+
+        $form->add('submit', SubmitType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $<?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
+
+            $this->addFlashSuccess('Changes to the <?= $singular['readable'] ?> were saved successfully.');
+
+            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
+        }
+
+        return $this->render('<?= $singular['camel_case'] ?>/form.html.twig', [
+            'form' => $form->createView(),
+            '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
+        ]);
+    }
+
     #[Route('/<?= $singular['kebab_case'] ?>/{id}/delete', name: '<?= $singular['snake_case'] ?>_delete', methods: ['GET', 'POST'])]
     public function delete(
         Request $request,
@@ -96,32 +122,6 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         }
 
         return $this->render('<?= $singular['camel_case'] ?>/delete.html.twig', [
-            'form' => $form->createView(),
-            '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
-        ]);
-    }
-
-    private function form(
-        Request $request,
-        <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
-        <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
-    ): Response
-    {
-        $form = $this->createForm(<?= $singular['pascal_case'] ?>Type::class, $<?= $singular['camel_case'] ?>);
-
-        $form->add('submit', SubmitType::class);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $<?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
-
-            $this->addFlashSuccess('Changes to the <?= $singular['readable'] ?> were saved successfully.');
-
-            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
-        }
-
-        return $this->render('<?= $singular['camel_case'] ?>/form.html.twig', [
             'form' => $form->createView(),
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
