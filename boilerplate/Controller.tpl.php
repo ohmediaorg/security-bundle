@@ -30,7 +30,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         $<?= $plural['camel_case'] ?> = $<?= $singular['camel_case'] ?>Repository->findAll();
 
         return $this->render('<?= $singular['camel_case'] ?>/index.html.twig', [
-            '<?= $plural['kebab_case'] ?>' => $<?= $plural['camel_case'] ?>,
+            '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
         ]);
     }
 
@@ -97,7 +97,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
         return $this->render('<?= $singular['camel_case'] ?>/delete.html.twig', [
             'form' => $form->createView(),
-            '<?= $singular['kebab_case'] ?>' => $<?= $singular['camel_case'] ?>,
+            '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
     }
 
@@ -123,7 +123,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
         return $this->render('<?= $singular['camel_case'] ?>/form.html.twig', [
             'form' => $form->createView(),
-            '<?= $singular['kebab_case'] ?>' => $<?= $singular['camel_case'] ?>,
+            '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
     }
 }
