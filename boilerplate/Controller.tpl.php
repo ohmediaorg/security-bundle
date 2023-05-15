@@ -31,6 +31,8 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
         return $this->render('<?= $singular['camel_case'] ?>/index.html.twig', [
             '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
+            'new_<?= $singular['snake_case'] ?>' => new <?= $singular['pascal_case'] ?>(),
+            'attributes' => <?= $singular['pascal_case'] ?>Voter::getAttributes(),
         ]);
     }
 

@@ -16,14 +16,14 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
     const EDIT = '<?= $singular['snake_case'] ?>_edit';
     const DELETE = '<?= $singular['snake_case'] ?>_delete';
 
-    public function getAttributes(): array
+    public static function getAttributes(): array
     {
         return [
-            self::INDEX,
-            self::CREATE,
-            self::VIEW,
-            self::EDIT,
-            self::DELETE,
+            'index' => self::INDEX,
+            'create' => self::CREATE,
+            'view' => self::VIEW,
+            'edit' => self::EDIT,
+            'delete' => self::DELETE,
         ];
     }
 
