@@ -53,21 +53,6 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         return $this->form($request, $<?= $singular['camel_case'] ?>, $<?= $singular['camel_case'] ?>Repository);
     }
 
-    #[Route('/<?= $singular['kebab_case'] ?>/{id}', name: '<?= $singular['snake_case'] ?>_view', methods: ['GET'])]
-    public function view(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>): Response
-    {
-        $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>Voter::VIEW,
-            $<?= $singular['camel_case'] ?>,
-            'You cannot view this <?= $singular['readable'] ?>.'
-        );
-
-        return $this->render('<?= $singular['camel_case'] ?>/view.html.twig', [
-            'form' => $form->createView(),
-            '<?= $singular['kebab_case'] ?>' => $<?= $singular['camel_case'] ?>,
-        ]);
-    }
-
     #[Route('/<?= $singular['kebab_case'] ?>/{id}/edit', name: '<?= $singular['snake_case'] ?>_edit', methods: ['GET', 'POST'])]
     public function edit(
         Connection $connection,
@@ -135,9 +120,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
             $this->addFlashSuccess('Changes to the <?= $singular['readable'] ?> were saved successfully.');
 
-            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_view', [
-                'id' => $<?= $singular['camel_case'] ?>->getId(),
-            ]);
+            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
         }
 
         return $this->render('<?= $singular['camel_case'] ?>/form.html.twig', [
