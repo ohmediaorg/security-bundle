@@ -32,7 +32,7 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
         return <?= $singular['pascal_case'] ?>::class;
     }
 
-    protected function can<?= $singular['pascal_case'] ?>Index(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    protected function can<?= $singular['pascal_case'] ?>Index(User $loggedIn): bool
     {
         return true;
     }

@@ -49,14 +49,21 @@ abstract class EntityVoter extends Voter
 
         $method = 'can' . u($attribute)->camel()->title();
 
-        if (method_exists($this, $method)) {
+        if (!method_exists($this, $method)) {
+            throw new LogicException(sprintf('Your voter "\%s" should implement %s()', static::class, $method));
+        }
+
+        if ($attribute === static::INDEX) {
             return call_user_func_array(
                 [$this, $method],
-                [$subject, $loggedIn]
+                [$loggedIn]
             );
         }
 
-        throw new LogicException(sprintf('Your voter "\%s" should implement %s()', static::class, $method));
+        return call_user_func_array(
+            [$this, $method],
+            [$subject, $loggedIn]
+        );
     }
 
     protected function isAttributeAccessibleByUser(string $attribute, User $loggedIn): bool
