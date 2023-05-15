@@ -21,9 +21,11 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     #[Route('/<?= $plural['kebab_case'] ?>', name: '<?= $singular['snake_case'] ?>_index', methods: ['GET'])]
     public function index(<?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository): Response
     {
+        $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
+
         $this->denyAccessUnlessGranted(
             <?= $singular['pascal_case'] ?>Voter::INDEX,
-            null,
+            $<?= $singular['camel_case'] ?>,
             'You cannot access the list of <?= $plural['readable'] ?>.'
         );
 

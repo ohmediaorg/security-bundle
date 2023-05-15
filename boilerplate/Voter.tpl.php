@@ -6,11 +6,11 @@ use App\Entity\<?= $singular['pascal_case'] ?>;
 <?php if (!$is_user) { ?>
 use App\Entity\User;
 <?php } ?>
-use App\Provider\<?= $singular['pascal_case'] ?>Provider;
 use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
 {
+    const INDEX = 'index';
     const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
@@ -19,6 +19,7 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
     protected function getAttributes(): array
     {
         return [
+            self::INDEX,
             self::CREATE,
             self::VIEW,
             self::EDIT,
@@ -29,6 +30,11 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
     protected function getEntityClass(): string
     {
         return <?= $singular['pascal_case'] ?>::class;
+    }
+
+    protected function canIndex(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    {
+        return true;
     }
 
     protected function canCreate(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
