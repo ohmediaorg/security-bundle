@@ -60,7 +60,7 @@ class BoilerplateCommand extends Command
         }
 
         $singular = $this->inflector->singularize($className)[0];
-        $plural = $this->inflector->pluralize($className)[0];
+        $plural = $this->inflector->pluralize($singular)[0];
 
         $this->parameters = [
             'singular' => $this->generateCases($singular),
@@ -100,9 +100,9 @@ class BoilerplateCommand extends Command
     {
         $camelCase = u($word)->camel();
         $snakeCase = u($word)->snake();
-        $pascalCase = u($word)->title();
-        $kebabCase = u($word)->replace('_', '-');
-        $readable = u($word)->replace('_', ' ');
+        $pascalCase = u($camelCase)->title();
+        $kebabCase = u($snakeCase)->replace('_', '-');
+        $readable = u($snakeCase)->replace('_', ' ');
 
         return [
             'camel_case' => $camelCase,
