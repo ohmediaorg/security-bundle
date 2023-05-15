@@ -36,7 +36,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         ]);
     }
 
-    #[Route('/<?= $singular['kebab_case'] ?>/create', name: '<?= $singular['snake_case'] ?>_create', methods: ['GET', 'PUT'])]
+    #[Route('/<?= $singular['kebab_case'] ?>/create', name: '<?= $singular['snake_case'] ?>_create', methods: ['GET', 'POST'])]
     public function create(
         Request $request,
         <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
@@ -125,10 +125,6 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     ): Response
     {
         $form = $this->createForm(<?= $singular['pascal_case'] ?>Type::class, $<?= $singular['camel_case'] ?>);
-
-        if (!$<?= $singular['camel_case'] ?>->getId()) {
-            $form->setMethod('PUT');
-        }
 
         $form->add('submit', SubmitType::class);
 
