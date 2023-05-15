@@ -63,8 +63,8 @@ class BoilerplateCommand extends Command
         $plural = $this->inflector->pluralize($singular)[0];
 
         $this->parameters = [
-            'singular' => $this->generateCases($singular),
-            'plural' => $this->generateCases($plural),
+            'singular' => $this->generateParameters($singular),
+            'plural' => $this->generateParameters($plural),
             'is_user' => $isUser,
         ];
 
@@ -96,7 +96,7 @@ class BoilerplateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function generateCases(string $word)
+    private function generateParameters(string $word)
     {
         $camelCase = u($word)->camel();
         $snakeCase = u($word)->snake();
