@@ -53,7 +53,6 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
     #[Route('/<?= $singular['kebab_case'] ?>/{id}/edit', name: '<?= $singular['snake_case'] ?>_edit', methods: ['GET', 'POST'])]
     public function edit(
-        Connection $connection,
         Request $request,
         <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
         <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository

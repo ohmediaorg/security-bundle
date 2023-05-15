@@ -12,7 +12,7 @@ use function Symfony\Component\String\u;
 abstract class EntityVoter extends Voter
 {
     abstract public function getAttributes(): array;
-    abstract public function getEntityClass(): array;
+    abstract public function getEntityClass(): string;
 
     public function supportsAttribute(string $attribute): bool
     {
@@ -21,7 +21,7 @@ abstract class EntityVoter extends Voter
 
     public function supportsType(string $subjectType): bool
     {
-        return $this->getEntityClass() === $subjectType;
+        return 'null' === $subjectType || $this->getEntityClass() === $subjectType;
     }
 
     protected function supports(string $attribute, $subject): bool
