@@ -119,36 +119,27 @@ You may want to represent some of these custom fields in the
 
 ## Custom Attributes
 
-Add the custom attribute to your voter:
+Create a new voter for the custom attribute:
 
 ```php
-namespace App\Security\Voter;
+<?php
+
+namespace App\Security\Voter\Post;
 
 use App\Entity\Post;
-use App\Entity\User;
+use OHMedia\SecurityBundle\Entity\User as EntityUser;
+use OHMedia\SecurityBundle\Security\Voter\SingleAttributeVoter;
 
-// ...
-
-class PostVoter extend Voter
+class PostPublishVoter extends SingleAttributeVoter
 {
-    // NOTE: attribute value is prefixed for uniqueness
-    const PUBLISH = 'post_publish';
-    
-    // ...
-
-    public static function getAttributes(): array
+    protected function getSubjectType(): string
     {
-        return [
-            // ...
-            'publish' => self::PUBLISH,
-        ];
+        return Post::class;
     }
-    
-    // ...
-    
-    // this function is expected to be the camel-case of 'can' . self::PUBLISH
-    protected function canPostPublish(Post $post, User $loggedIn): bool
+
+    protected function voteOnSubject($post, EntityUser $loggedIn): bool
     {
+        return $post->isApproved() && !$post->isPublished();
     }
 }
 ```
@@ -158,11 +149,15 @@ Utilize the custom attribute, like in a controller:
 ```php
 // App/Controller/PostController.php
 
+use App\Security\Voter\Post\PostPublishVoter;
+
+// ...
+
 #[Route('/post/{id}/publish', name: 'post_publish', methods: ['GET', 'POST'])]
 public function publish(Post $post, Request $request)
 {
     $this->denyAccessUnlessGranted(
-        PostVoter::PUBLISH,
+        PostPublishVoter::class,
         $post,
         'You cannot publish this post.'
     );
