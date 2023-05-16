@@ -16,20 +16,21 @@ abstract class SingleAttributeVoter extends Voter
         return static::class === $attribute;
     }
 
-    public function supportsType(string $subjectType): bool
-    {
-        return $this->getSubjectType() === $subjectType;
-    }
-
     protected function supports(string $attribute, $subject): bool
     {
         if (!$this->supportsAttribute($attribute)) {
             return false;
         }
 
-        $subjectString = \is_object($subject) ? \get_class($subject) : get_debug_type($subject);
+        $subjectString = \is_object($subject)
+            ? \get_class($subject)
+            : (\is_string($subject)
+                ? $subject
+                : get_debug_type($subject)
+            )
+        ;
 
-        return $this->supportsType($subjectString);
+        return $this->getSubjectType() === $subjectString;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool

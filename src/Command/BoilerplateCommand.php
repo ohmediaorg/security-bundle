@@ -71,7 +71,8 @@ class BoilerplateCommand extends Command
         $pascalCase = $parameters['singular']['pascal_case'];
 
         $parameters['has_view_route'] = $this->io->confirm(sprintf(
-            'Does this entity require a view route? (eg. /%s/{id})',
+            'Does the %s entity require a view route? (eg. /%s/{id})',
+            $pascalCase,
             $parameters['singular']['kebab_case']
         ), false);
 
@@ -79,7 +80,7 @@ class BoilerplateCommand extends Command
         $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
         $formFile = sprintf('src/Form/%sType.php', $pascalCase);
         $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
-        $indexVoterFile = sprintf('src/Security/Voter/%sIndexVoter.php', $pascalCase);
+        $indexVoterFile = sprintf('src/Security/Voter/%s/%sIndexVoter.php', $pascalCase, $pascalCase);
 
         $this
             ->generateFile('Entity.tpl.php', $entityFile, $parameters)
@@ -96,7 +97,12 @@ class BoilerplateCommand extends Command
         }
 
         foreach ($cruds as $crud) {
-            $crudVoterFile = sprintf('src/Security/Voter/%s%sVoter.php', $pascalCase, $crud);
+            $crudVoterFile = sprintf(
+                'src/Security/Voter/%s/%s%sVoter.php',
+                $pascalCase,
+                $pascalCase,
+                $crud
+            );
 
             $parameters['crud'] = $crud;
 
@@ -107,7 +113,8 @@ class BoilerplateCommand extends Command
             $this
                 ->generateFile(
                     'UserCreateCommand.tpl.php',
-                    'src/Command/UserCreateCommand.php'
+                    'src/Command/UserCreateCommand.php',
+                    $parameters
                 )
             ;
         }

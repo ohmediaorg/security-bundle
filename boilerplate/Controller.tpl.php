@@ -5,13 +5,15 @@ namespace App\Controller;
 use App\Entity\<?= $singular['pascal_case'] ?>;
 use App\Form\<?= $singular['pascal_case'] ?>Type;
 use App\Repository\<?= $singular['pascal_case'] ?>Repository;
-use App\Security\Voter\<?= $singular['pascal_case'] ?>CreateVoter;
-use App\Security\Voter\<?= $singular['pascal_case'] ?>DeleteVoter;
-use App\Security\Voter\<?= $singular['pascal_case'] ?>EditVoter;
-use App\Security\Voter\<?= $singular['pascal_case'] ?>IndexVoter;
-<?php if ($has_view_route) { ?>
-use App\Security\Voter\<?= $singular['pascal_case'] ?>ViewVoter;
-<?php } ?>
+use App\Security\Voter\<?= $singular['pascal_case'] ?>\{
+    <?= $singular['pascal_case'] ?>CreateVoter,
+    <?= $singular['pascal_case'] ?>DeleteVoter,
+    <?= $singular['pascal_case'] ?>EditVoter,
+    <?= $singular['pascal_case'] ?>IndexVoter,
+    <?php if ($has_view_route) { ?>
+    <?= $singular['pascal_case'] ?>ViewVoter,
+    <?php } ?>
+};
 use OHMedia\SecurityBundle\Controller\Traits\BootstrapFlashController;
 use OHMedia\SecurityBundle\Form\DeleteType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +40,14 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_index.html.twig', [
             '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
             'new_<?= $singular['snake_case'] ?>' => new <?= $singular['pascal_case'] ?>(),
-            'attributes' => <?= $singular['pascal_case'] ?>Voter::getAttributes(),
+            'attributes' => [
+                'create' => <?= $singular['pascal_case'] ?>CreateVoter::class,
+                'delete' => <?= $singular['pascal_case'] ?>DeleteVoter::class,
+                'edit' => <?= $singular['pascal_case'] ?>EditVoter::class,
+                <?php if ($has_view_route) { ?>
+                'view' => <?= $singular['pascal_case'] ?>ViewVoter::class,
+                <?php } ?>
+            ],
         ]);
     }
 

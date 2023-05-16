@@ -1,9 +1,9 @@
 <?= "<?php\n" ?>
 
-namespace App\Security\Voter;
+namespace App\Security\Voter\<?= $singular['pascal_case'] ?>;
 
 use App\Entity\<?= $singular['pascal_case'] ?>;
-use OHMedia\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Entity\User as EntityUser;
 use OHMedia\SecurityBundle\Security\Voter\SingleAttributeVoter;
 
 class <?= $singular['pascal_case'] ?>IndexVoter extends SingleAttributeVoter
@@ -13,7 +13,7 @@ class <?= $singular['pascal_case'] ?>IndexVoter extends SingleAttributeVoter
         return <?= $singular['pascal_case'] ?>::class;
     }
 
-    protected function voteOnSubject($<?= $singular['camel_case'] ?>, User $user): bool
+    protected function voteOnSubject($subject, EntityUser $loggedIn): bool
     {
         return true;
     }
