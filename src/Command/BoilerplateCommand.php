@@ -18,7 +18,6 @@ class BoilerplateCommand extends Command
     private string $projectDir;
     private Filesystem $filesystem;
     private EnglishInflector $inflector;
-    private array $parameters;
     private SymfonyStyle $io;
 
     public function __construct(string $projectDir)
@@ -63,27 +62,46 @@ class BoilerplateCommand extends Command
         $singular = $this->inflector->singularize($className)[0];
         $plural = $this->inflector->pluralize($singular)[0];
 
-        $this->parameters = [
+        $parameters = [
             'singular' => $this->generateParameters($singular),
             'plural' => $this->generateParameters($plural),
             'is_user' => $isUser,
         ];
 
-        $pascalCase = $this->parameters['singular']['pascal_case'];
+        $pascalCase = $parameters['singular']['pascal_case'];
+
+        $parameters['has_view_route'] = $this->io->confirm(sprintf(
+            'Does this entity require a view route? (eg. /%s/{id})',
+            $parameters['singular']['kebab_case']
+        ), false);
 
         $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
         $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
         $formFile = sprintf('src/Form/%sType.php', $pascalCase);
         $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
-        $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
+        $indexVoterFile = sprintf('src/Security/Voter/%sIndexVoter.php', $pascalCase);
 
         $this
-            ->generateFile('Entity.tpl.php', $entityFile)
-            ->generateFile('Repository.tpl.php', $repositoryFile)
-            ->generateFile('Form.tpl.php', $formFile)
-            ->generateFile('Controller.tpl.php', $controllerFile)
-            ->generateFile('Voter.tpl.php', $voterFile)
+            ->generateFile('Entity.tpl.php', $entityFile, $parameters)
+            ->generateFile('Repository.tpl.php', $repositoryFile, $parameters)
+            ->generateFile('Form.tpl.php', $formFile, $parameters)
+            ->generateFile('Controller.tpl.php', $controllerFile, $parameters)
+            ->generateFile('IndexVoter.tpl.php', $indexVoterFile, $parameters)
         ;
+
+        $cruds = ['Create', 'Edit', 'Delete'];
+
+        if ($parameters['has_view_route']) {
+            $cruds [] = 'View';
+        }
+
+        foreach ($cruds as $crud) {
+            $crudVoterFile = sprintf('src/Security/Voter/%s%sVoter.php', $pascalCase, $crud);
+
+            $parameters['crud'] = $crud;
+
+            $this->generateFile('CrudVoter.tpl.php', $crudVoterFile, $parameters);
+        }
 
         if ($isUser) {
             $this
@@ -114,7 +132,7 @@ class BoilerplateCommand extends Command
         ];
     }
 
-    private function generateFile(string $template, string $destination)
+    private function generateFile(string $template, string $destination, array $parameters)
     {
         $absoluteDestination = $this->projectDir . $destination;
 
@@ -131,7 +149,7 @@ class BoilerplateCommand extends Command
 
         ob_start();
 
-        extract($this->parameters);
+        extract($parameters);
 
         include $this->templateDir . $template;
 

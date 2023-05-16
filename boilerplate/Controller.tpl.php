@@ -5,7 +5,13 @@ namespace App\Controller;
 use App\Entity\<?= $singular['pascal_case'] ?>;
 use App\Form\<?= $singular['pascal_case'] ?>Type;
 use App\Repository\<?= $singular['pascal_case'] ?>Repository;
-use App\Security\Voter\<?= $singular['pascal_case'] ?>Voter;
+use App\Security\Voter\<?= $singular['pascal_case'] ?>CreateVoter;
+use App\Security\Voter\<?= $singular['pascal_case'] ?>DeleteVoter;
+use App\Security\Voter\<?= $singular['pascal_case'] ?>EditVoter;
+use App\Security\Voter\<?= $singular['pascal_case'] ?>IndexVoter;
+<?php if ($has_view_route) { ?>
+use App\Security\Voter\<?= $singular['pascal_case'] ?>ViewVoter;
+<?php } ?>
 use OHMedia\SecurityBundle\Controller\Traits\BootstrapFlashController;
 use OHMedia\SecurityBundle\Form\DeleteType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,14 +28,14 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     public function index(<?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>Voter::INDEX,
-            null,
+            <?= $singular['pascal_case'] ?>IndexVoter::class,
+            <?= $singular['pascal_case'] ?>::class,
             'You cannot access the list of <?= $plural['readable'] ?>.'
         );
 
         $<?= $plural['camel_case'] ?> = $<?= $singular['camel_case'] ?>Repository->findAll();
 
-        return $this->render('<?= $singular['camel_case'] ?>/index.html.twig', [
+        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_index.html.twig', [
             '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
             'new_<?= $singular['snake_case'] ?>' => new <?= $singular['pascal_case'] ?>(),
             'attributes' => <?= $singular['pascal_case'] ?>Voter::getAttributes(),
@@ -45,13 +51,29 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
 
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>Voter::CREATE,
+            <?= $singular['pascal_case'] ?>CreateVoter::class,
             $<?= $singular['camel_case'] ?>,
             'You cannot create a new <?= $singular['readable'] ?>.'
         );
 
         return $this->form($request, $<?= $singular['camel_case'] ?>, $<?= $singular['camel_case'] ?>Repository);
     }
+
+    <?php if ($has_view_route) { ?>
+    #[Route('/<?= $singular['kebab_case'] ?>/{id}', name: '<?= $singular['snake_case'] ?>_view', methods: ['GET'])]
+    public function view(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>): Response
+    {
+        $this->denyAccessUnlessGranted(
+            <?= $singular['pascal_case'] ?>ViewVoter::class,
+            $<?= $singular['camel_case'] ?>,
+            'You cannot view this <?= $singular['readable'] ?>.'
+        );
+
+        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_view.html.twig', [
+            '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
+        ]);
+    }
+    <?php } ?>
 
     #[Route('/<?= $singular['kebab_case'] ?>/{id}/edit', name: '<?= $singular['snake_case'] ?>_edit', methods: ['GET', 'POST'])]
     public function edit(
@@ -86,10 +108,16 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
             $this->addFlashSuccess('Changes to the <?= $singular['readable'] ?> were saved successfully.');
 
+            <?php if ($has_view_route) { ?>
+            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_view', [
+                'id' => $<?= $singular['camel_case'] ?>->getId(),
+            ]);
+            <?php } else { ?>
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
+            <?php } ?>
         }
 
-        return $this->render('<?= $singular['camel_case'] ?>/form.html.twig', [
+        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_form.html.twig', [
             'form' => $form->createView(),
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
@@ -122,7 +150,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
         }
 
-        return $this->render('<?= $singular['camel_case'] ?>/delete.html.twig', [
+        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_delete.html.twig', [
             'form' => $form->createView(),
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
