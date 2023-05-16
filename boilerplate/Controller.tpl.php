@@ -10,9 +10,9 @@ use App\Security\Voter\<?= $singular['pascal_case'] ?>\{
     <?= $singular['pascal_case'] ?>DeleteVoter,
     <?= $singular['pascal_case'] ?>EditVoter,
     <?= $singular['pascal_case'] ?>IndexVoter,
-    <?php if ($has_view_route) { ?>
+<?php if ($has_view_route) { ?>
     <?= $singular['pascal_case'] ?>ViewVoter,
-    <?php } ?>
+<?php } ?>
 };
 use OHMedia\SecurityBundle\Controller\Traits\BootstrapFlashController;
 use OHMedia\SecurityBundle\Form\DeleteType;
@@ -44,9 +44,9 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
                 'create' => <?= $singular['pascal_case'] ?>CreateVoter::class,
                 'delete' => <?= $singular['pascal_case'] ?>DeleteVoter::class,
                 'edit' => <?= $singular['pascal_case'] ?>EditVoter::class,
-                <?php if ($has_view_route) { ?>
+<?php if ($has_view_route) { ?>
                 'view' => <?= $singular['pascal_case'] ?>ViewVoter::class,
-                <?php } ?>
+<?php } ?>
             ],
         ]);
     }
@@ -92,7 +92,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     ): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>Voter::EDIT,
+            <?= $singular['pascal_case'] ?>EditVoter::class,
             $<?= $singular['camel_case'] ?>,
             'You cannot edit this <?= $singular['readable'] ?>.'
         );
@@ -117,13 +117,13 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
             $this->addFlashSuccess('Changes to the <?= $singular['readable'] ?> were saved successfully.');
 
-            <?php if ($has_view_route) { ?>
+<?php if ($has_view_route) { ?>
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_view', [
                 'id' => $<?= $singular['camel_case'] ?>->getId(),
             ]);
-            <?php } else { ?>
+<?php } else { ?>
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
-            <?php } ?>
+<?php } ?>
         }
 
         return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_form.html.twig', [
@@ -140,7 +140,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     ): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>Voter::DELETE,
+            <?= $singular['pascal_case'] ?>DeleteVoter::class,
             $<?= $singular['camel_case'] ?>,
             'You cannot delete this <?= $singular['readable'] ?>.'
         );
