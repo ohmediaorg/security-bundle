@@ -133,7 +133,6 @@ use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 class PostVoter extends EntityVoter
 {
     // ...
-    
     const PUBLISH = self::ATTRIBUTE_PREFIX . 'publish';
     
     // ...
@@ -146,7 +145,14 @@ class PostVoter extends EntityVoter
 
 ```
 
-Then utilize the new constant in a controller:
+Here, the suffix is "publish" and the corresponding function is `canPublish`.
+
+If you had `const APPROVE_ALL = self::ATTRIBUTE_PREFIX . 'approve_all';`, the
+corresponding function would be `canApproveAll` because of the suffix "approve_all".
+
+## Voter Attribute Constants
+
+Utilizing voter constants in a controller:
 
 ```php
 // App/Controller/PostController.php
@@ -168,7 +174,7 @@ public function publish(Post $post, Request $request)
 }
 ```
 
-Or in a template:
+Utilizing voter constants in a template:
 
 ```twig
 {% set publish_attribute = constant('App\\Security\\Voter\\PostVoter::PUBLISH') %}
