@@ -60,7 +60,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         return $this->form($request, $<?= $singular['camel_case'] ?>, $<?= $singular['camel_case'] ?>Repository);
     }
 
-    <?php if ($has_view_route) { ?>
+<?php if ($has_view_route) { ?>
     #[Route('/<?= $singular['kebab_case'] ?>/{id}', name: '<?= $singular['snake_case'] ?>_view', methods: ['GET'])]
     public function view(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>): Response
     {
@@ -74,7 +74,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
     }
-    <?php } ?>
+<?php } ?>
 
     #[Route('/<?= $singular['kebab_case'] ?>/{id}/edit', name: '<?= $singular['snake_case'] ?>_edit', methods: ['GET', 'POST'])]
     public function edit(

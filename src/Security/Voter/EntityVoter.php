@@ -11,8 +11,8 @@ use function Symfony\Component\String\u;
 
 abstract class EntityVoter extends Voter
 {
-    protected function getEntityClass(): string;
-    protected function getAttributes(): array;
+    abstract protected function getEntityClass(): string;
+    abstract protected function getAttributes(): array;
 
     public function supportsAttribute(string $attribute): bool
     {

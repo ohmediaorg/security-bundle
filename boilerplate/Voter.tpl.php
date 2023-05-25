@@ -1,6 +1,6 @@
 <?= "<?php\n" ?>
 
-namespace App\Security\Voter\<?= $singular['pascal_case'] ?>;
+namespace App\Security\Voter;
 
 use App\Entity\<?= $singular['pascal_case'] ?>;
 use OHMedia\SecurityBundle\Entity\User as EntityUser;
