@@ -12,11 +12,10 @@ use function Symfony\Component\String\u;
 abstract class EntityVoter extends Voter
 {
     abstract protected function getEntityClass(): string;
-    abstract protected function getAttributes(): array;
 
     public function supportsAttribute(string $attribute): bool
     {
-        return in_array($attribute, $this->getAttributes());
+        return str_starts_with($attribute, static::ATTRIBUTE_PREFIX);
     }
 
     public function supportsType(string $subjectType): bool
@@ -32,10 +31,10 @@ abstract class EntityVoter extends Voter
 
         $class = $this->getEntityClass();
 
-        return $subject instanceof $class || $subject === $class;
+        return $subject instanceof $class;
     }
 
-    protected function voteOnAttribute($action, $entity, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $loggedIn = $token->getUser();
 
@@ -43,7 +42,11 @@ abstract class EntityVoter extends Voter
             return false;
         }
 
-        $method = 'can' . u($action)->camel()->title();
+        $regex = '/^' . preg_quote(static::ATTRIBUTE_PREFIX) . '/';
+
+        $attribute = preg_replace($regex, '', $attribute);
+
+        $method = 'can' . u($attribute)->camel()->title();
 
         if (!method_exists($this, $method)) {
             throw new LogicException(sprintf(
@@ -55,7 +58,7 @@ abstract class EntityVoter extends Voter
 
         return call_user_func_array(
             [$this, $method],
-            [$entity, $loggedIn]
+            [$subject, $loggedIn]
         );
     }
 }

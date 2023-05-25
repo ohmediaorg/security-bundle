@@ -8,30 +8,18 @@ use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
 {
-    const INDEX = '<?= $singular['snake_case'] ?>_index';
-    const CREATE = '<?= $singular['snake_case'] ?>_create';
+    const ATTRIBUTE_PREFIX = '<?= $singular['snake_case'] ?>';
+    const INDEX = self::ATTRIBUTE_PREFIX . 'index';
+    const CREATE = self::ATTRIBUTE_PREFIX . 'create';
 <?php if ($has_view_route) { ?>
-    const VIEW = '<?= $singular['snake_case'] ?>_view';
+    const VIEW = self::ATTRIBUTE_PREFIX . 'view';
 <?php } ?>
-    const EDIT = '<?= $singular['snake_case'] ?>_edit';
-    const DELETE = '<?= $singular['snake_case'] ?>_delete';
+    const EDIT = self::ATTRIBUTE_PREFIX . 'edit';
+    const DELETE = self::ATTRIBUTE_PREFIX . 'delete';
 
     protected function getEntityClass(): string
     {
         return <?= $singular['pascal_case'] ?>::class;
-    }
-
-    protected function getAttributes(): array
-    {
-        return [
-            self::INDEX,
-            self::CREATE,
-<?php if ($has_view_route) { ?>
-            self::VIEW,
-<?php } ?>
-            self::EDIT,
-            self::DELETE,
-        ];
     }
 
     protected function canIndex(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, EntityUser $loggedIn): bool
