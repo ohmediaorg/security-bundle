@@ -21,9 +21,11 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     #[Route('/<?= $plural['kebab_case'] ?>', name: '<?= $singular['snake_case'] ?>_index', methods: ['GET'])]
     public function index(<?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository): Response
     {
+        $new<?= $singular['pascal_case'] ?> = new <?= $singular['pascal_case'] ?>();
+
         $this->denyAccessUnlessGranted(
             <?= $singular['pascal_case'] ?>Voter::INDEX,
-            <?= $singular['pascal_case'] ?>::class,
+            $new<?= $singular['pascal_case'] ?>,
             'You cannot access the list of <?= $plural['readable'] ?>.'
         );
 
@@ -31,7 +33,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
         return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_index.html.twig', [
             '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
-            'new_<?= $singular['snake_case'] ?>' => new <?= $singular['pascal_case'] ?>(),
+            'new_<?= $singular['snake_case'] ?>' => $new<?= $singular['pascal_case'] ?>,
             'attributes' => [
                 'create' => <?= $singular['pascal_case'] ?>Voter::CREATE,
                 'delete' => <?= $singular['pascal_case'] ?>Voter::DELETE,
