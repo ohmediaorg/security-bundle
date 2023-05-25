@@ -80,34 +80,15 @@ class BoilerplateCommand extends Command
         $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
         $formFile = sprintf('src/Form/%sType.php', $pascalCase);
         $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
-        $indexVoterFile = sprintf('src/Security/Voter/%s/%sIndexVoter.php', $pascalCase, $pascalCase);
+        $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
 
         $this
             ->generateFile('Entity.tpl.php', $entityFile, $parameters)
             ->generateFile('Repository.tpl.php', $repositoryFile, $parameters)
             ->generateFile('Form.tpl.php', $formFile, $parameters)
             ->generateFile('Controller.tpl.php', $controllerFile, $parameters)
-            ->generateFile('IndexVoter.tpl.php', $indexVoterFile, $parameters)
+            ->generateFile('Voter.tpl.php', $voterFile, $parameters)
         ;
-
-        $cruds = ['Create', 'Edit', 'Delete'];
-
-        if ($parameters['has_view_route']) {
-            $cruds [] = 'View';
-        }
-
-        foreach ($cruds as $crud) {
-            $crudVoterFile = sprintf(
-                'src/Security/Voter/%s/%s%sVoter.php',
-                $pascalCase,
-                $pascalCase,
-                $crud
-            );
-
-            $parameters['crud'] = $crud;
-
-            $this->generateFile('CrudVoter.tpl.php', $crudVoterFile, $parameters);
-        }
 
         if ($isUser) {
             $this

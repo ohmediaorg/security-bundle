@@ -5,15 +5,7 @@ namespace App\Controller;
 use App\Entity\<?= $singular['pascal_case'] ?>;
 use App\Form\<?= $singular['pascal_case'] ?>Type;
 use App\Repository\<?= $singular['pascal_case'] ?>Repository;
-use App\Security\Voter\<?= $singular['pascal_case'] ?>\{
-    <?= $singular['pascal_case'] ?>CreateVoter,
-    <?= $singular['pascal_case'] ?>DeleteVoter,
-    <?= $singular['pascal_case'] ?>EditVoter,
-    <?= $singular['pascal_case'] ?>IndexVoter,
-<?php if ($has_view_route) { ?>
-    <?= $singular['pascal_case'] ?>ViewVoter,
-<?php } ?>
-};
+use App\Security\Voter\<?= $singular['pascal_case'] ?>Voter;
 use OHMedia\SecurityBundle\Controller\Traits\BootstrapFlashController;
 use OHMedia\SecurityBundle\Form\DeleteType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +22,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     public function index(<?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>IndexVoter::class,
+            <?= $singular['pascal_case'] ?>Voter::INDEX,
             <?= $singular['pascal_case'] ?>::class,
             'You cannot access the list of <?= $plural['readable'] ?>.'
         );
@@ -41,11 +33,11 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
             'new_<?= $singular['snake_case'] ?>' => new <?= $singular['pascal_case'] ?>(),
             'attributes' => [
-                'create' => <?= $singular['pascal_case'] ?>CreateVoter::class,
-                'delete' => <?= $singular['pascal_case'] ?>DeleteVoter::class,
-                'edit' => <?= $singular['pascal_case'] ?>EditVoter::class,
+                'create' => <?= $singular['pascal_case'] ?>Voter::CREATE,
+                'delete' => <?= $singular['pascal_case'] ?>Voter::DELETE,
+                'edit' => <?= $singular['pascal_case'] ?>Voter::EDIT,
 <?php if ($has_view_route) { ?>
-                'view' => <?= $singular['pascal_case'] ?>ViewVoter::class,
+                'view' => <?= $singular['pascal_case'] ?>Voter::VIEW,
 <?php } ?>
             ],
         ]);
@@ -60,7 +52,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
 
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>CreateVoter::class,
+            <?= $singular['pascal_case'] ?>Voter::CREATE,
             $<?= $singular['camel_case'] ?>,
             'You cannot create a new <?= $singular['readable'] ?>.'
         );
@@ -73,7 +65,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     public function view(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>ViewVoter::class,
+            <?= $singular['pascal_case'] ?>Voter::VIEW,
             $<?= $singular['camel_case'] ?>,
             'You cannot view this <?= $singular['readable'] ?>.'
         );
@@ -92,7 +84,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     ): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>EditVoter::class,
+            <?= $singular['pascal_case'] ?>Voter::EDIT,
             $<?= $singular['camel_case'] ?>,
             'You cannot edit this <?= $singular['readable'] ?>.'
         );
@@ -140,7 +132,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     ): Response
     {
         $this->denyAccessUnlessGranted(
-            <?= $singular['pascal_case'] ?>DeleteVoter::class,
+            <?= $singular['pascal_case'] ?>Voter::DELETE,
             $<?= $singular['camel_case'] ?>,
             'You cannot delete this <?= $singular['readable'] ?>.'
         );
