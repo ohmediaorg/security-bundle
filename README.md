@@ -119,37 +119,39 @@ You may want to represent some of these custom fields in the
 
 ## Custom Attributes
 
-Create a new voter for the custom attribute:
+Define a new attribute constant and corresponding function in your voter:
 
 ```php
 <?php
 
-namespace App\Security\Voter\Post;
+namespace App\Security\Voter;
 
 use App\Entity\Post;
 use OHMedia\SecurityBundle\Entity\User as EntityUser;
-use OHMedia\SecurityBundle\Security\Voter\SingleAttributeVoter;
+use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
-class PostPublishVoter extends SingleAttributeVoter
+class PostVoter extends EntityVoter
 {
-    protected function getSubjectType(): string
-    {
-        return Post::class;
-    }
+    // ...
+    
+    const PUBLISH = self::ATTRIBUTE_PREFIX . 'publish';
+    
+    // ...
 
-    protected function voteOnSubject($post, EntityUser $loggedIn): bool
+    protected function canPublish(Post $post, EntityUser $loggedIn): bool
     {
-        return $post->isApproved() && !$post->isPublished();
+        return !$post->isPublished();
     }
 }
+
 ```
 
-Utilize the custom attribute, like in a controller:
+Then utilize the new constant in a controller:
 
 ```php
 // App/Controller/PostController.php
 
-use App\Security\Voter\Post\PostPublishVoter;
+use App\Security\Voter\PostVoter;
 
 // ...
 
@@ -157,11 +159,21 @@ use App\Security\Voter\Post\PostPublishVoter;
 public function publish(Post $post, Request $request)
 {
     $this->denyAccessUnlessGranted(
-        PostPublishVoter::class,
+        PostVoter::PUBLISH,
         $post,
         'You cannot publish this post.'
     );
     
     // ...
 }
+```
+
+Or in a template:
+
+```twig
+{% set publish_attribute = constant('App\\Security\\Voter\\PostVoter::PUBLISH') %}
+
+{% if is_granted(publish_attribute, post) %}
+    {# do something #}
+{% endif %}
 ```
