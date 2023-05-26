@@ -96,13 +96,13 @@ to your User entity.
 
 # Entities
 
-Create your other entities class using the boilerplate command with no flag:
+Create your other entity classes using the boilerplate command with no flag:
 
 ```bash
 php bin/console ohmedia:security:boilerplate
 
  Class name of the entity:
- > MyEntity
+ > Post
 ```
 
 then add your custom fields using the maker command:
@@ -111,152 +111,75 @@ then add your custom fields using the maker command:
 $ php bin/console make:entity
 
  Class name of the entity to create or update (e.g. TinyGnome):
- > MyEntity
+ > Post
 ```
 
 You may want to represent some of these custom fields in the
-`App\Form\MyEntityType` class that was auto-generated.
+`App\Form\PostType` class that was auto-generated.
 
-## Custom Actions
+## Custom Attributes
 
-Add the custom action to your provider:
-
-```php
-// App/Provider/MyEntityProvider.php
-
-public function getCustomActions(): array
-{
-    $actions = [
-        'my-custom-action',
-    ];
-    
-    return $actions;
-}
-```
-
-By convention, this string should be kebab case.
-
-If you are using the default routes, you will need to handle this action in your
-controller. The name of the controller function should match the camel-cased of
-your action string appended by the word "Action".
-
-```php
-// App/Controller/MyEntityController.php
-
-public function myEntityActionAction(Request $request)
-{
-    $this->preActionSetup($request, 'my-entity-action');
-    
-    // preActionSetup() will call all the "voters" in the system
-    
-    // if preActionSetup() is successful, the following are available:
-    // $this->em - the entity manager
-    // $this->request - the current Request
-    // $this->user - the currently logged-in user
-    // $this->entity - the entity the action is being performed on
-    // $this->provider - your Provider class
-    
-    // do stuff
-    
-    return $this->render(...);
-}
-```
-
-Manage the permissions for this custom action in your voter. The name of the
-voter function should match the pascal-case of your action string prepend by
-the word "can".
-
-```php
-// App/Security/Voter/MyEntityVoter.php
-
-protected function canMyCustomAction(MyEntity $myEntity, User $loggedIn)
-{
-    // return true or false
-}
-```
-
-## Events
-
-The `EntityController` calls various overridable methods. These are:
-
-1. `entityPostFormBuild`
-1. `entityPreValidate`
-1. `entityPreSave`
-1. `entityPostSave`
-
-It may be tempting to put certain logic here. Keep in mind, these methods are
-only called for the create/update actions through your entity controller. The
-logic should only specifically apply to the controller.
-
-If you need certain things to happen no matter where your entity is saved, you
-should be hooking into Doctrine Events.
-
-If you need common logic for both your controller and your event subscriber, you
-can create common functions in your entity provider. The provider is already
-available in your controller, and can be injected into your subscriber.
-
-## Locking
-
-An entity can become lockable if it uses the trait
-`OHMedia\SecurityBundle\Entity\Traits\Lockable`. By default, this happens on the
-`update` action in order to prevent two people from updating the same thing.
-
-Check out how the `EntityController` utilizes the `LockingController` trait.
-
-# Template Helpers
-
-## Rendering Entity Action Links 
-
-You can use twig helpers for rendering action links on existing entities.
-Links are only rendered if the voting passes.
-
-```twig
-{{ entity_action(action, entity, route, label, attributes) }}
-```
-
-These will only work if the value for 'action' is the same in both
-the route AND the voter.
-
-## Rendering Entity Create Links
-
-Determining if a 'create' link should be shown requires some setup,
-because you need to have an entity to pass to the voter.
-Just make sure not to persist that new entity!
+Define a new attribute constant and corresponding function in your voter:
 
 ```php
 <?php
 
-use App\Provider\MyOtherEntityProvider;
+namespace App\Security\Voter;
 
-class MyEntityController extends EntityController {
-  
-  // ...
-  
-  public function someOtherAction(Request $request, OtherEntityProvider $otherEntityProvider)
-  {
-      // ...
-      
-      // to create a new entity matching this controller
-      $new_my_entity = $this->getEntityNew();
-      
-      // to create a new entity unrelated to this controller
-      // you can autowire its provider into the action
-      $new_other_entity = $otherEntityProvider->create();
-      
-      /// ...
-      
-  }
+use App\Entity\Post;
+use OHMedia\SecurityBundle\Entity\User as EntityUser;
+use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
+
+class PostVoter extends EntityVoter
+{
+    // ...
+    const PUBLISH = self::ATTRIBUTE_PREFIX . 'publish';
+    
+    // ...
+
+    protected function canPublish(Post $post, EntityUser $loggedIn): bool
+    {
+        return !$post->isPublished();
+    }
+}
+
+```
+
+Here, the suffix is "publish" and the corresponding function is `canPublish`.
+
+If you had `const APPROVE_ALL = self::ATTRIBUTE_PREFIX . 'approve_all';`, the
+corresponding function would be `canApproveAll` because of the suffix "approve_all".
+
+## Voter Attribute Constants
+
+Utilizing voter constants in a controller:
+
+```php
+// App/Controller/PostController.php
+
+use App\Security\Voter\PostVoter;
+
+// ...
+
+#[Route('/post/{id}/publish', name: 'post_publish', methods: ['GET', 'POST'])]
+public function publish(Post $post, Request $request)
+{
+    $this->denyAccessUnlessGranted(
+        PostVoter::PUBLISH,
+        $post,
+        'You cannot publish this post.'
+    );
+    
+    // ...
 }
 ```
 
-then in the template:
+Utilizing voter constants in a template:
 
 ```twig
-{% if is_granted('create', new_entity) %}
-  {# render a link using the create route for this entity #}
-{% endif %}
+{% set publish_attribute = constant('App\\Security\\Voter\\PostVoter::PUBLISH') %}
 
-{% if is_granted('create', new_other_entity) %}
-  {# render a link using the create route for this entity #}
+{% if is_granted(publish_attribute, post) %}
+    {# do something #}
 {% endif %}
 ```

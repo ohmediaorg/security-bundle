@@ -14,7 +14,7 @@ class UserRole extends Entity implements Stringable
     private $name;
 
     #[ORM\Column(type: 'json')]
-    private $actions = [];
+    private $attributes = [];
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $system_generated;
@@ -39,14 +39,14 @@ class UserRole extends Entity implements Stringable
         return $this;
     }
 
-    public function getActions(): array
+    public function getAttributes(): array
     {
-        return $this->actions;
+        return $this->attributes;
     }
 
-    public function setActions(array $actions): self
+    public function setAttributes(array $attributes): self
     {
-        $this->actions = $actions;
+        $this->attributes = $attributes;
 
         return $this;
     }

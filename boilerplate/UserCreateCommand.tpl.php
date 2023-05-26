@@ -1,8 +1,9 @@
-<?php
+<?= "<?php\n" ?>
 
 namespace App\Command;
 
-use App\Provider\__PASCALCASE__Provider;
+use App\Entity\<?= $singular['pascal_case'] ?>;
+use App\Repository\<?= $singular['pascal_case'] ?>Repository;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,15 +15,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserCreateCommand extends Command
 {
     private $passwordHasher;
-    private $__CAMELCASE__Provider;
+    private $<?= $singular['camel_case'] ?>Repository;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
-        __PASCALCASE__Provider $__CAMELCASE__Provider
+        <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
     )
     {
         $this->passwordHasher = $passwordHasher;
-        $this->__CAMELCASE__Provider = $__CAMELCASE__Provider;
+        $this-><?= $singular['camel_case'] ?>Repository = $<?= $singular['camel_case'] ?>Repository;
 
         parent::__construct();
     }
@@ -54,14 +55,14 @@ class UserCreateCommand extends Command
         // if you need to populate more fields, ask for them here
         // or simply provide sensible defaults below
 
-        $__CAMELCASE__ = $this->__CAMELCASE__Provider->create();
+        $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
-            $__CAMELCASE__,
+            $<?= $singular['camel_case'] ?>,
             $password
         );
 
-        $__CAMELCASE__
+        $<?= $singular['camel_case'] . "\n" ?>
             ->setEmail($email)
             ->setPassword($hashedPassword)
             ->setDeveloper($developer)
@@ -71,7 +72,7 @@ class UserCreateCommand extends Command
         ;
 
         try {
-            $this->__CAMELCASE__Provider->save($__CAMELCASE__);
+            $this-><?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
         } catch(Exception $e) {
             $this->io->error($e->getMessage());
 

@@ -8,20 +8,25 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\String\Inflector\EnglishInflector;
 
 use function Symfony\Component\String\u;
 
 class BoilerplateCommand extends Command
 {
-    private $projectDir;
+    private string $templateDir;
+    private string $projectDir;
+    private Filesystem $filesystem;
+    private EnglishInflector $inflector;
+    private SymfonyStyle $io;
 
     public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir . '/';
         $this->templateDir = __DIR__ . '/../../boilerplate/';
-        $this->find = [];
-        $this->replace = [];
         $this->filesystem = new Filesystem();
+
+        $this->inflector = new EnglishInflector();
 
         parent::__construct();
     }
@@ -54,53 +59,43 @@ class BoilerplateCommand extends Command
             return Command::INVALID;
         }
 
-        $camelCase = u($className)->camel();
-        $snakeCase = u($className)->snake();
-        $pascalCase = u($camelCase)->title();
-        $kebabCase = u($snakeCase)->replace('_', '-');
-        $readable = u($snakeCase)->replace('_', ' ');
+        $singular = $this->inflector->singularize($className)[0];
+        $plural = $this->inflector->pluralize($singular)[0];
 
-        $findReplace = [
-            '__CAMELCASE__' => $camelCase,
-            '__SNAKECASE__' => $snakeCase,
-            '__PASCALCASE__' => $pascalCase,
-            '__KEBABCASE__' => $kebabCase,
-            '__READABLE__' => $readable
+        $parameters = [
+            'singular' => $this->generateParameters($singular),
+            'plural' => $this->generateParameters($plural),
+            'is_user' => $isUser,
         ];
 
-        $this->find = array_keys($findReplace);
-        $this->replace = array_values($findReplace);
+        $pascalCase = $parameters['singular']['pascal_case'];
 
-        if ($isUser) {
-            $entityTemplate = 'user/User.php.tpl';
-            $voterTemplate = 'user/UserVoter.php.tpl';
-        }
-        else {
-            $entityTemplate = 'Entity.php.tpl';
-            $voterTemplate = 'Voter.php.tpl';
-        }
+        $parameters['has_view_route'] = $this->io->confirm(sprintf(
+            'Does the %s entity require a view route? (eg. /%s/{id})',
+            $pascalCase,
+            $parameters['singular']['kebab_case']
+        ), false);
 
         $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
         $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
         $formFile = sprintf('src/Form/%sType.php', $pascalCase);
-        $providerFile = sprintf('src/Provider/%sProvider.php', $pascalCase);
         $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
         $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
 
         $this
-            ->generateFile($entityTemplate, $entityFile)
-            ->generateFile('Repository.php.tpl', $repositoryFile)
-            ->generateFile('Form.php.tpl', $formFile)
-            ->generateFile('Provider.php.tpl', $providerFile)
-            ->generateFile('Controller.php.tpl', $controllerFile)
-            ->generateFile($voterTemplate, $voterFile)
+            ->generateFile('Entity.tpl.php', $entityFile, $parameters)
+            ->generateFile('Repository.tpl.php', $repositoryFile, $parameters)
+            ->generateFile('Form.tpl.php', $formFile, $parameters)
+            ->generateFile('Controller.tpl.php', $controllerFile, $parameters)
+            ->generateFile('Voter.tpl.php', $voterFile, $parameters)
         ;
 
         if ($isUser) {
             $this
                 ->generateFile(
-                    'user/UserCreateCommand.php.tpl',
-                    'src/Command/UserCreateCommand.php'
+                    'UserCreateCommand.tpl.php',
+                    'src/Command/UserCreateCommand.php',
+                    $parameters
                 )
             ;
         }
@@ -108,7 +103,24 @@ class BoilerplateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function generateFile(string $template, string $destination)
+    private function generateParameters(string $word)
+    {
+        $camelCase = u($word)->camel();
+        $snakeCase = u($word)->snake();
+        $pascalCase = u($camelCase)->title();
+        $kebabCase = u($snakeCase)->replace('_', '-');
+        $readable = u($snakeCase)->replace('_', ' ');
+
+        return [
+            'camel_case' => $camelCase,
+            'snake_case' => $snakeCase,
+            'pascal_case' => $pascalCase,
+            'kebab_case' => $kebabCase,
+            'readable' => $readable,
+        ];
+    }
+
+    private function generateFile(string $template, string $destination, array $parameters)
     {
         $absoluteDestination = $this->projectDir . $destination;
 
@@ -123,11 +135,13 @@ class BoilerplateCommand extends Command
             }
         }
 
-        $contents = str_replace(
-            $this->find,
-            $this->replace,
-            file_get_contents($this->templateDir . $template)
-        );
+        ob_start();
+
+        extract($parameters);
+
+        include $this->templateDir . $template;
+
+        $contents = ob_get_clean();
 
         $this->filesystem->mkdir(\dirname($absoluteDestination));
 

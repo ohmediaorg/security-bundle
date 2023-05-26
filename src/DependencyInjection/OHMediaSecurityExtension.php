@@ -25,23 +25,5 @@ class OHMediaSecurityExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
-        $container->registerForAutoconfiguration(AbstractEntityProvider::class)
-            ->addTag('oh_media_security.provider');
-
-        $this->registerWidget($container);
-    }
-
-    /**
-     * Registers the form widget.
-     */
-    protected function registerWidget(ContainerBuilder $container)
-    {
-        $resource = '@OHMediaSecurity/Form/actions_widget.html.twig';
-
-        $container->setParameter('twig.form.resources', array_merge(
-            $container->getParameter('twig.form.resources'),
-            [$resource]
-        ));
     }
 }
