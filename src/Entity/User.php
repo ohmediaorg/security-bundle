@@ -5,16 +5,22 @@ namespace OHMedia\SecurityBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use OHMedia\SecurityBundle\Entity\Traits\Blameable;
 use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUser;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\MappedSuperclass]
 abstract class User
-extends Entity
 implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use Blameable;
     use TimezoneUser;
+
+    #[ORM\Id()]
+    #[ORM\GeneratedValue()]
+    #[ORM\Column(type: 'integer')]
+    protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     protected $email;
@@ -34,6 +40,11 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->user_roles = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getEmail(): string
