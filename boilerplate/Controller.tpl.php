@@ -6,7 +6,6 @@ use App\Entity\<?= $singular['pascal_case'] ?>;
 use App\Form\<?= $singular['pascal_case'] ?>Type;
 use App\Repository\<?= $singular['pascal_case'] ?>Repository;
 use App\Security\Voter\<?= $singular['pascal_case'] ?>Voter;
-use OHMedia\SecurityBundle\Controller\Traits\BootstrapFlashController;
 use OHMedia\SecurityBundle\Form\DeleteType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -16,8 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 {
-    use BootstrapFlashController;
-
     #[Route('/<?= $plural['kebab_case'] ?>', name: '<?= $singular['snake_case'] ?>_index', methods: ['GET'])]
     public function index(<?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository): Response
     {
@@ -109,7 +106,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $<?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
 
-            $this->addFlashSuccess('Changes to the <?= $singular['readable'] ?> were saved successfully.');
+            $this->addFlash('notice', 'Changes to the <?= $singular['readable'] ?> were saved successfully.');
 
 <?php if ($has_view_route) { ?>
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_view', [
@@ -148,7 +145,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $<?= $singular['camel_case'] ?>Repository->remove($<?= $singular['camel_case'] ?>, true);
 
-            $this->addFlashSuccess('The <?= $singular['readable'] ?> was deleted successfully.');
+            $this->addFlash('notice', 'The <?= $singular['readable'] ?> was deleted successfully.');
 
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
         }
