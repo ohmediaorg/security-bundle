@@ -13,7 +13,7 @@ use OHMedia\SecurityBundle\Entity\User as EntityUser;
 <?php if ($is_user) { ?>
 class <?= $singular['pascal_case'] ?> extends EntityUser
 <?php } else { ?>
-class <?= $singular['pascal_case'] ?>
+class <?= $singular['pascal_case'] . "\n" ?>
 <?php } ?>
 {
     use Blameable;
