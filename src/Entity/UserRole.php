@@ -5,11 +5,19 @@ namespace OHMedia\SecurityBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use OHMedia\SecurityBundle\Entity\Traits\Blameable;
 use Stringable;
 
 #[ORM\Entity]
-class UserRole extends Entity implements Stringable
+class UserRole implements Stringable
 {
+    use Blameable;
+
+    #[ORM\Id()]
+    #[ORM\GeneratedValue()]
+    #[ORM\Column(type: 'integer')]
+    private $id;
+
     #[ORM\Column(type: 'string', length: 50, unique: true)]
     private $name;
 
@@ -25,6 +33,11 @@ class UserRole extends Entity implements Stringable
     public function __construct()
     {
         $this->users = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getName(): ?string
