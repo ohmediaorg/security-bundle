@@ -11,7 +11,9 @@
         }
     ],
     "require": {
+        "ohmediaorg/email-bundle": "dev-main",
         "ohmediaorg/timezone-bundle": "dev-main",
+        "ohmediaorg/utility-bundle": "dev-main",
         "php": "^7.2",
         "symfony/framework-bundle": "5.4.*"
     },
