@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class PasswordResetController extends AbstractController
 {
     #[Route('/password-reset', name: 'user_password_reset')]
-    public function forgotPassword(Request $request, UserRepository $userRepository): Response
+    public function __invoke(Request $request, UserRepository $userRepository): Response
     {
         $form = $this->createFormBuilder()
             ->add('email', EmailType::class)
