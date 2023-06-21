@@ -6,12 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\Blameable;
+use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUser;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\MappedSuperclass]
-abstract class User
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+class User
 implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use Blameable;
