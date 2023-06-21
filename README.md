@@ -29,12 +29,32 @@ security:
         main:
             # ...
             provider: app_user_provider
+            
+            form_login:
+                login_path: user_login
+                check_path: user_login
+                enable_csrf: true
+                username_parameter: form[_username]
+                password_parameter: form[_password]
+                csrf_parameter: form[_csrf_token]
+
+            logout:
+                path: user_logout
+                target: user_login
 ```
 
-TODO: steps for user login
+Update `config/packages/routes.yml`:
 
-Follow the steps at https://symfony.com/doc/current/security.html#form-login for
-creating a login form.
+```yaml
+oh_media_security:
+    resource: '@OHMediaSecurityBundle/Controller/'
+    type: annotation
+```
+
+You will need to render the login form by creating the file
+`templates/bundles/OHMediaSecurityBundle/login.html.twig`.
+
+The form itself can be rendered with `{{ form(form) }}`.
 
 ## Migrations
 
@@ -102,7 +122,6 @@ class PostVoter extends EntityVoter
         return !$post->isPublished();
     }
 }
-
 ```
 
 Here, the suffix is "publish" and the corresponding function is `canPublish`.
