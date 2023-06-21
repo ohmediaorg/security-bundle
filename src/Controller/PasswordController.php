@@ -78,7 +78,7 @@ class PasswordController extends AbstractController
             return $this->redirectToRoute('user_forgot_password');
         }
 
-        return $this->render('@OHMediaSecurity/forgot-password.html.twig', [
+        return $this->render('@OHMediaSecurity/forgot_password_form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -170,7 +170,7 @@ class PasswordController extends AbstractController
             return $this->redirectToRoute('user_login');
         }
 
-        return $this->render('@OHMediaSecurity/password-reset.html.twig', [
+        return $this->render('@OHMediaSecurity/password_reset_form.html.twig', [
             'form' => $form->createView(),
         ]);
     }

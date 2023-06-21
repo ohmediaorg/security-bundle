@@ -55,10 +55,24 @@ oh_media_security:
     type: annotation
 ```
 
-You will need to render the login form by creating the file
-`templates/bundles/OHMediaSecurityBundle/login.html.twig`.
+## Templates
 
-The form itself can be rendered with `{{ form(form) }}`.
+Override this bundle's templates in the directory `templates/bundles/OHMediaSecurityBundle`.
+
+### Forms
+
+You will need to render some form by creating the following files in the
+aforementioned directory:
+
+1. `forgot_password_form.html.twig`
+1. `login_form.html.twig`
+1. `reset_password_form.html.twig`
+
+The forms can simply be rendered with `{{ form(form) }}`.
+
+### Password Reset Email
+
+The email template can be overridden in the same directory with a file named `password_reset_email.html.twig`.
 
 ## Migrations
 
