@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 abstract class UserBackendController extends AbstractController
@@ -35,6 +36,7 @@ abstract class UserBackendController extends AbstractController
     #[Route('/user/create', name: 'user_create', methods: ['GET', 'POST'])]
     public function create(
         Request $request,
+        UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
     ): Response
     {
@@ -46,13 +48,14 @@ abstract class UserBackendController extends AbstractController
             'You cannot create a new user.'
         );
 
-        return $this->form($request, $user, $userRepository);
+        return $this->form($request, $user, $passwordHasher, $userRepository);
     }
 
     #[Route('/user/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         User $user,
+        UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
     ): Response
     {
@@ -62,24 +65,38 @@ abstract class UserBackendController extends AbstractController
             'You cannot edit this user.'
         );
 
-        return $this->form($request, $user, $userRepository);
+        return $this->form($request, $user, $passwordHasher, $userRepository);
     }
 
     private function form(
         Request $request,
         User $user,
+        UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
     ): Response
     {
         $creating = !$user->getId();
 
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'logged_in' => $this->getUser(),
+        ]);
 
         $form->add('submit', SubmitType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
+
+            if ($password) {
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $password
+                );
+
+                $user->setPassword($hashedPassword);
+            }
+
             $userRepository->save($user, true);
 
             $this->addFlash('notice', 'Changes to the user were saved successfully.');
@@ -92,9 +109,7 @@ abstract class UserBackendController extends AbstractController
 
     protected function formRedirect(User $user, bool $creating): Response
     {
-        return $this->redirectToRoute('user_view', [
-            'id' => $user->getId(),
-        ]);
+        return $this->redirectToRoute('user_index');
     }
 
     #[Route('/user/{id}/delete', name: 'user_delete', methods: ['GET', 'POST'])]
