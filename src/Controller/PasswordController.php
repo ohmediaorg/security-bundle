@@ -140,8 +140,7 @@ class PasswordController extends AbstractController
 
             $this->addFlash('notice', 'Your password was reset successfully.');
 
-            // TODO: redirect to login
-            return $this->redirectToRoute('user_forgot_password');
+            return $this->redirectToRoute('user_login');
         }
 
         return $this->render('@OHMediaSecurity/password-reset.html.twig', [
