@@ -1,8 +1,12 @@
 # Installation
 
-Make sure `ohmediaorg/timezone-bundle` is set up.
+Make sure the following bundles are installed and set up:
 
-Enable the bundle in `config/bundles.php`:
+1. `ohmediaorg/email-bundle`
+1. `ohmediaorg/timezone-bundle`
+1. `ohmediaorg/utility-bundle`
+
+Enable the security bundle in `config/bundles.php`:
 
 ```php
 return [
