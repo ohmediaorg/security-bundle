@@ -23,22 +23,22 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id()]
     #[ORM\GeneratedValue()]
     #[ORM\Column(type: 'integer')]
-    protected $id;
+    private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    protected $email;
+    private $email;
 
     #[ORM\Column(type: 'string')]
-    protected $password;
+    private $password;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    protected $developer;
+    private $developer;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    protected $enabled;
+    private $enabled;
 
     #[ORM\ManyToMany(targetEntity: UserRole::class, inversedBy: 'users')]
-    protected $user_roles;
+    private $user_roles;
 
     public function __construct()
     {
