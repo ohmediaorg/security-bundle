@@ -29,7 +29,10 @@ class LoginController extends AbstractController
                 'label' => 'Email',
                 'data' => $authenticationUtils->getLastUsername(),
             ])
-            ->add('_password', PasswordType::class)
+            ->add('_password', PasswordType::class, [
+                'help' => '<a href="/forgot-password">Forgot your password?</a>',
+                'help_html' => true,
+            ])
             ->add('recaptcha', RecaptchaType::class)
             ->add('submit', SubmitType::class)
             ->getForm();
