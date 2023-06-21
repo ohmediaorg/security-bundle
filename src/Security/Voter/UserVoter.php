@@ -30,11 +30,22 @@ class UserVoter extends EntityVoter
 
     protected function canEdit(User $user, User $loggedIn): bool
     {
+        if ($user->isDeveloper()) {
+            // can only be edited by other developer users
+            return $loggedIn->isDeveloper();
+        }
+
         return true;
     }
 
     protected function canDelete(User $user, User $loggedIn): bool
     {
+        if ($user->isDeveloper()) {
+            // developer user cannot be deleted
+            return false;
+        }
+
+        // user cannot delete themselves
         return $user !== $loggedIn;
     }
 }
