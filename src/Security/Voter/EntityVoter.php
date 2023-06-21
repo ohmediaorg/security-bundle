@@ -41,6 +41,10 @@ abstract class EntityVoter extends Voter
             return false;
         }
 
+        if (!$loggedIn->isEnabled()) {
+            return false;
+        }
+
         $regex = '/^' . preg_quote(static::ATTRIBUTE_PREFIX) . '/';
 
         $attribute = preg_replace($regex, '', $attribute);
