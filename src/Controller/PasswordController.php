@@ -2,6 +2,9 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\EmailBundle\Entity\Email;
+use OHMedia\EmailBundle\Repository\EmailRepository;
+use OHMedia\EmailBundle\Util\EmailAddress;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\UtilityBundle\Util\RandomString;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +20,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class PasswordController extends AbstractController
 {
     #[Route('/forgot-password', name: 'user_forgot_password')]
-    public function forgotPassword(Request $request, UserRepository $userRepository): Response
+    public function forgotPassword(
+        EmailRepository $emailRepository,
+        Request $request,
+        UserRepository $userRepository
+    ): Response
     {
         $form = $this->createFormBuilder()
             ->add('email', EmailType::class)
@@ -64,11 +71,7 @@ class PasswordController extends AbstractController
 
             $userRepository->save($user, true);
 
-            $url = $this->generateUrl('user_password_reset', [
-                'token' => $token,
-            ]);
-
-            // TODO: email
+            $this->createPasswordResetEmail($emailRepository, $user, $token);
 
             $this->addFlash('notice', 'Check your email for a link to reset your password.');
 
@@ -78,6 +81,30 @@ class PasswordController extends AbstractController
         return $this->render('@OHMediaSecurity/forgot-password.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function createPasswordResetEmail(
+        EmailRepository $emailRepository,
+        User $user,
+        string $token
+    )
+    {
+        $url = $this->generateUrl('user_password_reset', [
+            'token' => $token,
+        ]);
+
+        $to = new EmailAddress($user->getEmail());
+
+        $email = (new Email())
+            ->setSubject('Password Reset')
+            ->setTemplate('@OHMediaSecurity/password_reset_email.html.twig', [
+                'user' => $user,
+                'url' => $url,
+            ])
+            ->setTo($to)
+        ;
+
+        $emailRepository->save($email, true);
     }
 
     #[Route('/password-reset/{token}', name: 'user_password_reset')]
