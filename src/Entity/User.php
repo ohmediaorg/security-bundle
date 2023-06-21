@@ -37,6 +37,15 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $enabled;
 
+    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    private $reset_token;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $next_reset;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $reset_expires;
+
     #[ORM\ManyToMany(targetEntity: UserRole::class, inversedBy: 'users')]
     private $user_roles;
 
@@ -99,6 +108,42 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEnabled(?bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->reset_token = $resetToken;
+
+        return $this;
+    }
+
+    public function getNextReset(): ?\DateTimeImmutable
+    {
+        return $this->next_reset;
+    }
+
+    public function setNextReset(?\DateTimeImmutable $nextReset): self
+    {
+        $this->next_reset = $nextReset;
+
+        return $this;
+    }
+
+    public function getResetExpires(): ?\DateTimeImmutable
+    {
+        return $this->reset_expires;
+    }
+
+    public function setResetExpires(?\DateTimeImmutable $resetExpires): self
+    {
+        $this->reset_expires = $resetExpires;
 
         return $this;
     }
