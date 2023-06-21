@@ -11,34 +11,7 @@ return [
 ];
 ```
 
-## User Files
-
-Create your user class using the boilerplate command and the user flag:
-
-```bash
-php bin/console ohmedia:security:boilerplate --user
-```
-
-This will generate all the Entity classes for `App\Entity\User`, including a
-command for creating your first user. Update this as needed.
-
-### User Login
-
-Follow the steps at https://symfony.com/doc/current/security.html#form-login for
-creating a login form.
-
 ## Config
-
-Update `config/packages/doctrine.yml`:
-
-```yaml
-doctrine:
-  # ...
-  orm:
-    # ...
-    resolve_target_entities:
-        OHMedia\SecurityBundle\Entity\User: App\Entity\User
-```
 
 Update `config/packages/security.yml`:
 
@@ -49,7 +22,7 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\Entity\User
+                class: OHMedia\SecurityBundle\Entity\User
                 property: email
     firewalls:
         # ...
@@ -58,27 +31,17 @@ security:
             provider: app_user_provider
 ```
 
+TODO: steps for user login
+
+Follow the steps at https://symfony.com/doc/current/security.html#form-login for
+creating a login form.
+
 ## Migrations
 
-Add custom fields to your user class using the maker command:
-
-```bash
-$ php bin/console make:entity
-
- Class name of the entity to create or update (e.g. TinyGnome):
- > User
-```
-
-Make the migration:
+Make the user migrations:
 
 ```bash
 $ php bin/console make:migration
-```
-
-Before running the migration, you will need to make sure the migration generated
-by the boilerplate is updated as needed.
-
-```bash
 $ php bin/console doctrine:migrations:migrate
 ```
 
@@ -88,11 +51,8 @@ To create the first user, run the command that was generated with the rest
 of the User files.
 
 ```bash
-$ php bin/console app:user:create
+$ php bin/console ohmedia:security:create-user
 ```
-
-You may need to update this command depending on the custom fields you added
-to your User entity.
 
 # Entities
 
