@@ -25,7 +25,7 @@ class LoginController extends AbstractController
         $form = $formBuilder
             ->add('_username', EmailType::class, [
                 'label' => 'Email',
-                'value' => $authenticationUtils->getLastUsername(),
+                'data' => $authenticationUtils->getLastUsername(),
             ])
             ->add('_password', PasswordType::class)
             ->add('submit', SubmitType::class)
@@ -34,7 +34,7 @@ class LoginController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
 
         if ($error) {
-            $this->addFlash('error', $error);
+            $this->addFlash('error', $error->getMessage());
         }
 
         return $this->render('@OHMediaSecurity/login.html.twig', [

@@ -6,3 +6,19 @@ services:
     OHMedia\SecurityBundle\Command\BoilerplateCommand:
         arguments: ["%kernel.project_dir%"]
         tags: ["console.command"]
+
+    OHMedia\SecurityBundle\Controller\LoginController:
+        tags: ["controller.service_arguments"]
+        calls:
+            - method: setContainer
+              arguments: ["@service_container"]
+
+    OHMedia\SecurityBundle\Controller\PasswordController:
+        tags: ["controller.service_arguments"]
+        calls:
+            - method: setContainer
+              arguments: ["@service_container"]
+
+    OHMedia\SecurityBundle\Repository\UserRepository:
+        autowire: true
+        tags: ["doctrine.repository_service"]

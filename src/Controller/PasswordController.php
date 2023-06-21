@@ -2,6 +2,7 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\UtilityBundle\Util\RandomString;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
