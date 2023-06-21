@@ -26,8 +26,13 @@ class PasswordController extends AbstractController
         UserRepository $userRepository
     ): Response
     {
-        $form = $this->createFormBuilder()
+        $formBuilder = $this->createFormBuilder(null, [
+            'honeypot_protection' => true,
+        ]);
+
+        $form = $formBuilder
             ->add('email', EmailType::class)
+            ->add('recaptcha', RecaptchaType::class)
             ->add('submit', SubmitType::class)
             ->getForm();
 
