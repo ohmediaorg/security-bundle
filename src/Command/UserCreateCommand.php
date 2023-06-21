@@ -51,9 +51,6 @@ class UserCreateCommand extends Command
 
         $developer = $this->io->confirm('Flag this user as a developer');
 
-        // if you need to populate more fields, ask for them here
-        // or simply provide sensible defaults below
-
         $user = new User();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
@@ -66,8 +63,6 @@ class UserCreateCommand extends Command
             ->setPassword($hashedPassword)
             ->setDeveloper($developer)
             ->setEnabled(true)
-
-            // ... set other fields as needed
         ;
 
         try {
