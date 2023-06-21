@@ -22,3 +22,6 @@ services:
     OHMedia\SecurityBundle\Repository\UserRepository:
         autowire: true
         tags: ["doctrine.repository_service"]
+
+    OHMedia\SecurityBundle\Security\Voter\UserVoter:
+        tags: ["security.voter"]
