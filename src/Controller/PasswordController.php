@@ -2,9 +2,11 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\AntispamBundle\Form\Type\RecaptchaType;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\EmailBundle\Util\EmailAddress;
+use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\UtilityBundle\Util\RandomString;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
