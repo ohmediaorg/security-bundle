@@ -37,7 +37,7 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $enabled;
 
-    #[ORM\Column(type: 'string', length: 25, nullable: true)]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private $reset_token;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]

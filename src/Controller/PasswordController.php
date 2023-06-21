@@ -47,12 +47,14 @@ class PasswordController extends AbstractController
                 return $this->redirectToRoute('user_forgot_password');
             }
 
-            $token = RandomString::get(25, function($token) {
-                return !$userRepository->findOneByResetToken($token);
+            $token = RandomString::get(50, function($token) use ($userRepository) {
+                return !$userRepository->findOneBy([
+                    'reset_token' => $token,
+                ]);
             });
 
-            $nextReset = new \DateTime('+1 hour');
-            $resetExpires = new \DateTime('+2 hours');
+            $nextReset = new \DateTimeImmutable('+1 hour');
+            $resetExpires = new \DateTimeImmutable('+2 hours');
 
             $user
                 ->setResetToken($token)
@@ -86,7 +88,11 @@ class PasswordController extends AbstractController
         string $token
     ): Response
     {
-        $user = $token ? $userRepository->findOneByResetToken($token) : null;
+        $user = $token
+            ? $userRepository->findOneBy([
+                'reset_token' => $token,
+            ])
+            : null;
 
         if (!$user) {
             $this->addFlash('error', 'Invalid password reset token.');
