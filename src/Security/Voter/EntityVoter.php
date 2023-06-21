@@ -3,7 +3,6 @@
 namespace OHMedia\SecurityBundle\Security\Voter;
 
 use OHMedia\SecurityBundle\Entity\User;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -49,7 +48,7 @@ abstract class EntityVoter extends Voter
         $method = 'can' . u($attribute)->camel()->title();
 
         if (!method_exists($this, $method)) {
-            throw new LogicException(sprintf(
+            throw new \LogicException(sprintf(
                 'Your voter "\%s" should implement %s()',
                 static::class,
                 $method
