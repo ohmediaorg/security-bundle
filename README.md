@@ -62,7 +62,7 @@ Override this bundle's templates in the directory `templates/bundles/OHMediaSecu
 
 ### Forms
 
-You will need to render some form by creating the following files in the
+You will need to render some forms by creating the following files in the
 aforementioned directory:
 
 1. `forgot_password_form.html.twig`
@@ -71,9 +71,12 @@ aforementioned directory:
 
 The forms can simply be rendered with `{{ form(form) }}`.
 
-### Password Reset Email
+### Emails
 
-The email template can be overridden in the same directory with a file named `password_reset_email.html.twig`.
+Email template can be overridden in the same directory:
+
+1. `password_reset_email.html.twig`
+1. `verification_email.html.twig`
 
 ## Migrations
 
