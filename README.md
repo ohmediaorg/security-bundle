@@ -38,9 +38,9 @@ security:
                 login_path: user_login
                 check_path: user_login
                 enable_csrf: true
-                username_parameter: form[_username]
-                password_parameter: form[_password]
-                csrf_parameter: form[_csrf_token]
+                username_parameter: form[email]
+                password_parameter: form[password]
+                csrf_parameter: form[token]
 
             logout:
                 path: user_logout

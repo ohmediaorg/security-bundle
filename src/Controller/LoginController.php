@@ -19,17 +19,17 @@ class LoginController extends AbstractController
     {
         $formBuilder = $this->createFormBuilder(null, [
             'csrf_protection' => true,
-            'csrf_field_name' => '_csrf_token',
+            'csrf_field_name' => 'token',
             'csrf_token_id' => 'authenticate',
             'honeypot_protection' => true,
         ]);
 
         $form = $formBuilder
-            ->add('_username', EmailType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'data' => $authenticationUtils->getLastUsername(),
             ])
-            ->add('_password', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'help' => '<a href="/forgot-password">Forgot your password?</a>',
                 'help_html' => true,
             ])
