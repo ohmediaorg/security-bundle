@@ -2,6 +2,9 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\EmailBundle\Entity\Email;
+use OHMedia\EmailBundle\Repository\EmailRepository;
+use OHMedia\EmailBundle\Util\EmailAddress;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Form\DeleteType;
 use OHMedia\SecurityBundle\Form\UserType;
@@ -15,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class UserBackendController extends AbstractController
 {
@@ -161,7 +165,7 @@ abstract class UserBackendController extends AbstractController
     private function createVerificationEmail(EmailRepository $emailRepository, User $user)
     {
         $url = $this->generateUrl('user_verify_email', [
-            'token' => $token,
+            'token' => $user->getVerifyToken(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $to = new EmailAddress($user->getVerifyEmail(), $user->getFullName());

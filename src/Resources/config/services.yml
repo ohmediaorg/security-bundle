@@ -19,6 +19,12 @@ services:
             - method: setContainer
               arguments: ["@service_container"]
 
+    OHMedia\SecurityBundle\Controller\VerificationController:
+        tags: ["controller.service_arguments"]
+        calls:
+            - method: setContainer
+              arguments: ["@service_container"]
+
     OHMedia\SecurityBundle\Repository\UserRepository:
         autowire: true
         tags: ["doctrine.repository_service"]

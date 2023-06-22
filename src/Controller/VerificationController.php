@@ -41,14 +41,14 @@ class VerificationController extends AbstractController
 
         $this->addFlash('notice', 'Your email is verified.');
 
-        return $this->redirectVerification($loggedIn);
+        return $this->redirectVerification($user);
     }
 
-    private function redirectVerification(?User $loggedIn): RedirectResponse
+    private function redirectVerification(?User $redirectUser): RedirectResponse
     {
-        if ($loggedIn) {
+        if ($redirectUser) {
             return $this->redirectToRoute('user_edit', [
-                'id' => $loggedIn->getId(),
+                'id' => $redirectUser->getId(),
             ]);
         }
         else {
