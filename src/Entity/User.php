@@ -52,6 +52,12 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $reset_expires;
 
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $verify_token;
+
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    private $verify_email;
+
     #[ORM\ManyToMany(targetEntity: UserRole::class, inversedBy: 'users')]
     private $user_roles;
 
@@ -196,6 +202,30 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     public function setResetExpires(?\DateTimeImmutable $resetExpires): self
     {
         $this->reset_expires = $resetExpires;
+
+        return $this;
+    }
+
+    public function getVerifyToken(): ?string
+    {
+        return $this->verify_token;
+    }
+
+    public function setVerifyToken(?string $verifyToken): self
+    {
+        $this->verify_token = $verifyToken;
+
+        return $this;
+    }
+
+    public function getVerifyEmail(): ?string
+    {
+        return $this->verify_email;
+    }
+
+    public function setVerifyEmail(?string $verifyEmail): self
+    {
+        $this->verify_email = $verifyEmail;
 
         return $this;
     }
