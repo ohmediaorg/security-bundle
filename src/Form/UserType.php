@@ -20,6 +20,8 @@ class UserType extends AbstractType
 
         $loggedIn = $options['logged_in'];
 
+        $verifyEmail = $user ? $user->getVerifyEmail() : null;
+
         $builder
             ->add('first_name', TextType::class, [
                 'required' => false,
@@ -27,7 +29,11 @@ class UserType extends AbstractType
             ->add('last_name', TextType::class, [
                 'required' => false,
             ])
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, [
+                'help' => $verifyEmail
+                    ? 'New email address awaiting verification: ' . $verifyEmail
+                    : '',
+            ])
             ->add('password', RepeatedType::class, [
                 'required' => !$user || !$user->getId(),
                 'type' => PasswordType::class,
