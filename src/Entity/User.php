@@ -31,6 +31,12 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $first_name;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $last_name;
+
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $developer;
 
@@ -52,6 +58,13 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->user_roles = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        $fullName = $this->getFullName();
+
+        return $fullName ?? $this->email;
     }
 
     public function getId(): ?int
@@ -86,6 +99,45 @@ implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->first_name = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->last_name = $lastName;
+
+        return $this;
+    }
+
+    public function getFullName(): string
+    {
+        $parts = [];
+
+        if ($this->first_name) {
+            $parts[] = $this->first_name;
+        }
+
+        if ($this->last_name) {
+            $parts[] = $this->last_name;
+        }
+
+        return implode(' ', $parts);
     }
 
     public function isDeveloper(): bool

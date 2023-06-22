@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,6 +21,12 @@ class UserType extends AbstractType
         $loggedIn = $options['logged_in'];
 
         $builder
+            ->add('first_name', TextType::class, [
+                'required' => false,
+            ])
+            ->add('last_name', TextType::class, [
+                'required' => false,
+            ])
             ->add('email', EmailType::class)
             ->add('password', RepeatedType::class, [
                 'required' => !$user || !$user->getId(),
