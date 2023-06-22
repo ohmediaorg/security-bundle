@@ -109,7 +109,7 @@ class PasswordController extends AbstractController
             'token' => $token,
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $to = new EmailAddress($user->getEmail());
+        $to = new EmailAddress($user->getEmail(), $user->getFullName());
 
         $email = (new Email())
             ->setSubject('Password Reset')
