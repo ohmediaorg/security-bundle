@@ -87,7 +87,7 @@ class PasswordController extends AbstractController
 
             $userRepository->save($user, true);
 
-            $this->createPasswordResetEmail($emailRepository, $user, $token);
+            $this->createPasswordResetEmail($emailRepository, $user);
 
             $this->addFlash('notice', 'Check your email for a link to reset your password.');
 
@@ -99,14 +99,10 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    private function createPasswordResetEmail(
-        EmailRepository $emailRepository,
-        User $user,
-        string $token
-    )
+    private function createPasswordResetEmail(EmailRepository $emailRepository, User $user)
     {
         $url = $this->generateUrl('user_password_reset', [
-            'token' => $token,
+            'token' => $user->getResetToken(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $to = new EmailAddress($user->getEmail(), $user->getFullName());
