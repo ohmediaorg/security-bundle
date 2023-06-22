@@ -21,6 +21,12 @@ class LoginController extends AbstractController
         UrlGeneratorInterface $urlGenerator
     ): Response
     {
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'You are already logged in.');
+
+            return $this->redirectToRoute('user_index');
+        }
+
         $formBuilder = $this->createFormBuilder(null, [
             'csrf_protection' => true,
             'csrf_field_name' => 'token',

@@ -29,6 +29,14 @@ class PasswordController extends AbstractController
         UserRepository $userRepository
     ): Response
     {
+        if ($loggedIn = $this->getUser()) {
+            $this->addFlash('warning', 'You are already logged in and can change your password below.');
+
+            return $this->redirectToRoute('user_edit', [
+                'id' => $loggedIn->getId(),
+            ]);
+        }
+
         $formBuilder = $this->createFormBuilder(null, [
             'honeypot_protection' => true,
         ]);
