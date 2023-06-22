@@ -11,6 +11,7 @@
         }
     ],
     "require": {
+        "ohmediaorg/antispam-bundle": "dev-main",
         "ohmediaorg/email-bundle": "dev-main",
         "ohmediaorg/timezone-bundle": "dev-main",
         "ohmediaorg/utility-bundle": "dev-main",

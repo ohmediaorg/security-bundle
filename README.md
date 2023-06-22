@@ -2,6 +2,7 @@
 
 Make sure the following bundles are installed and set up:
 
+1. `ohmediaorg/antispam-bundle`
 1. `ohmediaorg/email-bundle`
 1. `ohmediaorg/timezone-bundle`
 1. `ohmediaorg/utility-bundle`
