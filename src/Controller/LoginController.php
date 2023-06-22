@@ -10,12 +10,16 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
     #[Route('/login', name: 'user_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(
+        AuthenticationUtils $authenticationUtils,
+        UrlGeneratorInterface $urlGenerator
+    ): Response
     {
         $formBuilder = $this->createFormBuilder(null, [
             'csrf_protection' => true,
@@ -24,13 +28,18 @@ class LoginController extends AbstractController
             'honeypot_protection' => true,
         ]);
 
+        $forgotPasswordHref = $urlGenerator->generate('user_forgot_password');
+
         $form = $formBuilder
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'data' => $authenticationUtils->getLastUsername(),
             ])
             ->add('password', PasswordType::class, [
-                'help' => '<a href="/forgot-password">Forgot your password?</a>',
+                'help' => sprintf(
+                    '<a href="%s">Forgot your password?</a>',
+                    $forgotPasswordHref
+                ),
                 'help_html' => true,
             ])
             ->add('recaptcha', RecaptchaType::class)
