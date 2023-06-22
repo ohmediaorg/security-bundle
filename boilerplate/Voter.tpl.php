@@ -3,7 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\<?= $singular['pascal_case'] ?>;
-use OHMedia\SecurityBundle\Entity\User as EntityUser;
+use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
@@ -22,29 +22,29 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
         return <?= $singular['pascal_case'] ?>::class;
     }
 
-    protected function canIndex(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, EntityUser $loggedIn): bool
+    protected function canIndex(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canCreate(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, EntityUser $loggedIn): bool
+    protected function canCreate(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
     {
         return true;
     }
 <?php if ($has_view_route) { ?>
 
-    protected function canView(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, EntityUser $loggedIn): bool
+    protected function canView(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
     {
         return true;
     }
 <?php } ?>
 
-    protected function canEdit(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, EntityUser $loggedIn): bool
+    protected function canEdit(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canDelete(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, EntityUser $loggedIn): bool
+    protected function canDelete(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
     {
         return true;
     }

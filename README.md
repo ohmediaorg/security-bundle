@@ -125,7 +125,7 @@ Define a new attribute constant and corresponding function in your voter:
 namespace App\Security\Voter;
 
 use App\Entity\Post;
-use OHMedia\SecurityBundle\Entity\User as EntityUser;
+use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class PostVoter extends EntityVoter
@@ -135,7 +135,7 @@ class PostVoter extends EntityVoter
     
     // ...
 
-    protected function canPublish(Post $post, EntityUser $loggedIn): bool
+    protected function canPublish(Post $post, User $loggedIn): bool
     {
         return !$post->isPublished();
     }
