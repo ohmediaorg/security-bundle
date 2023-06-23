@@ -9,11 +9,19 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
+    private string $defaultTimezone;
+
+    public function __construct(string $defaultTimezone)
+    {
+        $this->defaultTimezone = $defaultTimezone;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = isset($options['data']) ? $options['data'] : null;
@@ -42,6 +50,10 @@ class UserType extends AbstractType
                 'first_options'  => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
                 'mapped' => false,
+            ])
+            ->add('timezone', TimezoneType::class, [
+                'required' => false,
+                'help' => 'The default timezone is ' . $this->defaultTimezone,
             ])
         ;
 

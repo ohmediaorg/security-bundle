@@ -25,6 +25,10 @@ services:
             - method: setContainer
               arguments: ["@service_container"]
 
+    OHMedia\SecurityBundle\Form\UserType:
+        arguments: ["%oh_media_timezone.timezone%"]
+        tags: ["form.type"]
+
     OHMedia\SecurityBundle\Repository\UserRepository:
         autowire: true
         tags: ["doctrine.repository_service"]
