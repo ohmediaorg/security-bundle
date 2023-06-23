@@ -43,7 +43,9 @@ class RegisterType extends AbstractType
                 'required' => false,
                 'help' => 'The default timezone is ' . $this->defaultTimezone,
             ])
-            ->add('recaptcha', RecaptchaType::class)
+            ->add('recaptcha', RecaptchaType::class, [
+                'mapped' => false,
+            ])
         ;
     }
 

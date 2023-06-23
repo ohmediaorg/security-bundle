@@ -2,11 +2,11 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
-use OHMedia\AntispamBundle\Form\Type\RecaptchaType;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\EmailBundle\Util\EmailAddress;
 use OHMedia\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Form\RegisterType;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\UtilityBundle\Util\RandomString;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,21 +14,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class PasswordController extends AbstractController
+class RegisterController extends AbstractController
 {
     #[Route('/register', name: 'user_register')]
     public function forgotPassword(
         EmailRepository $emailRepository,
         Request $request,
+        UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
     ): Response
     {
+        // TODO: config to enable/disable registration
+
         if ($this->getUser()) {
             $this->addFlash('warning', 'You are already logged in.');
 
@@ -40,6 +40,8 @@ class PasswordController extends AbstractController
         $form = $this->createForm(RegisterType::class, $user, [
             'honeypot_protection' => true,
         ]);
+
+        $form->add('submit', SubmitType::class);
 
         $form->handleRequest($request);
 
@@ -110,73 +112,5 @@ class PasswordController extends AbstractController
         ;
 
         $emailRepository->save($email, true);
-    }
-
-    #[Route('/password-reset/{token}', name: 'user_password_reset')]
-    public function passwordReset(
-        UserPasswordHasherInterface $passwordHasher,
-        Request $request,
-        UserRepository $userRepository,
-        string $token
-    ): Response
-    {
-        $user = $token
-            ? $userRepository->findOneBy([
-                'reset_token' => $token,
-            ])
-            : null;
-
-        if (!$user) {
-            $this->addFlash('error', 'Invalid password reset token.');
-
-            return $this->redirectToRoute('user_forgot_password');
-        }
-
-        $now = new \DateTime();
-
-        if ($now > $user->getResetExpires()) {
-            $this->addFlash('error', 'This password reset is expired. Please start a new one.');
-
-            return $this->redirectToRoute('user_forgot_password');
-        }
-
-        $form = $this->createFormBuilder()
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'options' => ['attr' => ['autocomplete' => 'new-password']],
-                'invalid_message' => 'The password fields must match.',
-                'first_options'  => ['label' => 'New Password'],
-                'second_options' => ['label' => 'Repeat Password'],
-            ])
-            ->add('submit', SubmitType::class)
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('password')->getData();
-
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $password
-            );
-
-            $user
-                ->setPassword($hashedPassword)
-                ->setResetToken(null)
-                ->setNextReset(null)
-                ->setResetExpires(null)
-            ;
-
-            $userRepository->save($user, true);
-
-            $this->addFlash('notice', 'Your password was reset successfully.');
-
-            return $this->redirectToRoute('user_login');
-        }
-
-        return $this->render('@OHMediaSecurity/password_reset_form.html.twig', [
-            'form' => $form->createView(),
-        ]);
     }
 }
