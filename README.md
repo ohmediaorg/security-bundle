@@ -78,6 +78,10 @@ Email templates can be overridden in the same directory:
 1. `password_reset_email.html.twig`
 1. `verification_email.html.twig`
 
+## Registration
+
+// TODO: instructions
+
 ## Migrations
 
 Make the user migrations:
