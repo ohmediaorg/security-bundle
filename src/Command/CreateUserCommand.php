@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserCreateCommand extends Command
+class CreateUserCommand extends Command
 {
     private $passwordHasher;
     private $userRepository;

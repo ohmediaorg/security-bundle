@@ -7,6 +7,10 @@ services:
         arguments: ["%kernel.project_dir%"]
         tags: ["console.command"]
 
+    OHMedia\SecurityBundle\Command\CreateUserCommand:
+        autowire: true
+        tags: ["console.command"]
+
     OHMedia\SecurityBundle\Controller\LoginController:
         tags: ["controller.service_arguments"]
         calls:
