@@ -19,21 +19,11 @@ services:
             - method: setContainer
               arguments: ["@service_container"]
 
-    OHMedia\SecurityBundle\Controller\RegisterController:
-        tags: ["controller.service_arguments"]
-        calls:
-            - method: setContainer
-              arguments: ["@service_container"]
-
     OHMedia\SecurityBundle\Controller\VerificationController:
         tags: ["controller.service_arguments"]
         calls:
             - method: setContainer
               arguments: ["@service_container"]
-
-    OHMedia\SecurityBundle\Form\RegisterType:
-        arguments: ["%oh_media_timezone.timezone%"]
-        tags: ["form.type"]
 
     OHMedia\SecurityBundle\Form\UserType:
         arguments: ["%oh_media_timezone.timezone%"]
