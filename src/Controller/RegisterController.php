@@ -76,6 +76,7 @@ class RegisterController extends AbstractController
             $user
                 ->setEmail($fakeEmail)
                 ->setPassword($hashedPassword)
+                ->setEnabled(true)
                 ->setVerifyToken($token)
                 ->setVerifyEmail($email)
             ;
