@@ -1,10 +1,9 @@
-<?= "<?php\n" ?>
+<?php
 
-namespace App\Command;
+namespace OHMedia\SecurityBundle\Command;
 
-use App\Entity\<?= $singular['pascal_case'] ?>;
-use App\Repository\<?= $singular['pascal_case'] ?>Repository;
-use Exception;
+use OHMedia\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Repository\UserRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,18 +11,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserCreateCommand extends Command
+class CreateUserCommand extends Command
 {
     private $passwordHasher;
-    private $<?= $singular['camel_case'] ?>Repository;
+    private $userRepository;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
-        <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
+        UserRepository $userRepository
     )
     {
         $this->passwordHasher = $passwordHasher;
-        $this-><?= $singular['camel_case'] ?>Repository = $<?= $singular['camel_case'] ?>Repository;
+        $this->userRepository = $userRepository;
 
         parent::__construct();
     }
@@ -31,7 +30,7 @@ class UserCreateCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:user:create')
+            ->setName('ohmedia:security:create-user')
             ->setDescription('A command to create users')
         ;
     }
@@ -52,28 +51,23 @@ class UserCreateCommand extends Command
 
         $developer = $this->io->confirm('Flag this user as a developer');
 
-        // if you need to populate more fields, ask for them here
-        // or simply provide sensible defaults below
-
-        $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
+        $user = new User();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
-            $<?= $singular['camel_case'] ?>,
+            $user,
             $password
         );
 
-        $<?= $singular['camel_case'] . "\n" ?>
+        $user
             ->setEmail($email)
             ->setPassword($hashedPassword)
             ->setDeveloper($developer)
             ->setEnabled(true)
-
-            // ... set other fields as needed
         ;
 
         try {
-            $this-><?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
-        } catch(Exception $e) {
+            $this->userRepository->save($user, true);
+        } catch(\Exception $e) {
             $this->io->error($e->getMessage());
 
             return Command::FAILURE;

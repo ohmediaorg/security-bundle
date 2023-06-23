@@ -36,22 +36,14 @@ class BoilerplateCommand extends Command
         $this
             ->setName('ohmedia:security:boilerplate')
             ->setDescription('Command to create the files needed for an entity')
-            ->addOption('user', null, InputOption::VALUE_NONE, 'Specify that this is the user entity')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $isUser = $input->getOption('user');
-
         $this->io = new SymfonyStyle($input, $output);
 
-        if ($isUser) {
-            $className = 'User';
-        }
-        else {
-            $className = $this->io->ask('Class name of the entity');
-        }
+        $className = $this->io->ask('Class name of the entity');
 
         if (!$className) {
             $this->io->error('Please provide the class name');
@@ -65,7 +57,6 @@ class BoilerplateCommand extends Command
         $parameters = [
             'singular' => $this->generateParameters($singular),
             'plural' => $this->generateParameters($plural),
-            'is_user' => $isUser,
         ];
 
         $pascalCase = $parameters['singular']['pascal_case'];
@@ -89,16 +80,6 @@ class BoilerplateCommand extends Command
             ->generateFile('Controller.tpl.php', $controllerFile, $parameters)
             ->generateFile('Voter.tpl.php', $voterFile, $parameters)
         ;
-
-        if ($isUser) {
-            $this
-                ->generateFile(
-                    'UserCreateCommand.tpl.php',
-                    'src/Command/UserCreateCommand.php',
-                    $parameters
-                )
-            ;
-        }
 
         return Command::SUCCESS;
     }

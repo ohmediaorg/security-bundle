@@ -1,8 +1,13 @@
 # Installation
 
-Make sure `ohmediaorg/timezone-bundle` is set up.
+Make sure the following bundles are installed and set up:
 
-Enable the bundle in `config/bundles.php`:
+1. `ohmediaorg/antispam-bundle`
+1. `ohmediaorg/email-bundle`
+1. `ohmediaorg/timezone-bundle`
+1. `ohmediaorg/utility-bundle`
+
+Enable the security bundle in `config/bundles.php`:
 
 ```php
 return [
@@ -11,34 +16,7 @@ return [
 ];
 ```
 
-## User Files
-
-Create your user class using the boilerplate command and the user flag:
-
-```bash
-php bin/console ohmedia:security:boilerplate --user
-```
-
-This will generate all the Entity classes for `App\Entity\User`, including a
-command for creating your first user. Update this as needed.
-
-### User Login
-
-Follow the steps at https://symfony.com/doc/current/security.html#form-login for
-creating a login form.
-
 ## Config
-
-Update `config/packages/doctrine.yml`:
-
-```yaml
-doctrine:
-  # ...
-  orm:
-    # ...
-    resolve_target_entities:
-        OHMedia\SecurityBundle\Entity\User: App\Entity\User
-```
 
 Update `config/packages/security.yml`:
 
@@ -49,54 +27,77 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\Entity\User
+                class: OHMedia\SecurityBundle\Entity\User
                 property: email
     firewalls:
         # ...
         main:
             # ...
             provider: app_user_provider
+            
+            form_login:
+                login_path: user_login
+                check_path: user_login
+                enable_csrf: true
+                username_parameter: form[email]
+                password_parameter: form[password]
+                csrf_parameter: form[token]
+
+            logout:
+                path: user_logout
+                target: user_login
 ```
+
+Update `config/packages/routes.yml`:
+
+```yaml
+oh_media_security:
+    resource: '@OHMediaSecurityBundle/Controller/'
+    type: annotation
+```
+
+## Templates
+
+Override this bundle's templates in the directory `templates/bundles/OHMediaSecurityBundle`.
+
+### Forms
+
+You will need to render some forms by creating the following files in the
+aforementioned directory:
+
+1. `forgot_password_form.html.twig`
+1. `login_form.html.twig`
+1. `reset_password_form.html.twig`
+
+The forms can simply be rendered with `{{ form(form) }}`.
+
+### Emails
+
+Email templates can be overridden in the same directory:
+
+1. `password_reset_email.html.twig`
+1. `verification_email.html.twig`
 
 ## Migrations
 
-Add custom fields to your user class using the maker command:
-
-```bash
-$ php bin/console make:entity
-
- Class name of the entity to create or update (e.g. TinyGnome):
- > User
-```
-
-Make the migration:
+Make the user migrations:
 
 ```bash
 $ php bin/console make:migration
-```
-
-Before running the migration, you will need to make sure the migration generated
-by the boilerplate is updated as needed.
-
-```bash
 $ php bin/console doctrine:migrations:migrate
 ```
 
 ## First User
 
-To create the first user, run the command that was generated with the rest
-of the User files.
+To create the first user, run this command:
 
 ```bash
-$ php bin/console app:user:create
+$ php bin/console ohmedia:security:create-user
 ```
-
-You may need to update this command depending on the custom fields you added
-to your User entity.
 
 # Entities
 
-Create your other entity classes using the boilerplate command with no flag:
+Create entity classes using the boilerplate command:
 
 ```bash
 php bin/console ohmedia:security:boilerplate
@@ -127,7 +128,7 @@ Define a new attribute constant and corresponding function in your voter:
 namespace App\Security\Voter;
 
 use App\Entity\Post;
-use OHMedia\SecurityBundle\Entity\User as EntityUser;
+use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class PostVoter extends EntityVoter
@@ -137,12 +138,11 @@ class PostVoter extends EntityVoter
     
     // ...
 
-    protected function canPublish(Post $post, EntityUser $loggedIn): bool
+    protected function canPublish(Post $post, User $loggedIn): bool
     {
         return !$post->isPublished();
     }
 }
-
 ```
 
 Here, the suffix is "publish" and the corresponding function is `canPublish`.

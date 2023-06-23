@@ -6,12 +6,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\Blameable;
+use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUser;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\MappedSuperclass]
-abstract class User
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity('email')]
+class User
 implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use Blameable;
@@ -20,26 +23,54 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id()]
     #[ORM\GeneratedValue()]
     #[ORM\Column(type: 'integer')]
-    protected $id;
+    private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    protected $email;
+    private $email;
 
     #[ORM\Column(type: 'string')]
-    protected $password;
+    private $password;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $first_name;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $last_name;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    protected $developer;
+    private $developer;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    protected $enabled;
+    private $enabled;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $reset_token;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $next_reset;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $reset_expires;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $verify_token;
+
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    private $verify_email;
 
     #[ORM\ManyToMany(targetEntity: UserRole::class, inversedBy: 'users')]
-    protected $user_roles;
+    private $user_roles;
 
     public function __construct()
     {
         $this->user_roles = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        $fullName = $this->getFullName();
+
+        return $fullName ?? $this->email;
     }
 
     public function getId(): ?int
@@ -76,6 +107,45 @@ implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->first_name = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(?string $lastName): self
+    {
+        $this->last_name = $lastName;
+
+        return $this;
+    }
+
+    public function getFullName(): string
+    {
+        $parts = [];
+
+        if ($this->first_name) {
+            $parts[] = $this->first_name;
+        }
+
+        if ($this->last_name) {
+            $parts[] = $this->last_name;
+        }
+
+        return implode(' ', $parts);
+    }
+
     public function isDeveloper(): bool
     {
         return (bool) $this->developer;
@@ -96,6 +166,66 @@ implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEnabled(?bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->reset_token = $resetToken;
+
+        return $this;
+    }
+
+    public function getNextReset(): ?\DateTimeImmutable
+    {
+        return $this->next_reset;
+    }
+
+    public function setNextReset(?\DateTimeImmutable $nextReset): self
+    {
+        $this->next_reset = $nextReset;
+
+        return $this;
+    }
+
+    public function getResetExpires(): ?\DateTimeImmutable
+    {
+        return $this->reset_expires;
+    }
+
+    public function setResetExpires(?\DateTimeImmutable $resetExpires): self
+    {
+        $this->reset_expires = $resetExpires;
+
+        return $this;
+    }
+
+    public function getVerifyToken(): ?string
+    {
+        return $this->verify_token;
+    }
+
+    public function setVerifyToken(?string $verifyToken): self
+    {
+        $this->verify_token = $verifyToken;
+
+        return $this;
+    }
+
+    public function getVerifyEmail(): ?string
+    {
+        return $this->verify_email;
+    }
+
+    public function setVerifyEmail(?string $verifyEmail): self
+    {
+        $this->verify_email = $verifyEmail;
 
         return $this;
     }
