@@ -28,7 +28,7 @@ class VerificationController extends AbstractController
         if (!$user) {
             $this->addFlash('error', 'Invalid verification token.');
 
-            return $this->redirectVerification($loggedIn);
+            return $this->redirectVerification($loggedIn, $loggedIn);
         }
 
         $user
@@ -41,10 +41,10 @@ class VerificationController extends AbstractController
 
         $this->addFlash('notice', 'Your email is verified.');
 
-        return $this->redirectVerification($user);
+        return $this->redirectVerification($loggedIn, $user);
     }
 
-    private function redirectVerification(?User $redirectUser): RedirectResponse
+    private function redirectVerification(?User $loggedIn, ?User $redirectUser): RedirectResponse
     {
         if ($redirectUser) {
             return $this->redirectToRoute('user_edit', [
