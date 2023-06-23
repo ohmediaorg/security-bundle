@@ -73,7 +73,7 @@ The forms can simply be rendered with `{{ form(form) }}`.
 
 ### Emails
 
-Email template can be overridden in the same directory:
+Email templates can be overridden in the same directory:
 
 1. `password_reset_email.html.twig`
 1. `verification_email.html.twig`
@@ -89,8 +89,7 @@ $ php bin/console doctrine:migrations:migrate
 
 ## First User
 
-To create the first user, run the command that was generated with the rest
-of the User files.
+To create the first user, run this command:
 
 ```bash
 $ php bin/console ohmedia:security:create-user
@@ -98,7 +97,7 @@ $ php bin/console ohmedia:security:create-user
 
 # Entities
 
-Create your other entity classes using the boilerplate command with no flag:
+Create entity classes using the boilerplate command:
 
 ```bash
 php bin/console ohmedia:security:boilerplate
