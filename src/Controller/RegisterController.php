@@ -28,6 +28,9 @@ class RegisterController extends AbstractController
     ): Response
     {
         // TODO: config to enable/disable registration
+        $this->addFlash('warning', 'Registration is disabled.');
+
+        return $this->redirectToRoute('user_login');
 
         if ($this->getUser()) {
             $this->addFlash('warning', 'You are already logged in.');
