@@ -55,7 +55,9 @@ class LoginController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
 
         if ($error) {
-            $this->addFlash('error', $error->getMessage());
+            $message = strtr($error->getMessageKey(), $error->getMessageData());
+
+            $this->addFlash('error', $message);
         }
 
         return $this->render('@OHMediaSecurity/login_form.html.twig', [
