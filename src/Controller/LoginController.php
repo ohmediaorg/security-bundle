@@ -2,7 +2,6 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
-use OHMedia\AntispamBundle\Form\Type\RecaptchaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -31,7 +30,6 @@ class LoginController extends AbstractController
             'csrf_protection' => true,
             'csrf_field_name' => 'token',
             'csrf_token_id' => 'authenticate',
-            'honeypot_protection' => true,
         ]);
 
         $forgotPasswordHref = $urlGenerator->generate('user_forgot_password');
@@ -48,7 +46,6 @@ class LoginController extends AbstractController
                 ),
                 'help_html' => true,
             ])
-            ->add('recaptcha', RecaptchaType::class)
             ->add('submit', SubmitType::class)
             ->getForm();
 
