@@ -56,6 +56,10 @@ oh_media_security:
     type: annotation
 ```
 
+### Login Throttling
+
+https://symfony.com/blog/new-in-symfony-5-2-login-throttling
+
 ## Templates
 
 Override this bundle's templates in the directory `templates/bundles/OHMediaSecurityBundle`.
