@@ -8,14 +8,14 @@ use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
 {
-    const ATTRIBUTE_PREFIX = '<?= $singular['snake_case'] ?>';
-    const INDEX = self::ATTRIBUTE_PREFIX . 'index';
-    const CREATE = self::ATTRIBUTE_PREFIX . 'create';
+    public const ATTRIBUTE_PREFIX = '<?= $singular['snake_case'] ?>';
+    public const INDEX = self::ATTRIBUTE_PREFIX . 'index';
+    public const CREATE = self::ATTRIBUTE_PREFIX . 'create';
 <?php if ($has_view_route) { ?>
-    const VIEW = self::ATTRIBUTE_PREFIX . 'view';
+    public const VIEW = self::ATTRIBUTE_PREFIX . 'view';
 <?php } ?>
-    const EDIT = self::ATTRIBUTE_PREFIX . 'edit';
-    const DELETE = self::ATTRIBUTE_PREFIX . 'delete';
+    public const EDIT = self::ATTRIBUTE_PREFIX . 'edit';
+    public const DELETE = self::ATTRIBUTE_PREFIX . 'delete';
 
     protected function getEntityClass(): string
     {

@@ -46,8 +46,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
     public function create(
         Request $request,
         <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
-    ): Response
-    {
+    ): Response {
         $<?= $singular['camel_case'] ?> = new <?= $singular['pascal_case'] ?>();
 
         $this->denyAccessUnlessGranted(
@@ -80,8 +79,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         Request $request,
         <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
         <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted(
             <?= $singular['pascal_case'] ?>Voter::EDIT,
             $<?= $singular['camel_case'] ?>,
@@ -95,8 +93,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         Request $request,
         <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
         <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
-    ): Response
-    {
+    ): Response {
         $form = $this->createForm(<?= $singular['pascal_case'] ?>Type::class, $<?= $singular['camel_case'] ?>);
 
         $form->add('submit', SubmitType::class);
@@ -128,8 +125,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         Request $request,
         <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
         <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted(
             <?= $singular['pascal_case'] ?>Voter::DELETE,
             $<?= $singular['camel_case'] ?>,
