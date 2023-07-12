@@ -15,8 +15,7 @@ class VerificationController extends AbstractController
     public function verifyEmail(
         UserRepository $userRepository,
         string $token
-    ): Response
-    {
+    ): Response {
         $user = $token
             ? $userRepository->findOneBy([
                 'verify_token' => $token,
@@ -50,8 +49,7 @@ class VerificationController extends AbstractController
             return $this->redirectToRoute('user_edit', [
                 'id' => $redirectUser->getId(),
             ]);
-        }
-        else {
+        } else {
             return $this->redirectToRoute('user_login');
         }
     }

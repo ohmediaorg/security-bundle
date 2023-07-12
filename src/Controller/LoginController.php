@@ -18,8 +18,7 @@ class LoginController extends AbstractController
     public function login(
         AuthenticationUtils $authenticationUtils,
         UrlGeneratorInterface $urlGenerator
-    ): Response
-    {
+    ): Response {
         if ($this->getUser()) {
             $this->addFlash('warning', 'You are already logged in.');
 

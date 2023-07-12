@@ -32,7 +32,7 @@ abstract class UserBackendController extends AbstractController
     {
         $this->denyAccessUnlessGranted(
             UserVoter::INDEX,
-            new User,
+            new User(),
             'You cannot access the list of users.'
         );
 
@@ -44,8 +44,7 @@ abstract class UserBackendController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
-    ): Response
-    {
+    ): Response {
         $user = new User();
 
         $this->denyAccessUnlessGranted(
@@ -92,8 +91,7 @@ abstract class UserBackendController extends AbstractController
         User $user,
         UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted(
             UserVoter::EDIT,
             $user,
@@ -116,7 +114,7 @@ abstract class UserBackendController extends AbstractController
             $verifyEmail = $oldEmail !== $newEmail;
 
             if ($verifyEmail) {
-                $token = RandomString::get(50, function($token) use ($userRepository) {
+                $token = RandomString::get(50, function ($token) use ($userRepository) {
                     return !$userRepository->findOneBy([
                         'verify_token' => $token,
                     ]);
@@ -146,8 +144,7 @@ abstract class UserBackendController extends AbstractController
                 $this->addFlash('notice', 'Changes to the user were saved successfully. The new email address will need to be verified before that change takes effect.');
 
                 $this->createVerificationEmail($emailRepository, $user);
-            }
-            else {
+            } else {
                 $this->addFlash('notice', 'Changes to the user were saved successfully.');
             }
 
@@ -187,8 +184,7 @@ abstract class UserBackendController extends AbstractController
         Request $request,
         User $user,
         UserRepository $userRepository
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted(
             UserVoter::DELETE,
             $user,

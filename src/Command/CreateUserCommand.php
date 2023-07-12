@@ -19,8 +19,7 @@ class CreateUserCommand extends Command
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository
-    )
-    {
+    ) {
         $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
 

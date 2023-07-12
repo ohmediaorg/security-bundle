@@ -27,8 +27,7 @@ class PasswordController extends AbstractController
         EmailRepository $emailRepository,
         Request $request,
         UserRepository $userRepository
-    ): Response
-    {
+    ): Response {
         if ($loggedIn = $this->getUser()) {
             $this->addFlash('warning', 'You are already logged in and can change your password below.');
 
@@ -70,7 +69,7 @@ class PasswordController extends AbstractController
                 return $this->redirectToRoute('user_forgot_password');
             }
 
-            $token = RandomString::get(50, function($token) use ($userRepository) {
+            $token = RandomString::get(50, function ($token) use ($userRepository) {
                 return !$userRepository->findOneBy([
                     'reset_token' => $token,
                 ]);
@@ -125,8 +124,7 @@ class PasswordController extends AbstractController
         Request $request,
         UserRepository $userRepository,
         string $token
-    ): Response
-    {
+    ): Response {
         $user = $token
             ? $userRepository->findOneBy([
                 'reset_token' => $token,
