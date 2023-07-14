@@ -138,7 +138,7 @@ use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 class PostVoter extends EntityVoter
 {
     // ...
-    const PUBLISH = self::ATTRIBUTE_PREFIX . 'publish';
+    const PUBLISH = 'publish';
     
     // ...
 
@@ -149,10 +149,8 @@ class PostVoter extends EntityVoter
 }
 ```
 
-Here, the suffix is "publish" and the corresponding function is `canPublish`.
-
-If you had `const APPROVE_ALL = self::ATTRIBUTE_PREFIX . 'approve_all';`, the
-corresponding function would be `canApproveAll` because of the suffix "approve_all".
+The corresponding function is "can" concatenated with the PascalCase of the
+attribute string. In this case, "publish" and "canPublish".
 
 ## Voter Attribute Constants
 
