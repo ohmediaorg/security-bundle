@@ -10,11 +10,12 @@ use function Symfony\Component\String\u;
 
 abstract class EntityVoter extends Voter
 {
+    abstract protected function getAttributes(): array;
     abstract protected function getEntityClass(): string;
 
     public function supportsAttribute(string $attribute): bool
     {
-        return str_starts_with($attribute, static::ATTRIBUTE_PREFIX);
+        return in_array($attribute, $this->getAttributes());
     }
 
     public function supportsType(string $subjectType): bool
@@ -44,10 +45,6 @@ abstract class EntityVoter extends Voter
         if (!$loggedIn->isEnabled()) {
             return false;
         }
-
-        $regex = '/^' . preg_quote(static::ATTRIBUTE_PREFIX) . '/';
-
-        $attribute = preg_replace($regex, '', $attribute);
 
         $method = 'can' . u($attribute)->camel()->title();
 

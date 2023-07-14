@@ -7,11 +7,20 @@ use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
 class UserVoter extends EntityVoter
 {
-    public const ATTRIBUTE_PREFIX = 'user_';
-    public const INDEX = self::ATTRIBUTE_PREFIX . 'index';
-    public const CREATE = self::ATTRIBUTE_PREFIX . 'create';
-    public const EDIT = self::ATTRIBUTE_PREFIX . 'edit';
-    public const DELETE = self::ATTRIBUTE_PREFIX . 'delete';
+    public const INDEX = 'index';
+    public const CREATE = 'create';
+    public const EDIT = 'edit';
+    public const DELETE = 'delete';
+
+    protected function getAttributes(): array
+    {
+        return [
+            self::INDEX,
+            self::CREATE,
+            self::EDIT,
+            self::DELETE,
+        ];
+    }
 
     protected function getEntityClass(): string
     {
