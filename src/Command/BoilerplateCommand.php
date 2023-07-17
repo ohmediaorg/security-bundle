@@ -60,6 +60,7 @@ class BoilerplateCommand extends Command
         ];
 
         $pascalCase = $parameters['singular']['pascal_case'];
+        $snakeCase = $parameters['singular']['snake_case'];
 
         $parameters['has_view_route'] = $this->io->confirm(sprintf(
             'Does the %s entity require a view route? (eg. /%s/{id})',
@@ -67,19 +68,35 @@ class BoilerplateCommand extends Command
             $parameters['singular']['kebab_case']
         ), false);
 
-        $entityFile = sprintf('src/Entity/%s.php', $pascalCase);
-        $repositoryFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
-        $formFile = sprintf('src/Form/%sType.php', $pascalCase);
-        $controllerFile = sprintf('src/Controller/%sController.php', $pascalCase);
-        $voterFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
+        $entityPhpFile = sprintf('src/Entity/%s.php', $pascalCase);
+        $repositoryPhpFile = sprintf('src/Repository/%sRepository.php', $pascalCase);
+        $formPhpFile = sprintf('src/Form/%sType.php', $pascalCase);
+        $controllerPhpFile = sprintf('src/Controller/%sController.php', $pascalCase);
+        $voterPhpFile = sprintf('src/Security/Voter/%sVoter.php', $pascalCase);
+        $indexTwigFile = sprintf('templates/%s/%s_index.html.twig', $snakeCase, $snakeCase);
+        $createTwigFile = sprintf('templates/%s/%s_create.html.twig', $snakeCase, $snakeCase);
+        $editTwigFile = sprintf('templates/%s/%s_edit.html.twig', $snakeCase, $snakeCase);
+        $formTwigFile = sprintf('templates/%s/_%s_form.html.twig', $snakeCase, $snakeCase);
+        $deleteTwigFile = sprintf('templates/%s/%s_delete.html.twig', $snakeCase, $snakeCase);
 
         $this
-            ->generateFile('Entity.tpl.php', $entityFile, $parameters)
-            ->generateFile('Repository.tpl.php', $repositoryFile, $parameters)
-            ->generateFile('Form.tpl.php', $formFile, $parameters)
-            ->generateFile('Controller.tpl.php', $controllerFile, $parameters)
-            ->generateFile('Voter.tpl.php', $voterFile, $parameters)
+            ->generateFile('Entity.tpl.php', $entityPhpFile, $parameters)
+            ->generateFile('Repository.tpl.php', $repositoryPhpFile, $parameters)
+            ->generateFile('Form.tpl.php', $formPhpFile, $parameters)
+            ->generateFile('Controller.tpl.php', $controllerPhpFile, $parameters)
+            ->generateFile('Voter.tpl.php', $voterPhpFile, $parameters)
+            ->generateFile('twig/blank.tpl.php', $indexTwigFile, $parameters)
+            ->generateFile('twig/create.tpl.php', $createTwigFile, $parameters)
+            ->generateFile('twig/edit.tpl.php', $editTwigFile, $parameters)
+            ->generateFile('twig/form.tpl.php', $formTwigFile, $parameters)
+            ->generateFile('twig/form.tpl.php', $deleteTwigFile, $parameters)
         ;
+
+        if ($parameters['has_view_route']) {
+            $viewTwigFile = sprintf('templates/%s/%s_view.html.twig', $snakeCase, $snakeCase);
+
+            $this->generateFile('twig/blank.tpl.php', $viewTwigFile, $parameters);
+        }
 
         return Command::SUCCESS;
     }
