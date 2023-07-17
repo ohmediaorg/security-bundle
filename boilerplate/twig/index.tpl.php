@@ -29,6 +29,8 @@
         {% endif %}
       </td>
     </tr>
+    {% else %}
+    <tr><td colspan="100%">No <?= $plural['readable'] ?> found.</td></tr>
     {% endfor %}
   </tbody>
 </table>
