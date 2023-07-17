@@ -28,7 +28,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 
         $<?= $plural['camel_case'] ?> = $<?= $singular['camel_case'] ?>Repository->findAll();
 
-        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_index.html.twig', [
+        return $this->render('<?= $singular['snake_case'] ?>/<?= $singular['snake_case'] ?>_index.html.twig', [
             '<?= $plural['snake_case'] ?>' => $<?= $plural['camel_case'] ?>,
             'new_<?= $singular['snake_case'] ?>' => $new<?= $singular['pascal_case'] ?>,
             'attributes' => [
@@ -55,7 +55,30 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             'You cannot create a new <?= $singular['readable'] ?>.'
         );
 
-        return $this->form($request, $<?= $singular['camel_case'] ?>, $<?= $singular['camel_case'] ?>Repository);
+        $form = $this->createForm(<?= $singular['pascal_case'] ?>Type::class, $<?= $singular['camel_case'] ?>);
+
+        $form->add('submit', SubmitType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $<?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
+
+            $this->addFlash('notice', 'The <?= $singular['readable'] ?> was created successfully.');
+
+<?php if ($has_view_route) { ?>
+            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_view', [
+                'id' => $<?= $singular['camel_case'] ?>->getId(),
+            ]);
+<?php } else { ?>
+            return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
+<?php } ?>
+        }
+
+        return $this->render('<?= $singular['snake_case'] ?>/<?= $singular['snake_case'] ?>_create.html.twig', [
+            'form' => $form->createView(),
+            '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
+        ]);
     }
 
 <?php if ($has_view_route) { ?>
@@ -68,7 +91,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             'You cannot view this <?= $singular['readable'] ?>.'
         );
 
-        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_view.html.twig', [
+        return $this->render('<?= $singular['snake_case'] ?>/<?= $singular['snake_case'] ?>_view.html.twig', [
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
     }
@@ -86,14 +109,6 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             'You cannot edit this <?= $singular['readable'] ?>.'
         );
 
-        return $this->form($request, $<?= $singular['camel_case'] ?>, $<?= $singular['camel_case'] ?>Repository);
-    }
-
-    private function form(
-        Request $request,
-        <?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>,
-        <?= $singular['pascal_case'] ?>Repository $<?= $singular['camel_case'] ?>Repository
-    ): Response {
         $form = $this->createForm(<?= $singular['pascal_case'] ?>Type::class, $<?= $singular['camel_case'] ?>);
 
         $form->add('submit', SubmitType::class);
@@ -103,7 +118,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $<?= $singular['camel_case'] ?>Repository->save($<?= $singular['camel_case'] ?>, true);
 
-            $this->addFlash('notice', 'Changes to the <?= $singular['readable'] ?> were saved successfully.');
+            $this->addFlash('notice', 'The <?= $singular['readable'] ?> was updated successfully.');
 
 <?php if ($has_view_route) { ?>
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_view', [
@@ -114,7 +129,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
 <?php } ?>
         }
 
-        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_form.html.twig', [
+        return $this->render('<?= $singular['snake_case'] ?>/<?= $singular['snake_case'] ?>_edit.html.twig', [
             'form' => $form->createView(),
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
@@ -146,7 +161,7 @@ class <?= $singular['pascal_case'] ?>Controller extends AbstractController
             return $this->redirectToRoute('<?= $singular['snake_case'] ?>_index');
         }
 
-        return $this->render('<?= $singular['camel_case'] ?>/<?= $singular['snake_case'] ?>_delete.html.twig', [
+        return $this->render('<?= $singular['snake_case'] ?>/<?= $singular['snake_case'] ?>_delete.html.twig', [
             'form' => $form->createView(),
             '<?= $singular['snake_case'] ?>' => $<?= $singular['camel_case'] ?>,
         ]);
