@@ -20,4 +20,9 @@ class <?= $singular['pascal_case'] . "\n" ?>
     {
         return $this->id;
     }
+
+    public function __toString(): string
+    {
+        return '<?= $singular['readable'] ?> #' . $this->id;
+    }
 }

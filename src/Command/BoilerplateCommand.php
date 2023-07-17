@@ -85,17 +85,17 @@ class BoilerplateCommand extends Command
             ->generateFile('Form.tpl.php', $formPhpFile, $parameters)
             ->generateFile('Controller.tpl.php', $controllerPhpFile, $parameters)
             ->generateFile('Voter.tpl.php', $voterPhpFile, $parameters)
-            ->generateFile('twig/blank.tpl.php', $indexTwigFile, $parameters)
+            ->generateFile('twig/index.tpl.php', $indexTwigFile, $parameters)
             ->generateFile('twig/create.tpl.php', $createTwigFile, $parameters)
             ->generateFile('twig/edit.tpl.php', $editTwigFile, $parameters)
-            ->generateFile('twig/form.tpl.php', $formTwigFile, $parameters)
-            ->generateFile('twig/form.tpl.php', $deleteTwigFile, $parameters)
+            ->generateFile('twig/_form.tpl.php', $formTwigFile, $parameters)
+            ->generateFile('twig/delete.tpl.php', $deleteTwigFile, $parameters)
         ;
 
         if ($parameters['has_view_route']) {
             $viewTwigFile = sprintf('templates/%s/%s_view.html.twig', $snakeCase, $snakeCase);
 
-            $this->generateFile('twig/blank.tpl.php', $viewTwigFile, $parameters);
+            $this->generateFile('twig/view.tpl.php', $viewTwigFile, $parameters);
         }
 
         return Command::SUCCESS;
