@@ -5,9 +5,9 @@ namespace OHMedia\SecurityBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use OHMedia\SecurityBundle\Entity\Traits\Blameable;
+use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\SecurityBundle\Repository\UserRepository;
-use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUser;
+use OHMedia\TimezoneBundle\Entity\Traits\TimezoneUserTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,8 +16,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    use Blameable;
-    use TimezoneUser;
+    use BlameableTrait;
+    use TimezoneUserTrait;
 
     #[ORM\Id()]
     #[ORM\GeneratedValue()]

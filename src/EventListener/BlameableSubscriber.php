@@ -3,7 +3,7 @@
 namespace OHMedia\SecurityBundle\EventListener;
 
 use DateTime;
-use OHMedia\SecurityBundle\Entity\Traits\Blameable as BlameableTrait;
+use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\SecurityBundle\Entity\User;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;

@@ -5,13 +5,13 @@ namespace OHMedia\SecurityBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use OHMedia\SecurityBundle\Entity\Traits\Blameable;
+use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use Stringable;
 
 #[ORM\Entity]
 class UserRole implements Stringable
 {
-    use Blameable;
+    use BlameableTrait;
 
     #[ORM\Id()]
     #[ORM\GeneratedValue()]

@@ -5,7 +5,7 @@ namespace OHMedia\SecurityBundle\Entity\Traits;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-trait Blameable
+trait BlameableTrait
 {
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected $created_at;
