@@ -2,7 +2,6 @@
 
 namespace OHMedia\SecurityBundle\EventListener;
 
-use DateTime;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\SecurityBundle\Entity\User;
 use Doctrine\Common\EventSubscriber;
@@ -54,7 +53,7 @@ class BlameableSubscriber implements EventSubscriber
             ? $user->getEmail()
             : null;
 
-        $now = new DateTime();
+        $now = new \DateTime();
 
         if ($creating) {
             $entity

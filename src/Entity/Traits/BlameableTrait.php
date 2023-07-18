@@ -2,7 +2,6 @@
 
 namespace OHMedia\SecurityBundle\Entity\Traits;
 
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 trait BlameableTrait
@@ -19,12 +18,12 @@ trait BlameableTrait
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
     protected $updated_by;
 
-    public function getCreatedAt(): ?DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(?DateTimeInterface $createdAt): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
         $this->created_at = $createdAt;
 
@@ -43,12 +42,12 @@ trait BlameableTrait
         return $this;
     }
 
-    public function getUpdatedAt(): ?DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updated_at = $updatedAt;
 
