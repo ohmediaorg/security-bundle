@@ -20,7 +20,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-abstract class UserBackendController extends AbstractController
+abstract class AbstractUserBackendController extends AbstractController
 {
     abstract protected function indexRender(UserRepository $userRepository): Response;
     abstract protected function createRender(FormView $formView, User $user): Response;

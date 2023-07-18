@@ -133,9 +133,9 @@ namespace App\Security\Voter;
 
 use App\Entity\Post;
 use OHMedia\SecurityBundle\Entity\User;
-use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
+use OHMedia\SecurityBundle\Security\Voter\AbstractEntityVoter;
 
-class PostVoter extends EntityVoter
+class PostVoter extends AbstractEntityVoter
 {
     // ...
     const PUBLISH = 'publish';

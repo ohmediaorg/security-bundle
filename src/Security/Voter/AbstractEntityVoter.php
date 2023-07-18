@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 use function Symfony\Component\String\u;
 
-abstract class EntityVoter extends Voter
+abstract class AbstractEntityVoter extends Voter
 {
     abstract protected function getAttributes(): array;
     abstract protected function getEntityClass(): string;
