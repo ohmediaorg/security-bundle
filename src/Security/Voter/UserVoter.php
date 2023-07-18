@@ -3,9 +3,8 @@
 namespace OHMedia\SecurityBundle\Security\Voter;
 
 use OHMedia\SecurityBundle\Entity\User;
-use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
-class UserVoter extends EntityVoter
+class UserVoter extends AbstractEntityVoter
 {
     public const INDEX = 'index';
     public const CREATE = 'create';
