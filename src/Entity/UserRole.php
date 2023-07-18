@@ -6,10 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
-use Stringable;
 
 #[ORM\Entity]
-class UserRole implements Stringable
+class UserRole implements \Stringable
 {
     use BlameableTrait;
 
