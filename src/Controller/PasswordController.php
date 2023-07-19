@@ -8,6 +8,7 @@ use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\EmailBundle\Util\EmailAddress;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Repository\UserRepository;
+use OHMedia\TimezoneBundle\Util\DateTimeUtil;
 use OHMedia\UtilityBundle\Util\RandomString;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,9 +62,7 @@ class PasswordController extends AbstractController
 
             $currentReset = $user->getNextReset();
 
-            $now = new \DateTime();
-
-            if ($currentReset && $currentReset > $now) {
+            if ($currentReset && DateTimeUtil::isFuture($currentReset)) {
                 $this->addFlash('warning', 'You recently requested a password reset.');
 
                 return $this->redirectToRoute('user_forgot_password');
@@ -137,9 +136,9 @@ class PasswordController extends AbstractController
             return $this->redirectToRoute('user_forgot_password');
         }
 
-        $now = new \DateTime();
+        $resetExpires = $user->getResetExpires();
 
-        if ($now > $user->getResetExpires()) {
+        if (!$resetExpires || DateTimeUtil::isPast($resetExpires)) {
             $this->addFlash('error', 'This password reset is expired. Please start a new one.');
 
             return $this->redirectToRoute('user_forgot_password');
