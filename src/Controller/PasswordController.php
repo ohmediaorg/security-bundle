@@ -2,7 +2,7 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
-use OHMedia\AntispamBundle\Form\Type\RecaptchaType;
+use OHMedia\AntispamBundle\Form\Type\CaptchaType;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\EmailBundle\Util\EmailAddress;
@@ -43,7 +43,7 @@ class PasswordController extends AbstractController
 
         $form = $formBuilder
             ->add('email', EmailType::class)
-            ->add('recaptcha', RecaptchaType::class)
+            ->add('captcha', CaptchaType::class)
             ->add('submit', SubmitType::class)
             ->getForm();
 
