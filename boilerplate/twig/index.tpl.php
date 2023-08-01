@@ -1,36 +1,36 @@
-<h1><?= $plural['readable'] ?></h1>
+<h1><?php echo $plural['readable']; ?></h1>
 
-{% if is_granted(attributes.create, new_<?= $singular['snake_case'] ?>) %}
-<a href="{{ path('<?= $singular['snake_case'] ?>_create') }}">Create <?= $singular['readable'] ?></a>
+{% if is_granted(attributes.create, new_<?php echo $singular['snake_case']; ?>) %}
+<a href="{{ path('<?php echo $singular['snake_case']; ?>_create') }}">Create <?php echo $singular['readable']; ?></a>
 {% endif %}
 
 <table>
   <thead>
     <tr>
-      <th><?= $singular['readable'] ?></th>
+      <th><?php echo $singular['readable']; ?></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    {% for <?= $singular['snake_case'] ?> in <?= $plural['snake_case'] ?> %}
+    {% for <?php echo $singular['snake_case']; ?> in <?php echo $plural['snake_case']; ?> %}
     <tr>
-      <td>{{ <?= $singular['snake_case'] ?> }}</td>
+      <td>{{ <?php echo $singular['snake_case']; ?> }}</td>
       <td>
 <?php if ($has_view_route) { ?>
-        {% if is_granted(attributes.view, <?= $singular['snake_case'] ?>) %}
-        <a href="{{ path('<?= $singular['snake_case'] ?>_view', {id: <?= $singular['snake_case'] ?>.id}) }}">View</a>
+        {% if is_granted(attributes.view, <?php echo $singular['snake_case']; ?>) %}
+        <a href="{{ path('<?php echo $singular['snake_case']; ?>_view', {id: <?php echo $singular['snake_case']; ?>.id}) }}">View</a>
         {% endif %}
 <?php } ?>
-        {% if is_granted(attributes.edit, <?= $singular['snake_case'] ?>) %}
-        <a href="{{ path('<?= $singular['snake_case'] ?>_edit', {id: <?= $singular['snake_case'] ?>.id}) }}">Edit</a>
+        {% if is_granted(attributes.edit, <?php echo $singular['snake_case']; ?>) %}
+        <a href="{{ path('<?php echo $singular['snake_case']; ?>_edit', {id: <?php echo $singular['snake_case']; ?>.id}) }}">Edit</a>
         {% endif %}
-        {% if is_granted(attributes.delete, <?= $singular['snake_case'] ?>) %}
-        <a href="{{ path('<?= $singular['snake_case'] ?>_delete', {id: <?= $singular['snake_case'] ?>.id}) }}">Delete</a>
+        {% if is_granted(attributes.delete, <?php echo $singular['snake_case']; ?>) %}
+        <a href="{{ path('<?php echo $singular['snake_case']; ?>_delete', {id: <?php echo $singular['snake_case']; ?>.id}) }}">Delete</a>
         {% endif %}
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="100%">No <?= $plural['readable'] ?> found.</td></tr>
+    <tr><td colspan="100%">No <?php echo $plural['readable']; ?> found.</td></tr>
     {% endfor %}
   </tbody>
 </table>

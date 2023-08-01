@@ -2,8 +2,8 @@
 
 namespace OHMedia\SecurityBundle\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\EqualTo;
@@ -19,9 +19,9 @@ class DeleteType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new EqualTo('DELETE'),
-                    new NotBlank()
+                    new NotBlank(),
                 ],
-                'attr' => ['autocomplete' => 'off']
+                'attr' => ['autocomplete' => 'off'],
             ])
         ;
     }
@@ -29,7 +29,7 @@ class DeleteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => null
+            'data_class' => null,
         ]);
     }
 }

@@ -11,6 +11,7 @@ use function Symfony\Component\String\u;
 abstract class AbstractEntityVoter extends Voter
 {
     abstract protected function getAttributes(): array;
+
     abstract protected function getEntityClass(): string;
 
     public function supportsAttribute(string $attribute): bool
@@ -46,14 +47,10 @@ abstract class AbstractEntityVoter extends Voter
             return false;
         }
 
-        $method = 'can' . u($attribute)->camel()->title();
+        $method = 'can'.u($attribute)->camel()->title();
 
         if (!method_exists($this, $method)) {
-            throw new \LogicException(sprintf(
-                'Your voter "\%s" should implement %s()',
-                static::class,
-                $method
-            ));
+            throw new \LogicException(sprintf('Your voter "\%s" should implement %s()', static::class, $method));
         }
 
         return call_user_func_array(

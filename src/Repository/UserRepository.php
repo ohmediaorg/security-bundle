@@ -3,8 +3,6 @@
 namespace OHMedia\SecurityBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use OHMedia\SecurityBundle\Entity\User;
 

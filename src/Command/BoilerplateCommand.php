@@ -4,7 +4,6 @@ namespace OHMedia\SecurityBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,8 +21,8 @@ class BoilerplateCommand extends Command
 
     public function __construct(string $projectDir)
     {
-        $this->projectDir = $projectDir . '/';
-        $this->templateDir = __DIR__ . '/../../boilerplate/';
+        $this->projectDir = $projectDir.'/';
+        $this->templateDir = __DIR__.'/../../boilerplate/';
         $this->filesystem = new Filesystem();
 
         $this->inflector = new EnglishInflector();
@@ -120,7 +119,7 @@ class BoilerplateCommand extends Command
 
     private function generateFile(string $template, string $destination, array $parameters)
     {
-        $absoluteDestination = $this->projectDir . $destination;
+        $absoluteDestination = $this->projectDir.$destination;
 
         if (file_exists($absoluteDestination)) {
             $continue = $this->io->confirm(sprintf(
@@ -137,7 +136,7 @@ class BoilerplateCommand extends Command
 
         extract($parameters);
 
-        include $this->templateDir . $template;
+        include $this->templateDir.$template;
 
         $contents = ob_get_clean();
 

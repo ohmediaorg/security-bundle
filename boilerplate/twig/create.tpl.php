@@ -1,3 +1,3 @@
-<h1>Create <?= $singular['readable'] ?></h1>
+<h1>Create <?php echo $singular['readable']; ?></h1>
 
-{% include '<?= $singular['snake_case'] ?>/_<?= $singular['snake_case'] ?>_form.html.twig' %}
+{% include '<?php echo $singular['snake_case']; ?>/_<?php echo $singular['snake_case']; ?>_form.html.twig' %}

@@ -6,8 +6,8 @@ use OHMedia\SecurityBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +39,7 @@ class UserType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'help' => $verifyEmail
-                    ? 'New email address awaiting verification: ' . $verifyEmail
+                    ? 'New email address awaiting verification: '.$verifyEmail
                     : '',
             ])
             ->add('password', RepeatedType::class, [
@@ -47,13 +47,13 @@ class UserType extends AbstractType
                 'type' => PasswordType::class,
                 'options' => ['attr' => ['autocomplete' => 'new-password']],
                 'invalid_message' => 'The password fields must match.',
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
                 'mapped' => false,
             ])
             ->add('timezone', TimezoneType::class, [
                 'required' => false,
-                'help' => 'The default timezone is ' . $this->defaultTimezone,
+                'help' => 'The default timezone is '.$this->defaultTimezone,
             ])
         ;
 

@@ -1,12 +1,12 @@
-<?= "<?php\n" ?>
+<?php echo "<?php\n"; ?>
 
 namespace App\Security\Voter;
 
-use App\Entity\<?= $singular['pascal_case'] ?>;
+use App\Entity\<?php echo $singular['pascal_case']; ?>;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
 
-class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
+class <?php echo $singular['pascal_case']; ?>Voter extends EntityVoter
 {
     public const INDEX = 'index';
     public const CREATE = 'create';
@@ -31,32 +31,32 @@ class <?= $singular['pascal_case'] ?>Voter extends EntityVoter
 
     protected function getEntityClass(): string
     {
-        return <?= $singular['pascal_case'] ?>::class;
+        return <?php echo $singular['pascal_case']; ?>::class;
     }
 
-    protected function canIndex(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    protected function canIndex(<?php echo $singular['pascal_case']; ?> $<?php echo $singular['camel_case']; ?>, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canCreate(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    protected function canCreate(<?php echo $singular['pascal_case']; ?> $<?php echo $singular['camel_case']; ?>, User $loggedIn): bool
     {
         return true;
     }
 <?php if ($has_view_route) { ?>
 
-    protected function canView(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    protected function canView(<?php echo $singular['pascal_case']; ?> $<?php echo $singular['camel_case']; ?>, User $loggedIn): bool
     {
         return true;
     }
 <?php } ?>
 
-    protected function canEdit(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    protected function canEdit(<?php echo $singular['pascal_case']; ?> $<?php echo $singular['camel_case']; ?>, User $loggedIn): bool
     {
         return true;
     }
 
-    protected function canDelete(<?= $singular['pascal_case'] ?> $<?= $singular['camel_case'] ?>, User $loggedIn): bool
+    protected function canDelete(<?php echo $singular['pascal_case']; ?> $<?php echo $singular['camel_case']; ?>, User $loggedIn): bool
     {
         return true;
     }

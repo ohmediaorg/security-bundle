@@ -1,13 +1,13 @@
-<?= "<?php\n" ?>
+<?php echo "<?php\n"; ?>
 
 namespace App\Form;
 
-use App\Entity\<?= $singular['pascal_case'] ?>;
+use App\Entity\<?php echo $singular['pascal_case']; ?>;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class <?= $singular['pascal_case'] ?>Type extends AbstractType
+class <?php echo $singular['pascal_case']; ?>Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -19,7 +19,7 @@ class <?= $singular['pascal_case'] ?>Type extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => <?= $singular['pascal_case'] ?>::class,
+            'data_class' => <?php echo $singular['pascal_case']; ?>::class,
         ]);
     }
 }

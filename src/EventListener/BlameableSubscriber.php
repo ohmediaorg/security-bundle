@@ -2,11 +2,11 @@
 
 namespace OHMedia\SecurityBundle\EventListener;
 
-use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
-use OHMedia\SecurityBundle\Entity\User;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
+use OHMedia\SecurityBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BlameableSubscriber implements EventSubscriber
@@ -74,7 +74,7 @@ class BlameableSubscriber implements EventSubscriber
 
         do {
             $traits = array_merge(class_uses($class), $traits);
-        } while($class = get_parent_class($class));
+        } while ($class = get_parent_class($class));
 
         foreach ($traits as $trait => $same) {
             $traits = array_merge(class_uses($trait), $traits);

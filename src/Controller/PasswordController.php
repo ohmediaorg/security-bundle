@@ -11,15 +11,15 @@ use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\TimezoneBundle\Util\DateTimeUtil;
 use OHMedia\UtilityBundle\Util\RandomString;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PasswordController extends AbstractController
 {
@@ -149,7 +149,7 @@ class PasswordController extends AbstractController
                 'type' => PasswordType::class,
                 'options' => ['attr' => ['autocomplete' => 'new-password']],
                 'invalid_message' => 'The password fields must match.',
-                'first_options'  => ['label' => 'New Password'],
+                'first_options' => ['label' => 'New Password'],
                 'second_options' => ['label' => 'Repeat Password'],
             ])
             ->add('submit', SubmitType::class)

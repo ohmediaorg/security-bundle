@@ -1,3 +1,3 @@
-<h1>Delete <?= $singular['readable'] ?></h1>
+<h1>Delete <?php echo $singular['readable']; ?></h1>
 
 {{ form(form) }}

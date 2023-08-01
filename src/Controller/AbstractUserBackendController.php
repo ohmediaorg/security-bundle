@@ -23,8 +23,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 abstract class AbstractUserBackendController extends AbstractController
 {
     abstract protected function indexRender(UserRepository $userRepository): Response;
+
     abstract protected function createRender(FormView $formView, User $user): Response;
+
     abstract protected function editRender(FormView $formView, User $user): Response;
+
     abstract protected function deleteRender(FormView $formView, User $user): Response;
 
     #[Route('/users', name: 'user_index', methods: ['GET'])]
