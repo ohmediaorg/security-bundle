@@ -34,7 +34,7 @@ security:
         main:
             # ...
             provider: app_user_provider
-            
+
             form_login:
                 login_path: user_login
                 check_path: user_login
@@ -46,6 +46,12 @@ security:
             logout:
                 path: user_logout
                 target: user_login
+
+    # ...
+
+    access_decision_manager:
+        strategy: unanimous
+        allow_if_all_abstain: false
 ```
 
 Update `config/packages/routes.yml`:
@@ -139,7 +145,7 @@ class PostVoter extends AbstractEntityVoter
 {
     // ...
     const PUBLISH = 'publish';
-    
+
     // ...
 
     protected function canPublish(Post $post, User $loggedIn): bool
@@ -171,7 +177,7 @@ public function publish(Post $post, Request $request)
         $post,
         'You cannot publish this post.'
     );
-    
+
     // ...
 }
 ```
