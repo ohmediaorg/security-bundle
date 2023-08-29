@@ -4,9 +4,9 @@ namespace App\Security\Voter;
 
 use App\Entity\<?php echo $singular['pascal_case']; ?>;
 use OHMedia\SecurityBundle\Entity\User;
-use OHMedia\SecurityBundle\Security\Voter\EntityVoter;
+use OHMedia\SecurityBundle\Security\Voter\AbstractEntityVoter;
 
-class <?php echo $singular['pascal_case']; ?>Voter extends EntityVoter
+class <?php echo $singular['pascal_case']; ?>Voter extends AbstractEntityVoter
 {
     public const INDEX = 'index';
     public const CREATE = 'create';
