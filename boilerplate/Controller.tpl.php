@@ -80,8 +80,8 @@ class <?php echo $singular['pascal_case']; ?>Controller extends AbstractControll
             '<?php echo $singular['snake_case']; ?>' => $<?php echo $singular['camel_case']; ?>,
         ]);
     }
-
 <?php if ($has_view_route) { ?>
+
     #[Route('/<?php echo $singular['kebab_case']; ?>/{id}', name: '<?php echo $singular['snake_case']; ?>_view', methods: ['GET'])]
     public function view(<?php echo $singular['pascal_case']; ?> $<?php echo $singular['camel_case']; ?>): Response
     {
