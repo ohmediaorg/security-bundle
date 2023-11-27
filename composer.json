@@ -10,12 +10,30 @@
             "email": "justin@ohmedia.ca"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ohmediaorg/antispam-bundle"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ohmediaorg/email-bundle"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ohmediaorg/timezone-bundle"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ohmediaorg/utility-bundle"
+        }
+    ],
     "require": {
         "ohmediaorg/antispam-bundle": "dev-main",
         "ohmediaorg/email-bundle": "dev-main",
         "ohmediaorg/timezone-bundle": "dev-main",
         "ohmediaorg/utility-bundle": "dev-main",
-        "php": "^7.2",
+        "php": ">=7.2.5",
         "symfony/framework-bundle": "5.4.*"
     },
     "autoload": {
