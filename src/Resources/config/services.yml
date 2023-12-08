@@ -1,7 +1,23 @@
 services:
-    OHMedia\SecurityBundle\EventListener\BlameableSubscriber:
+    OHMedia\SecurityBundle\Service\Blamer:
         arguments: ["@security.token_storage"]
-        tags: ["doctrine.event_subscriber"]
+
+    ohmedia_security.blamer:
+      alias: OHMedia\SecurityBundle\Service\Blamer
+
+    OHMedia\SecurityBundle\EventListener\BlamePrePersist:
+        arguments: ["@ohmedia_security.blamer"]
+        tags:
+            -
+                name: 'doctrine.event_listener'
+                event: 'prePersist'
+
+    OHMedia\SecurityBundle\EventListener\BlamePreUpdate:
+        arguments: ["@ohmedia_security.blamer"]
+        tags:
+            -
+                name: 'doctrine.event_listener'
+                event: 'preUpdate'
 
     OHMedia\SecurityBundle\Command\BoilerplateCommand:
         arguments: ["%kernel.project_dir%"]

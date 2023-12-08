@@ -1,15 +1,12 @@
 <?php
 
-namespace OHMedia\SecurityBundle\EventListener;
+namespace OHMedia\SecurityBundle\Service;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Events;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\SecurityBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class BlameableSubscriber implements EventSubscriber
+class Blamer
 {
     private $tokenStorage;
 
@@ -18,28 +15,8 @@ class BlameableSubscriber implements EventSubscriber
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getSubscribedEvents(): array
+    public function blame($entity)
     {
-        return [
-            Events::prePersist,
-            Events::preUpdate,
-        ];
-    }
-
-    public function prePersist(LifecycleEventArgs $args)
-    {
-        $this->addBlameables(true, $args);
-    }
-
-    public function preUpdate(LifecycleEventArgs $args)
-    {
-        $this->addBlameables(false, $args);
-    }
-
-    private function addBlameables($creating, LifecycleEventArgs $args)
-    {
-        $entity = $args->getObject();
-
         $class = get_class($entity);
 
         if (!in_array(BlameableTrait::class, $this->getTraits($class))) {
@@ -49,22 +26,24 @@ class BlameableSubscriber implements EventSubscriber
         $token = $this->tokenStorage->getToken();
 
         $user = $token ? $token->getUser() : null;
-        $blame = $user instanceof User
+
+        $by = $user instanceof User
             ? $user->getEmail()
             : null;
 
-        $now = new \DateTime();
+        $at = new \DateTime();
 
-        if ($creating) {
-            $entity
-                ->setCreatedAt($now)
-                ->setCreatedBy($blame)
-            ;
+        if (!$entity->getCreatedAt()) {
+            $entity->setCreatedAt($at);
+        }
+
+        if (!$entity->getCreatedBy()) {
+            $entity->setCreatedBy($by);
         }
 
         $entity
-            ->setUpdatedAt($now)
-            ->setUpdatedBy($blame)
+            ->setUpdatedAt($at)
+            ->setUpdatedBy($by)
         ;
     }
 
