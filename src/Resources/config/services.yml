@@ -12,22 +12,16 @@ services:
         tags: ["console.command"]
 
     OHMedia\SecurityBundle\Controller\LoginController:
-        tags: ["controller.service_arguments"]
-        calls:
-            - method: setContainer
-              arguments: ["@service_container"]
+        tags: ["container.service_subscriber", "controller.service_arguments"]
+        autowire: true
 
     OHMedia\SecurityBundle\Controller\PasswordController:
-        tags: ["controller.service_arguments"]
-        calls:
-            - method: setContainer
-              arguments: ["@service_container"]
+        tags: ["container.service_subscriber", "controller.service_arguments"]
+        autowire: true
 
     OHMedia\SecurityBundle\Controller\VerificationController:
-        tags: ["controller.service_arguments"]
-        calls:
-            - method: setContainer
-              arguments: ["@service_container"]
+        tags: ["container.service_subscriber", "controller.service_arguments"]
+        autowire: true
 
     OHMedia\SecurityBundle\Form\UserType:
         arguments: ["%oh_media_timezone.timezone%"]
