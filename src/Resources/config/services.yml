@@ -2,18 +2,18 @@ services:
     OHMedia\SecurityBundle\Service\Blamer:
         arguments: ["@security.token_storage"]
 
-    ohmedia_security.blamer:
+    oh_media_security.blamer:
       alias: OHMedia\SecurityBundle\Service\Blamer
 
     OHMedia\SecurityBundle\EventListener\BlamePrePersist:
-        arguments: ["@ohmedia_security.blamer"]
+        arguments: ["@oh_media_security.blamer"]
         tags:
             -
                 name: 'doctrine.event_listener'
                 event: 'prePersist'
 
     OHMedia\SecurityBundle\EventListener\BlamePreUpdate:
-        arguments: ["@ohmedia_security.blamer"]
+        arguments: ["@oh_media_security.blamer"]
         tags:
             -
                 name: 'doctrine.event_listener'
