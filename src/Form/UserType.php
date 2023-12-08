@@ -22,7 +22,7 @@ class UserType extends AbstractType
         $this->defaultTimezone = $defaultTimezone;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = isset($options['data']) ? $options['data'] : null;
 
@@ -66,7 +66,7 @@ class UserType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
