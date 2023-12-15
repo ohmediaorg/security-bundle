@@ -77,7 +77,7 @@ aforementioned directory:
 
 1. `forgot_password_form.html.twig`
 1. `login_form.html.twig`
-1. `reset_password_form.html.twig`
+1. `password_reset_form.html.twig`
 
 The forms can simply be rendered with `{{ form(form) }}`.
 
