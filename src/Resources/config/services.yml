@@ -35,6 +35,10 @@ services:
         tags: ["container.service_subscriber", "controller.service_arguments"]
         autowire: true
 
+    OHMedia\SecurityBundle\Controller\UserController:
+        tags: ["container.service_subscriber", "controller.service_arguments"]
+        autowire: true
+
     OHMedia\SecurityBundle\Controller\VerificationController:
         tags: ["container.service_subscriber", "controller.service_arguments"]
         autowire: true
