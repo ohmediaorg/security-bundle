@@ -1,1 +1,7 @@
-Click here to verify your email: {{ url }}
+{% extends '@OHMediaEmail/base.html.twig' %}
+
+{% block content %}
+<p>Hello {{ user }},</p>
+
+<p>Please <a href="{{ url }}">click here</a> to verify your new email address.</p>
+{% endblock %}
