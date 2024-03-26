@@ -61,7 +61,7 @@ class UserType extends AbstractType
 
         if (!$user->isDeveloper() && !$usersMatch) {
             $builder->add('enabled', CheckboxType::class, [
-                'required' => true,
+                'required' => false,
             ]);
         }
     }
