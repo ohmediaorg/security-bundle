@@ -49,3 +49,7 @@ services:
 
     OHMedia\SecurityBundle\Security\Voter\UserVoter:
         tags: ["security.voter"]
+
+    OHMedia\SecurityBundle\Service\UserNavItemProvider:
+        autowire: true
+        tags: ["oh_media_backend.nav_item_provider"]
