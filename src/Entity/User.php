@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $fullName = $this->getFullName();
 
-        return $fullName ?? $this->email;
+        return $fullName ?: $this->email;
     }
 
     public function getId(): ?int
