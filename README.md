@@ -105,29 +105,6 @@ To create the first user, run this command:
 $ php bin/console ohmedia:security:create-user
 ```
 
-# Entities
-
-Create entity classes using the boilerplate command:
-
-```bash
-php bin/console ohmedia:security:boilerplate
-
- Class name of the entity:
- > Post
-```
-
-then add your custom fields using the maker command:
-
-```bash
-$ php bin/console make:entity
-
- Class name of the entity to create or update (e.g. TinyGnome):
- > Post
-```
-
-You may want to represent some of these custom fields in the
-`App\Form\PostType` class that was auto-generated.
-
 ## Custom Attributes
 
 Define a new attribute constant and corresponding function in your voter:
