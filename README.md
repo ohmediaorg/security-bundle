@@ -59,7 +59,7 @@ Update `config/packages/routes.yml`:
 ```yaml
 oh_media_security:
     resource: '@OHMediaSecurityBundle/Controller/'
-    type: annotation
+    type: attribute
 ```
 
 ### Login Throttling
