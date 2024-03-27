@@ -2,6 +2,7 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
@@ -20,6 +21,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+#[Admin]
 class UserController extends AbstractController
 {
     #[Route('/users', name: 'user_index', methods: ['GET'])]
