@@ -63,7 +63,7 @@ class UserRole implements \Stringable
         return $this;
     }
 
-    public function getSystemGenerated(): ?bool
+    public function isSystemGenerated(): ?bool
     {
         return $this->system_generated;
     }
