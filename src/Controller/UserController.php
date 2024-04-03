@@ -35,7 +35,7 @@ class UserController extends AbstractController
 
         $qb = $userRepository->createQueryBuilder('u');
 
-        return $this->render('@OHMediaSecurity/user_index.html.twig', [
+        return $this->render('@OHMediaSecurity/user/user_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_user' => new User(),
             'attributes' => [
@@ -83,7 +83,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_index');
         }
 
-        return $this->render('@OHMediaSecurity/user_form.html.twig', [
+        return $this->render('@OHMediaSecurity/user/user_form.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
             'form_title' => 'Create User',
@@ -157,7 +157,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_index');
         }
 
-        return $this->render('@OHMediaSecurity/user_form.html.twig', [
+        return $this->render('@OHMediaSecurity/user/user_form.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
             'form_title' => 'Edit User',
@@ -174,7 +174,7 @@ class UserController extends AbstractController
 
         $email = (new Email())
             ->setSubject('Verify Email Address')
-            ->setTemplate('@OHMediaSecurity/verification_email.html.twig', [
+            ->setTemplate('@OHMediaSecurity/email/verification_email.html.twig', [
                 'user' => $user,
                 'url' => $url,
             ])
@@ -210,7 +210,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_index');
         }
 
-        return $this->render('@OHMediaSecurity/user_delete.html.twig', [
+        return $this->render('@OHMediaSecurity/user/user_delete.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
             'form_title' => sprintf('Delete User %s', $user->getEmail()),
