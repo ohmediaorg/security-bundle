@@ -2,9 +2,11 @@
 
 namespace OHMedia\SecurityBundle\Form;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OHMedia\SecurityBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -15,10 +17,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
+    private $entityManager;
     private string $defaultTimezone;
 
-    public function __construct(string $defaultTimezone)
+    public function __construct(EntityManagerInterface $entityManager, string $defaultTimezone)
     {
+        $this->entityManager = $entityManager;
         $this->defaultTimezone = $defaultTimezone;
     }
 
@@ -29,6 +33,12 @@ class UserType extends AbstractType
         $loggedIn = $options['logged_in'];
 
         $verifyEmail = $user ? $user->getVerifyEmail() : null;
+
+        $entities = [];
+        $metas = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        foreach ($metas as $meta) {
+            $entities[$meta->getName()] = $meta->getName();
+        }
 
         $builder
             ->add('first_name', TextType::class, [
@@ -56,6 +66,14 @@ class UserType extends AbstractType
                 'help' => 'The default timezone is '.$this->defaultTimezone,
             ])
         ;
+
+        if (!$user->isDeveloper()) {
+            $builder->add('entities', ChoiceType::class, [
+                'choices' => $entities,
+                'multiple' => true,
+                'expanded' => true,
+            ]);
+        }
 
         $usersMatch = $loggedIn && $user && ($loggedIn === $user);
 
