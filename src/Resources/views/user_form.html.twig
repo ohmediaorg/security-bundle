@@ -1,8 +1,0 @@
-{% extends '@OHMediaBackend/form.html.twig' %}
-
-{% block breadcrumbs %}
-{{ bootstrap_breadcrumbs(
-  bootstrap_breadcrumb(bootstrap_icon('lock-fill') ~ ' Users', 'user_index'),
-  bootstrap_breadcrumb(user.id ? 'Edit' : 'Create'),
-) }}
-{% endblock %}
