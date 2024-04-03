@@ -2,8 +2,6 @@
 
 namespace OHMedia\SecurityBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\SecurityBundle\Repository\UserRepository;
@@ -56,14 +54,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
     private $verify_email;
-
-    #[ORM\ManyToMany(targetEntity: UserRole::class, inversedBy: 'users')]
-    private $user_roles;
-
-    public function __construct()
-    {
-        $this->user_roles = new ArrayCollection();
-    }
 
     public function __toString(): string
     {
@@ -227,43 +217,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verify_email = $verifyEmail;
 
         return $this;
-    }
-
-    /**
-     * @return Collection[]
-     */
-    public function getUserRoles(): Collection
-    {
-        return $this->user_roles;
-    }
-
-    public function addUserRole(UserRole $userRole): self
-    {
-        if (!$this->user_roles->contains($userRole)) {
-            $this->user_roles[] = $userRole;
-        }
-
-        return $this;
-    }
-
-    public function removeUserRole(UserRole $userRole): self
-    {
-        if ($this->user_roles->contains($userRole)) {
-            $this->user_roles->removeElement($userRole);
-        }
-
-        return $this;
-    }
-
-    public function hasUserRole($name)
-    {
-        foreach ($this->user_roles as $userRole) {
-            if ($userRole->getName() === $name) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public function getRoles(): array
