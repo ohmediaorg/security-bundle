@@ -3,8 +3,6 @@
 namespace OHMedia\SecurityBundle\Form;
 
 use OHMedia\SecurityBundle\Entity\User;
-use OHMedia\SecurityBundle\Entity\UserRole;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -59,19 +57,9 @@ class UserType extends AbstractType
             ])
         ;
 
-        if (!$user->isDeveloper()) {
-            $builder->add('user_roles', EntityType::class, [
-                'label' => 'Roles',
-                'required' => true,
-                'class' => UserRole::class,
-                'multiple' => true,
-                'expanded' => true,
-            ]);
-        }
-
         $usersMatch = $loggedIn && $user && ($loggedIn === $user);
 
-        if (!$user->isDeveloper() && !$usersMatch) {
+        if (!$usersMatch) {
             $builder->add('enabled', CheckboxType::class, [
                 'required' => false,
             ]);
