@@ -55,7 +55,7 @@ class LoginController extends AbstractController
             $this->addFlash('error', $message);
         }
 
-        return $this->render('@OHMediaSecurity/login_form.html.twig', [
+        return $this->render('@OHMediaSecurity/form/login_form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
