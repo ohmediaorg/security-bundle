@@ -47,6 +47,12 @@ abstract class AbstractEntityVoter extends Voter
             return false;
         }
 
+        if (!$loggedIn->isDeveloper()) {
+            if (!in_array($this->getEntityClass(), $loggedIn->getEntities())) {
+                return false;
+            }
+        }
+
         $method = 'can'.u($attribute)->camel()->title();
 
         if (!method_exists($this, $method)) {
