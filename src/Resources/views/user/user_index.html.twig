@@ -52,10 +52,6 @@
           <td>
             {% if user.developer %}
               <span class="badge text-bg-primary">Developer</span>
-            {% else %}
-              {% for user_role in user.userRoles %}
-              <span class="badge text-bg-secondary">{{ user_role }}</span>
-              {% endfor %}
             {% endif %}
           </td>
           <td>{{ user.updatedAt|datetime }}</td>
