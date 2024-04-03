@@ -40,7 +40,7 @@ services:
         autowire: true
 
     OHMedia\SecurityBundle\Form\UserType:
-        arguments: ["%oh_media_timezone.timezone%"]
+        arguments: ["@doctrine.orm.entity_manager", "%oh_media_timezone.timezone%"]
         tags: ["form.type"]
 
     OHMedia\SecurityBundle\Repository\UserRepository:
