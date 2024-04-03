@@ -55,6 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
     private $verify_email;
 
+    #[ORM\Column(type: 'json')]
+    private $entities = [];
+
     public function __toString(): string
     {
         $fullName = $this->getFullName();
@@ -215,6 +218,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerifyEmail(?string $verifyEmail): self
     {
         $this->verify_email = $verifyEmail;
+
+        return $this;
+    }
+
+    public function getEntities(): array
+    {
+        return $this->entities;
+    }
+
+    public function setEntities(array $entities): self
+    {
+        $this->entities = $entities;
 
         return $this;
     }
