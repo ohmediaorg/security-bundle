@@ -2,9 +2,10 @@
 
 namespace OHMedia\SecurityBundle\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
 use OHMedia\SecurityBundle\Entity\User;
+use OHMedia\SecurityBundle\Service\EntityChoiceManager;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -17,12 +18,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-    private $entityManager;
+    private EntityChoiceManager $entityChoiceManager;
     private string $defaultTimezone;
 
-    public function __construct(EntityManagerInterface $entityManager, string $defaultTimezone)
+    public function __construct(EntityChoiceManager $entityChoiceManager, string $defaultTimezone)
     {
-        $this->entityManager = $entityManager;
+        $this->entityChoiceManager = $entityChoiceManager;
         $this->defaultTimezone = $defaultTimezone;
     }
 
@@ -33,12 +34,6 @@ class UserType extends AbstractType
         $loggedIn = $options['logged_in'];
 
         $verifyEmail = $user ? $user->getVerifyEmail() : null;
-
-        $entities = [];
-        $metas = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        foreach ($metas as $meta) {
-            $entities[$meta->getName()] = $meta->getName();
-        }
 
         $builder
             ->add('first_name', TextType::class, [
@@ -68,11 +63,7 @@ class UserType extends AbstractType
         ;
 
         if (!$user->isDeveloper()) {
-            $builder->add('entities', ChoiceType::class, [
-                'choices' => $entities,
-                'multiple' => true,
-                'expanded' => true,
-            ]);
+            $this->addEntitiesField($builder);
         }
 
         $usersMatch = $loggedIn && $user && ($loggedIn === $user);
@@ -82,6 +73,27 @@ class UserType extends AbstractType
                 'required' => false,
             ]);
         }
+    }
+
+    private function addEntitiesField(FormBuilderInterface $builder)
+    {
+        $builder->add('entities', ChoiceType::class, [
+            'choices' => $this->entityChoiceManager->getEntityChoices(),
+            'choice_label' => 'label',
+            'multiple' => true,
+            'expanded' => true,
+        ]);
+
+        $builder->get('entities')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($entities) {
+                    return $this->entityChoiceManager->transformEntitiesToEntityChoices(...$entities);
+                },
+                function ($entityChoices) {
+                    return $this->entityChoiceManager->transformEntityChoicesToEntities(...$entityChoices);
+                }
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
