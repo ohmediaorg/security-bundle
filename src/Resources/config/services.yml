@@ -39,8 +39,11 @@ services:
         tags: ["container.service_subscriber", "controller.service_arguments"]
         autowire: true
 
+    OHMedia\SecurityBundle\Service\EntityChoiceManager:
+        autowire: true
+
     oh_media_security.entity_choice_manager:
-        class: OHMedia\SecurityBundle\Service\EntityChoiceManager
+        alias: OHMedia\SecurityBundle\Service\EntityChoiceManager
 
     OHMedia\SecurityBundle\Service\UserEntityChoice:
         tags: ["oh_media_security.entity_choice"]
@@ -59,3 +62,7 @@ services:
     OHMedia\SecurityBundle\Service\UserNavItemProvider:
         autowire: true
         tags: ["oh_media_backend.nav_item_provider"]
+
+    OHMedia\SecurityBundle\Twig\EntityChoiceExtension:
+        autowire: true
+        tags: ["twig.extension"]
