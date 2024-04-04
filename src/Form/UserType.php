@@ -70,7 +70,7 @@ class UserType extends AbstractType
             ]);
         }
 
-        if (!$user->isDeveloper()) {
+        if (!$user->isDeveloper() && !$usersMatch) {
             $this->addEntitiesField($builder);
         }
     }
