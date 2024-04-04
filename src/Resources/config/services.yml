@@ -42,6 +42,9 @@ services:
     oh_media_security.entity_choice_manager:
         class: OHMedia\SecurityBundle\Service\EntityChoiceManager
 
+    OHMedia\SecurityBundle\Service\UserEntityChoice:
+        tags: ["oh_media_security.entity_choice"]
+
     OHMedia\SecurityBundle\Form\UserType:
         arguments: ["@oh_media_security.entity_choice_manager", "%oh_media_timezone.timezone%"]
         tags: ["form.type"]
