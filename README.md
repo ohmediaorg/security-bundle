@@ -168,3 +168,10 @@ Utilizing voter constants in a template:
     {# do something #}
 {% endif %}
 ```
+
+## User Permissions
+
+Editing a non-developer user will show a selection of Permissions. To add to this
+selection, create a service that implements `OHMedia\SecurityBundle\Service\EntityChoiceInterface`.
+
+You may need to manually tag your service as `oh_media_security.entity_choice`.
