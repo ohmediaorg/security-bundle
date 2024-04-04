@@ -32,7 +32,7 @@
       <thead>
         <tr>
           <th>Name/Email</th>
-          <th>Roles</th>
+          <th>Permissions</th>
           <th>Last Updated</th>
           <th>&nbsp;</th>
         </tr>
@@ -49,11 +49,7 @@
             {{ user.email }}
             {% endif %}
           </td>
-          <td>
-            {% if user.developer %}
-              <span class="badge text-bg-primary">Developer</span>
-            {% endif %}
-          </td>
+          <td>{{ user_permissions(user) }}</td>
           <td>{{ user.updatedAt|datetime }}</td>
           <td>
             {% if is_granted(attributes.edit, user) %}
