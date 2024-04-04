@@ -13,6 +13,10 @@ class EntityChoiceManager
 
     public function getEntityChoices(): array
     {
+        usort($this->entityChoices, function (EntityChoiceInterface $a, EntityChoiceInterface $b) {
+            return $a->getLabel() <=> $b->getLabel();
+        });
+
         return $this->entityChoices;
     }
 
