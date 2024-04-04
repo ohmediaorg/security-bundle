@@ -3,7 +3,7 @@ services:
         arguments: ["@security.token_storage"]
 
     oh_media_security.blamer:
-      alias: OHMedia\SecurityBundle\Service\Blamer
+        alias: OHMedia\SecurityBundle\Service\Blamer
 
     OHMedia\SecurityBundle\EventListener\BlamePrePersist:
         arguments: ["@oh_media_security.blamer"]
@@ -39,8 +39,11 @@ services:
         tags: ["container.service_subscriber", "controller.service_arguments"]
         autowire: true
 
+    oh_media_security.entity_choice_manager:
+        class: OHMedia\SecurityBundle\Service\EntityChoiceManager
+
     OHMedia\SecurityBundle\Form\UserType:
-        arguments: ["@doctrine.orm.entity_manager", "%oh_media_timezone.timezone%"]
+        arguments: ["@oh_media_security.entity_choice_manager", "%oh_media_timezone.timezone%"]
         tags: ["form.type"]
 
     OHMedia\SecurityBundle\Repository\UserRepository:
