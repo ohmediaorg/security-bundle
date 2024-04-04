@@ -96,6 +96,25 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/profile', name: 'user_profile', methods: ['GET', 'POST'])]
+    public function profile(
+        EmailRepository $emailRepository,
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        UserRepository $userRepository
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        return $this->editForm(
+            $emailRepository,
+            $request,
+            $this->getUser(),
+            $passwordHasher,
+            $userRepository,
+            true
+        );
+    }
+
     #[Route('/user/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(
         EmailRepository $emailRepository,
@@ -110,6 +129,24 @@ class UserController extends AbstractController
             'You cannot edit this user.'
         );
 
+        return $this->editForm(
+            $emailRepository,
+            $request,
+            $user,
+            $passwordHasher,
+            $userRepository,
+            false
+        );
+    }
+
+    private function editForm(
+        EmailRepository $emailRepository,
+        Request $request,
+        User $user,
+        UserPasswordHasherInterface $passwordHasher,
+        UserRepository $userRepository,
+        bool $isProfile
+    ): Response {
         $form = $this->createForm(UserType::class, $user, [
             'logged_in' => $this->getUser(),
         ]);
@@ -152,21 +189,26 @@ class UserController extends AbstractController
 
             $userRepository->save($user, true);
 
+            $noun = $isProfile ? 'your profile' : 'the user';
+
             if ($verifyEmail) {
-                $this->addFlash('notice', 'Changes to the user were saved successfully. The new email address will need to be verified before that change takes effect.');
+                $this->addFlash('notice', "Changes to $noun were saved successfully. The new email address will need to be verified before that change takes effect.");
 
                 $this->createVerificationEmail($emailRepository, $user);
             } else {
-                $this->addFlash('notice', 'Changes to the user were saved successfully.');
+                $this->addFlash('notice', "Changes to $noun were saved successfully.");
             }
 
-            return $this->redirectToRoute('user_index');
+            return $isProfile
+                ? $this->redirectToRoute('user_profile')
+                : $this->redirectToRoute('user_index');
         }
 
         return $this->render('@OHMediaSecurity/user/user_form.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            'form_title' => 'Edit User',
+            'form_title' => $isProfile ? 'Profile' : 'Edit User',
+            'is_profile' => $isProfile,
         ]);
     }
 
