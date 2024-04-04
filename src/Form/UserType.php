@@ -62,10 +62,6 @@ class UserType extends AbstractType
             ])
         ;
 
-        if (!$user->isDeveloper()) {
-            $this->addEntitiesField($builder);
-        }
-
         $usersMatch = $loggedIn && $user && ($loggedIn === $user);
 
         if (!$usersMatch) {
@@ -73,15 +69,23 @@ class UserType extends AbstractType
                 'required' => false,
             ]);
         }
+
+        if (!$user->isDeveloper()) {
+            $this->addEntitiesField($builder);
+        }
     }
 
     private function addEntitiesField(FormBuilderInterface $builder)
     {
         $builder->add('entities', ChoiceType::class, [
+            'label' => 'Permissions',
             'choices' => $this->entityChoiceManager->getEntityChoices(),
             'choice_label' => 'label',
             'multiple' => true,
             'expanded' => true,
+            'row_attr' => [
+                'class' => 'fieldset-nostyle',
+            ],
         ]);
 
         $builder->get('entities')
