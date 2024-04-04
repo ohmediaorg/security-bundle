@@ -2,6 +2,7 @@
 
 namespace OHMedia\SecurityBundle\DependencyInjection;
 
+use OHMedia\SecurityBundle\Service\EntityChoiceInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -21,5 +22,9 @@ class OHMediaSecurityExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->registerForAutoconfiguration(EntityChoiceInterface::class)
+            ->addTag('oh_media_security.entity_choice')
+        ;
     }
 }
