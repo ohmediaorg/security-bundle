@@ -2,6 +2,7 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -11,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+#[Admin]
 class LoginController extends AbstractController
 {
     #[Route('/login', name: 'user_login')]
