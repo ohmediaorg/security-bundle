@@ -35,6 +35,12 @@ class UserController extends AbstractController
 
         $qb = $userRepository->createQueryBuilder('u');
 
+        $loggedIn = $this->getUser();
+
+        if (!$loggedIn->isDeveloper()) {
+            $qb->where('(u.developer IS NULL OR u.developer = 0)');
+        }
+
         return $this->render('@OHMediaSecurity/user/user_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_user' => new User(),
