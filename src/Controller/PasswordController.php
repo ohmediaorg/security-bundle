@@ -3,6 +3,7 @@
 namespace OHMedia\SecurityBundle\Controller;
 
 use OHMedia\AntispamBundle\Form\Type\CaptchaType;
+use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\EmailBundle\Util\EmailAddress;
@@ -21,6 +22,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+#[Admin]
 class PasswordController extends AbstractController
 {
     #[Route('/forgot-password', name: 'user_forgot_password')]
