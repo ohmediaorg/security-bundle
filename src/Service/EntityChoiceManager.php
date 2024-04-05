@@ -2,13 +2,28 @@
 
 namespace OHMedia\SecurityBundle\Service;
 
+use OHMedia\FileBundle\Service\FileBrowser;
+use OHMedia\FileBundle\Service\FileEntityChoice;
+
 class EntityChoiceManager
 {
+    private FileBrowser $fileBrowser;
     private array $entityChoices = [];
 
-    public function addEntityChoice(EntityChoiceInterface $entityChoice)
+    public function __construct(FileBrowser $fileBrowser)
     {
+        $this->fileBrowser = $fileBrowser;
+    }
+
+    public function addEntityChoice(EntityChoiceInterface $entityChoice): self
+    {
+        if ($entityChoice instanceof FileEntityChoice && !$this->fileBrowser->isEnabled()) {
+            return $this;
+        }
+
         $this->entityChoices[] = $entityChoice;
+
+        return $this;
     }
 
     public function getEntityChoices(): array
