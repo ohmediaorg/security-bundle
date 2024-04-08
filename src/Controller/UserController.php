@@ -93,6 +93,7 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form->createView(),
             'form_title' => 'Create User',
+            'is_profile' => false,
         ]);
     }
 
