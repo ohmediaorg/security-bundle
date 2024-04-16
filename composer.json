@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=8.2",
-        "symfony/framework-bundle": "6.4.*"
+        "symfony/framework-bundle": "6.4.*",
+        "symfony/rate-limiter": "6.4.*"
     },
     "autoload": {
         "psr-4": { "OHMedia\\SecurityBundle\\": "src/" }

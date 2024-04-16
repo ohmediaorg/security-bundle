@@ -47,6 +47,7 @@ security:
                 path: user_logout
                 target: user_login
 
+            login_throttling: ~
     # ...
 
     access_decision_manager:
@@ -61,10 +62,6 @@ oh_media_security:
     resource: '@OHMediaSecurityBundle/Controller/'
     type: attribute
 ```
-
-### Login Throttling
-
-https://symfony.com/blog/new-in-symfony-5-2-login-throttling
 
 ## Templates
 
