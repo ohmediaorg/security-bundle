@@ -58,7 +58,8 @@ class UserType extends AbstractType
             ])
             ->add('timezone', TimezoneType::class, [
                 'required' => false,
-                'help' => 'The default timezone is '.$this->defaultTimezone,
+                'help' => 'The default timezone is '.$this->defaultTimezone.'.',
+                'placeholder' => 'Default',
             ])
         ;
 
