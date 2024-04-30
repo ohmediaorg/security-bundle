@@ -3,6 +3,7 @@
 namespace OHMedia\SecurityBundle;
 
 use OHMedia\SecurityBundle\DependencyInjection\Compiler\EntityChoicePass;
+use OHMedia\SecurityBundle\Security\EntityChoiceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
