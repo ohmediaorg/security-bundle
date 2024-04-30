@@ -17,5 +17,10 @@
     },
     "autoload": {
         "psr-4": { "OHMedia\\SecurityBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OHMedia\\SecurityBundle\\Tests\\": "tests/"
+        }
     }
 }

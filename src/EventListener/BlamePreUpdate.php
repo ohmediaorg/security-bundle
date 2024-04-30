@@ -7,11 +7,8 @@ use OHMedia\SecurityBundle\Service\Blamer;
 
 class BlamePreUpdate
 {
-    private $blamer;
-
-    public function __construct(Blamer $blamer)
+    public function __construct(private Blamer $blamer)
     {
-        $this->blamer = $blamer;
     }
 
     public function preUpdate(PreUpdateEventArgs $args)

@@ -18,13 +18,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-    private EntityChoiceManager $entityChoiceManager;
-    private string $defaultTimezone;
-
-    public function __construct(EntityChoiceManager $entityChoiceManager, string $defaultTimezone)
-    {
-        $this->entityChoiceManager = $entityChoiceManager;
-        $this->defaultTimezone = $defaultTimezone;
+    public function __construct(
+        private EntityChoiceManager $entityChoiceManager,
+        private string $defaultTimezone
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

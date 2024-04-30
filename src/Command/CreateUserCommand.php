@@ -12,16 +12,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CreateUserCommand extends Command
 {
-    private $passwordHasher;
-    private $userRepository;
-
     public function __construct(
-        UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository
+        private UserPasswordHasherInterface $passwordHasher,
+        private UserRepository $userRepository
     ) {
-        $this->passwordHasher = $passwordHasher;
-        $this->userRepository = $userRepository;
-
         parent::__construct();
     }
 

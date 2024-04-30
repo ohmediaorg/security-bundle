@@ -7,12 +7,10 @@ use OHMedia\FileBundle\Service\FileEntityChoice;
 
 class EntityChoiceManager
 {
-    private FileBrowser $fileBrowser;
     private array $entityChoices = [];
 
-    public function __construct(FileBrowser $fileBrowser)
+    public function __construct(private FileBrowser $fileBrowser)
     {
-        $this->fileBrowser = $fileBrowser;
     }
 
     public function addEntityChoice(EntityChoiceInterface $entityChoice): self

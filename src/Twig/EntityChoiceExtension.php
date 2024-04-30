@@ -10,11 +10,8 @@ use Twig\TwigFunction;
 
 class EntityChoiceExtension extends AbstractExtension
 {
-    private EntityChoiceManager $entityChoiceManager;
-
-    public function __construct(EntityChoiceManager $entityChoiceManager)
+    public function __construct(private EntityChoiceManager $entityChoiceManager)
     {
-        $this->entityChoiceManager = $entityChoiceManager;
     }
 
     public function getFunctions(): array

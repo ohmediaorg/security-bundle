@@ -1,19 +1,17 @@
 services:
     OHMedia\SecurityBundle\Service\Blamer:
+        autowire: true
         arguments: ["@security.token_storage"]
 
-    oh_media_security.blamer:
-        alias: OHMedia\SecurityBundle\Service\Blamer
-
     OHMedia\SecurityBundle\EventListener\BlamePrePersist:
-        arguments: ["@oh_media_security.blamer"]
+        autowire: true
         tags:
             -
                 name: 'doctrine.event_listener'
                 event: 'prePersist'
 
     OHMedia\SecurityBundle\EventListener\BlamePreUpdate:
-        arguments: ["@oh_media_security.blamer"]
+        autowire: true
         tags:
             -
                 name: 'doctrine.event_listener'
@@ -42,8 +40,7 @@ services:
     OHMedia\SecurityBundle\Service\EntityChoiceManager:
         autowire: true
 
-    oh_media_security.entity_choice_manager:
-        alias: OHMedia\SecurityBundle\Service\EntityChoiceManager
+    oh_media_security.entity_choice_manager: '@OHMedia\SecurityBundle\Service\EntityChoiceManager'
 
     OHMedia\SecurityBundle\Service\UserEntityChoice:
         tags: ["oh_media_security.entity_choice"]
