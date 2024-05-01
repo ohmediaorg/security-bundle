@@ -2,6 +2,7 @@
 
 namespace OHMedia\SecurityBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use OHMedia\SecurityBundle\Entity\Traits\BlameableTrait;
 use OHMedia\SecurityBundle\Repository\UserRepository;
@@ -17,46 +18,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use BlameableTrait;
     use TimezoneUserTrait;
 
-    #[ORM\Id()]
-    #[ORM\GeneratedValue()]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $email;
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $email = null;
 
-    #[ORM\Column(type: 'string')]
-    private $password;
+    #[ORM\Column]
+    private string $password;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $first_name;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $first_name = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $last_name;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $last_name = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private $developer;
+    #[ORM\Column(nullable: true)]
+    private ?bool $developer = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private $enabled;
+    #[ORM\Column(nullable: true)]
+    private ?bool $enabled = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $reset_token;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $reset_token = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $next_reset;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeInterface $next_reset = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $reset_expires;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeInterface $reset_expires = null;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $verify_token;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $verify_token = null;
 
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    private $verify_email;
+    #[ORM\Column(length: 180, nullable: true)]
+    private ?string $verify_email = null;
 
-    #[ORM\Column(type: 'json')]
-    private $entities = [];
+    #[ORM\Column]
+    private array $entities = [];
 
     public function __toString(): string
     {
@@ -75,7 +76,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
@@ -92,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
@@ -104,7 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->first_name;
     }
 
-    public function setFirstName(?string $firstName): self
+    public function setFirstName(?string $firstName): static
     {
         $this->first_name = $firstName;
 
@@ -116,7 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->last_name;
     }
 
-    public function setLastName(?string $lastName): self
+    public function setLastName(?string $lastName): static
     {
         $this->last_name = $lastName;
 
@@ -143,7 +144,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (bool) $this->developer;
     }
 
-    public function setDeveloper(?bool $developer): self
+    public function setDeveloper(?bool $developer): static
     {
         $this->developer = $developer;
 
@@ -155,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->enabled;
     }
 
-    public function setEnabled(?bool $enabled): self
+    public function setEnabled(?bool $enabled): static
     {
         $this->enabled = $enabled;
 
@@ -167,7 +168,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->reset_token;
     }
 
-    public function setResetToken(?string $resetToken): self
+    public function setResetToken(?string $resetToken): static
     {
         $this->reset_token = $resetToken;
 
@@ -179,7 +180,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->next_reset;
     }
 
-    public function setNextReset(?\DateTimeImmutable $nextReset): self
+    public function setNextReset(?\DateTimeImmutable $nextReset): static
     {
         $this->next_reset = $nextReset;
 
@@ -191,7 +192,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->reset_expires;
     }
 
-    public function setResetExpires(?\DateTimeImmutable $resetExpires): self
+    public function setResetExpires(?\DateTimeImmutable $resetExpires): static
     {
         $this->reset_expires = $resetExpires;
 
@@ -203,7 +204,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->verify_token;
     }
 
-    public function setVerifyToken(?string $verifyToken): self
+    public function setVerifyToken(?string $verifyToken): static
     {
         $this->verify_token = $verifyToken;
 
@@ -215,7 +216,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->verify_email;
     }
 
-    public function setVerifyEmail(?string $verifyEmail): self
+    public function setVerifyEmail(?string $verifyEmail): static
     {
         $this->verify_email = $verifyEmail;
 
@@ -227,7 +228,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->entities;
     }
 
-    public function setEntities(array $entities): self
+    public function setEntities(array $entities): static
     {
         $this->entities = $entities;
 
