@@ -59,6 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $entities = [];
 
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $admin = false;
+
     public function __toString(): string
     {
         $fullName = $this->getFullName();
@@ -261,5 +264,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    public function isAdmin(): ?bool
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?bool $admin): static
+    {
+        $this->admin = $admin;
+
+        return $this;
     }
 }

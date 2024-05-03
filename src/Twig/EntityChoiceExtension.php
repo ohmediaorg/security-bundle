@@ -33,23 +33,19 @@ class EntityChoiceExtension extends AbstractExtension
                 'class_name' => 'text-bg-primary',
                 'text' => 'Developer',
             ];
+        } elseif ($user->isAdmin()) {
+            $badges[] = [
+                'class_name' => 'text-bg-success',
+                'text' => 'Admin',
+            ];
         } else {
-            $allEntityChoices = $this->entityChoiceManager->getEntityChoices();
-
             $entityChoices = $this->entityChoiceManager->transformEntitiesToEntityChoices(...$user->getEntities());
 
-            if (count($allEntityChoices) === count($entityChoices)) {
+            foreach ($entityChoices as $entityChoice) {
                 $badges[] = [
-                    'class_name' => 'text-bg-success',
-                    'text' => 'Admin',
+                    'class_name' => 'text-bg-secondary',
+                    'text' => $entityChoice->getLabel(),
                 ];
-            } else {
-                foreach ($entityChoices as $entityChoice) {
-                    $badges[] = [
-                        'class_name' => 'text-bg-secondary',
-                        'text' => $entityChoice->getLabel(),
-                    ];
-                }
             }
         }
 

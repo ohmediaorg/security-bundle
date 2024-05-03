@@ -6,7 +6,6 @@ use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Service\EntityChoiceManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -63,12 +62,30 @@ class UserType extends AbstractType
         $usersMatch = $loggedIn && $user && ($loggedIn === $user);
 
         if (!$usersMatch) {
-            $builder->add('enabled', CheckboxType::class, [
-                'required' => false,
+            $builder->add('enabled', ChoiceType::class, [
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ],
+                'expanded' => true,
+                'row_attr' => [
+                    'class' => 'fieldset-nostyle',
+                ],
             ]);
         }
 
         if (!$user->isDeveloper() && !$usersMatch) {
+            $builder->add('admin', ChoiceType::class, [
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ],
+                'expanded' => true,
+                'row_attr' => [
+                    'class' => 'fieldset-nostyle',
+                ],
+            ]);
+
             $this->addEntitiesField($builder);
         }
     }
@@ -83,6 +100,7 @@ class UserType extends AbstractType
             'expanded' => true,
             'row_attr' => [
                 'class' => 'fieldset-nostyle',
+                'id' => 'user_entities_container',
             ],
         ]);
 
