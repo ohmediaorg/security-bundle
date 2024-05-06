@@ -56,6 +56,10 @@ class UserType extends AbstractType
                 'required' => false,
                 'help' => 'The default timezone is '.$this->defaultTimezone.'.',
                 'placeholder' => 'Default',
+                'attr' => [
+                    'class' => 'nice-select2',
+                    'placeholder' => 'Default',
+                ],
             ])
         ;
 
