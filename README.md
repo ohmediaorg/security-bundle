@@ -1,20 +1,15 @@
 # Installation
 
-Make sure the following bundles are installed and set up:
+Update `composer.json` by adding this to the `repositories` array:
 
-1. `ohmediaorg/antispam-bundle`
-1. `ohmediaorg/email-bundle`
-1. `ohmediaorg/timezone-bundle`
-1. `ohmediaorg/utility-bundle`
-
-Enable the security bundle in `config/bundles.php`:
-
-```php
-return [
-    // ...
-    OHMedia\SecurityBundle\OHMediaSecurityBundle::class => ['all' => true],
-];
+```json
+{
+    "type": "vcs",
+    "url": "https://github.com/ohmediaorg/security-bundle"
+}
 ```
+
+Then run `composer require ohmediaorg/security-bundle:dev-main`.
 
 ## Config
 
@@ -59,31 +54,8 @@ Update `config/packages/routes.yml`:
 
 ```yaml
 oh_media_security:
-    resource: '@OHMediaSecurityBundle/Controller/'
-    type: attribute
+    resource: '@OHMediaSecurityBundle/config/routes.yaml'
 ```
-
-## Templates
-
-Override this bundle's templates in the directory `templates/bundles/OHMediaSecurityBundle`.
-
-### Forms
-
-You will need to render some forms by creating the following files in the
-aforementioned directory:
-
-1. `forgot_password_form.html.twig`
-1. `login_form.html.twig`
-1. `password_reset_form.html.twig`
-
-The forms can simply be rendered with `{{ form(form) }}`.
-
-### Emails
-
-Email templates can be overridden in the same directory:
-
-1. `password_reset_email.html.twig`
-1. `verification_email.html.twig`
 
 ## Migrations
 
