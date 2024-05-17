@@ -29,19 +29,19 @@ class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
 
-        $email = $this->io->ask('Email');
+        $email = $io->ask('Email');
 
-        $password = $this->io->askHidden('Password (hidden)');
+        $password = $io->askHidden('Password (hidden)');
 
         if (!$email || !$password) {
-            $this->io->error('Please provide an email and password');
+            $io->error('Please provide an email and password');
 
             return Command::INVALID;
         }
 
-        $developer = $this->io->confirm('Flag this user as a developer');
+        $developer = $io->confirm('Flag this user as a developer');
 
         $user = new User();
 
@@ -60,12 +60,12 @@ class CreateUserCommand extends Command
         try {
             $this->userRepository->save($user, true);
         } catch (\Exception $e) {
-            $this->io->error($e->getMessage());
+            $io->error($e->getMessage());
 
             return Command::FAILURE;
         }
 
-        $this->io->success(sprintf('User %s created successfully', $email));
+        $io->success(sprintf('User %s created successfully', $email));
 
         return Command::SUCCESS;
     }
