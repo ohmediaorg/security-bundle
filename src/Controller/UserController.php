@@ -24,8 +24,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[Admin]
 class UserController extends AbstractController
 {
+    public function __construct(private UserRepository $userRepository)
+    {
+    }
+
     #[Route('/users', name: 'user_index', methods: ['GET'])]
-    public function index(Paginator $paginator, UserRepository $userRepository): Response
+    public function index(Paginator $paginator): Response
     {
         $this->denyAccessUnlessGranted(
             UserVoter::INDEX,
@@ -33,7 +37,7 @@ class UserController extends AbstractController
             'You cannot access the list of users.'
         );
 
-        $qb = $userRepository->createQueryBuilder('u');
+        $qb = $this->userRepository->createQueryBuilder('u');
 
         $loggedIn = $this->getUser();
 
@@ -56,7 +60,6 @@ class UserController extends AbstractController
     public function create(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository
     ): Response {
         $user = new User();
 
@@ -82,7 +85,7 @@ class UserController extends AbstractController
 
             $user->setPassword($hashedPassword);
 
-            $userRepository->save($user, true);
+            $this->userRepository->save($user, true);
 
             $this->addFlash('notice', 'Changes to the user were saved successfully.');
 
@@ -102,7 +105,6 @@ class UserController extends AbstractController
         EmailRepository $emailRepository,
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -111,7 +113,6 @@ class UserController extends AbstractController
             $request,
             $this->getUser(),
             $passwordHasher,
-            $userRepository,
             true
         );
     }
@@ -122,7 +123,6 @@ class UserController extends AbstractController
         Request $request,
         User $user,
         UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository
     ): Response {
         $this->denyAccessUnlessGranted(
             UserVoter::EDIT,
@@ -135,7 +135,6 @@ class UserController extends AbstractController
             $request,
             $user,
             $passwordHasher,
-            $userRepository,
             false
         );
     }
@@ -145,7 +144,6 @@ class UserController extends AbstractController
         Request $request,
         User $user,
         UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository,
         bool $isProfile
     ): Response {
         $form = $this->createForm(UserType::class, $user, [
@@ -164,8 +162,8 @@ class UserController extends AbstractController
             $verifyEmail = $oldEmail !== $newEmail;
 
             if ($verifyEmail) {
-                $token = RandomString::get(50, function ($token) use ($userRepository) {
-                    return !$userRepository->findOneBy([
+                $token = RandomString::get(50, function ($token) {
+                    return !$this->userRepository->findOneBy([
                         'verify_token' => $token,
                     ]);
                 });
@@ -188,7 +186,7 @@ class UserController extends AbstractController
                 $user->setPassword($hashedPassword);
             }
 
-            $userRepository->save($user, true);
+            $this->userRepository->save($user, true);
 
             $noun = $isProfile ? 'your profile' : 'the user';
 
@@ -237,7 +235,6 @@ class UserController extends AbstractController
     public function delete(
         Request $request,
         User $user,
-        UserRepository $userRepository
     ): Response {
         $this->denyAccessUnlessGranted(
             UserVoter::DELETE,
@@ -252,7 +249,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->remove($user, true);
+            $this->userRepository->remove($user, true);
 
             $this->addFlash('notice', 'The user was deleted successfully.');
 
