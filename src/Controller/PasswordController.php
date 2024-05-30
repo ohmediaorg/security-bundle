@@ -51,47 +51,51 @@ class PasswordController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $email = $form->get('email')->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $email = $form->get('email')->getData();
 
-            $user = $userRepository->findOneByEmail($email);
+                $user = $userRepository->findOneByEmail($email);
 
-            if (!$user) {
-                $this->addFlash('warning', 'We could not find a user with that email address.');
+                if (!$user) {
+                    $this->addFlash('warning', 'We could not find a user with that email address.');
+
+                    return $this->redirectToRoute('user_forgot_password');
+                }
+
+                $currentReset = $user->getNextReset();
+
+                if ($currentReset && DateTimeUtil::isFuture($currentReset)) {
+                    $this->addFlash('warning', 'You recently requested a password reset.');
+
+                    return $this->redirectToRoute('user_forgot_password');
+                }
+
+                $token = RandomString::get(50, function ($token) use ($userRepository) {
+                    return !$userRepository->findOneBy([
+                        'reset_token' => $token,
+                    ]);
+                });
+
+                $nextReset = new \DateTimeImmutable('+1 hour');
+                $resetExpires = new \DateTimeImmutable('+2 hours');
+
+                $user
+                    ->setResetToken($token)
+                    ->setNextReset($nextReset)
+                    ->setResetExpires($resetExpires)
+                ;
+
+                $userRepository->save($user, true);
+
+                $this->createPasswordResetEmail($emailRepository, $user);
+
+                $this->addFlash('notice', 'Check your email for a link to reset your password.');
 
                 return $this->redirectToRoute('user_forgot_password');
             }
 
-            $currentReset = $user->getNextReset();
-
-            if ($currentReset && DateTimeUtil::isFuture($currentReset)) {
-                $this->addFlash('warning', 'You recently requested a password reset.');
-
-                return $this->redirectToRoute('user_forgot_password');
-            }
-
-            $token = RandomString::get(50, function ($token) use ($userRepository) {
-                return !$userRepository->findOneBy([
-                    'reset_token' => $token,
-                ]);
-            });
-
-            $nextReset = new \DateTimeImmutable('+1 hour');
-            $resetExpires = new \DateTimeImmutable('+2 hours');
-
-            $user
-                ->setResetToken($token)
-                ->setNextReset($nextReset)
-                ->setResetExpires($resetExpires)
-            ;
-
-            $userRepository->save($user, true);
-
-            $this->createPasswordResetEmail($emailRepository, $user);
-
-            $this->addFlash('notice', 'Check your email for a link to reset your password.');
-
-            return $this->redirectToRoute('user_forgot_password');
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaSecurity/form/forgot_password_form.html.twig', [
@@ -159,26 +163,30 @@ class PasswordController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $password = $form->get('password')->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $password = $form->get('password')->getData();
 
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $password
-            );
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $password
+                );
 
-            $user
-                ->setPassword($hashedPassword)
-                ->setResetToken(null)
-                ->setNextReset(null)
-                ->setResetExpires(null)
-            ;
+                $user
+                    ->setPassword($hashedPassword)
+                    ->setResetToken(null)
+                    ->setNextReset(null)
+                    ->setResetExpires(null)
+                ;
 
-            $userRepository->save($user, true);
+                $userRepository->save($user, true);
 
-            $this->addFlash('notice', 'Your password was reset successfully.');
+                $this->addFlash('notice', 'Your password was reset successfully.');
 
-            return $this->redirectToRoute('user_login');
+                return $this->redirectToRoute('user_login');
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaSecurity/form/password_reset_form.html.twig', [

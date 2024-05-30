@@ -77,19 +77,23 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $form->get('password')->getData()
-            );
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                );
 
-            $user->setPassword($hashedPassword);
+                $user->setPassword($hashedPassword);
 
-            $this->userRepository->save($user, true);
+                $this->userRepository->save($user, true);
 
-            $this->addFlash('notice', 'Changes to the user were saved successfully.');
+                $this->addFlash('notice', 'Changes to the user were saved successfully.');
 
-            return $this->redirectToRoute('user_index');
+                return $this->redirectToRoute('user_index');
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaSecurity/user/user_form.html.twig', [
@@ -156,51 +160,55 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newEmail = $form->get('email')->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $newEmail = $form->get('email')->getData();
 
-            $verifyEmail = $oldEmail !== $newEmail;
+                $verifyEmail = $oldEmail !== $newEmail;
 
-            if ($verifyEmail) {
-                $token = RandomString::get(50, function ($token) {
-                    return !$this->userRepository->findOneBy([
-                        'verify_token' => $token,
-                    ]);
-                });
+                if ($verifyEmail) {
+                    $token = RandomString::get(50, function ($token) {
+                        return !$this->userRepository->findOneBy([
+                            'verify_token' => $token,
+                        ]);
+                    });
 
-                $user
-                    ->setEmail($oldEmail)
-                    ->setVerifyToken($token)
-                    ->setVerifyEmail($newEmail)
-                ;
+                    $user
+                        ->setEmail($oldEmail)
+                        ->setVerifyToken($token)
+                        ->setVerifyEmail($newEmail)
+                    ;
+                }
+
+                $password = $form->get('password')->getData();
+
+                if ($password) {
+                    $hashedPassword = $passwordHasher->hashPassword(
+                        $user,
+                        $password
+                    );
+
+                    $user->setPassword($hashedPassword);
+                }
+
+                $this->userRepository->save($user, true);
+
+                $noun = $isProfile ? 'your profile' : 'the user';
+
+                if ($verifyEmail) {
+                    $this->addFlash('notice', "Changes to $noun were saved successfully. The new email address will need to be verified before that change takes effect.");
+
+                    $this->createVerificationEmail($emailRepository, $user);
+                } else {
+                    $this->addFlash('notice', "Changes to $noun were saved successfully.");
+                }
+
+                return $isProfile
+                    ? $this->redirectToRoute('user_profile')
+                    : $this->redirectToRoute('user_index');
             }
 
-            $password = $form->get('password')->getData();
-
-            if ($password) {
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $password
-                );
-
-                $user->setPassword($hashedPassword);
-            }
-
-            $this->userRepository->save($user, true);
-
-            $noun = $isProfile ? 'your profile' : 'the user';
-
-            if ($verifyEmail) {
-                $this->addFlash('notice', "Changes to $noun were saved successfully. The new email address will need to be verified before that change takes effect.");
-
-                $this->createVerificationEmail($emailRepository, $user);
-            } else {
-                $this->addFlash('notice', "Changes to $noun were saved successfully.");
-            }
-
-            return $isProfile
-                ? $this->redirectToRoute('user_profile')
-                : $this->redirectToRoute('user_index');
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaSecurity/user/user_form.html.twig', [
@@ -248,12 +256,16 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->userRepository->remove($user, true);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->userRepository->remove($user, true);
 
-            $this->addFlash('notice', 'The user was deleted successfully.');
+                $this->addFlash('notice', 'The user was deleted successfully.');
 
-            return $this->redirectToRoute('user_index');
+                return $this->redirectToRoute('user_index');
+            }
+
+            $this->addFlash('error', 'There are some errors in the form below.');
         }
 
         return $this->render('@OHMediaSecurity/user/user_delete.html.twig', [
