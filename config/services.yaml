@@ -1,22 +1,4 @@
 services:
-    OHMedia\SecurityBundle\Service\Blamer:
-        autowire: true
-        arguments: ["@security.token_storage"]
-
-    OHMedia\SecurityBundle\EventListener\BlamePrePersist:
-        autowire: true
-        tags:
-            -
-                name: 'doctrine.event_listener'
-                event: 'prePersist'
-
-    OHMedia\SecurityBundle\EventListener\BlamePreUpdate:
-        autowire: true
-        tags:
-            -
-                name: 'doctrine.event_listener'
-                event: 'preUpdate'
-
     OHMedia\SecurityBundle\Command\CreateUserCommand:
         autowire: true
         tags: ["console.command"]
