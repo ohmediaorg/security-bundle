@@ -18,6 +18,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use BlameableEntityTrait;
     use TimezoneUserTrait;
 
+    public const TYPE_DEVELOPER = 'developer';
+    public const TYPE_SUPER = 'super';
+    public const TYPE_ADMIN = 'admin';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -61,6 +65,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(options: ['default' => false])]
     private ?bool $admin = false;
+
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
 
     public function __toString(): string
     {
@@ -276,5 +283,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->admin = $admin;
 
         return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function isType(string $type): bool
+    {
+        return $type === $this->type;
+    }
+
+    public function isTypeDeveloper(): bool
+    {
+        return $this->isType(static::TYPE_DEVELOPER);
+    }
+
+    public function isTypeSuper(): bool
+    {
+        return $this->isType(static::TYPE_SUPER);
+    }
+
+    public function isTypeAdmin(): bool
+    {
+        return $this->isType(static::TYPE_ADMIN);
     }
 }
