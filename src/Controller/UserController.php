@@ -46,6 +46,10 @@ class UserController extends AbstractController
                 ->setParameter('developer', User::TYPE_DEVELOPER);
         }
 
+        $qb->addSelect('COALESCE(u.first_name, u.email) AS HIDDEN ord');
+
+        $qb->orderBy('ord', 'ASC');
+
         return $this->render('@OHMediaSecurity/user/user_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_user' => new User(),
