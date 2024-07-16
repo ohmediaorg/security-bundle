@@ -42,7 +42,7 @@ class UserController extends AbstractController
         $loggedIn = $this->getUser();
 
         if (!$loggedIn->isTypeDeveloper()) {
-            $qb->where('(u.type <> :developer)')
+            $qb->where('u.type <> :developer')
                 ->setParameter('developer', User::TYPE_DEVELOPER);
         }
 
