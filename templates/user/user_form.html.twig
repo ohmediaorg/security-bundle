@@ -14,20 +14,24 @@
 {% endblock %}
 
 {% block javascripts %}
-{% if form.admin is defined %}
+{% if form.type is defined %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('form[name={{ form.vars.name }}]');
 
-  const adminRadioNodeList = form.elements['{{ form.admin.vars.full_name }}'];
+  const typeRadioNodeList = form.elements['{{ form.type.vars.full_name }}'];
 
-  const userEntitiesContainer = document.getElementById('user_entities_container');
+  const adminEntitiesContainer = document.getElementById('admin_entities_container');
+
+  const userTypeAdmin = {{ constant('OHMedia\\SecurityBundle\\Entity\\User::TYPE_ADMIN')|json_encode|raw }};
 
   function toggleEntities() {
-    userEntitiesContainer.style.display = parseInt(adminRadioNodeList.value) ? 'none' : '';
+    adminEntitiesContainer.style.display = userTypeAdmin === typeRadioNodeList.value
+        ? ''
+        : 'none';
   }
 
-  adminRadioNodeList.forEach((radio) => {
+  typeRadioNodeList.forEach((radio) => {
     radio.addEventListener('change', () => {
       toggleEntities();
     });

@@ -38,9 +38,9 @@ class UserVoter extends AbstractEntityVoter
 
     protected function canEdit(User $user, User $loggedIn): bool
     {
-        if ($user->isDeveloper()) {
+        if ($user->isTypeDeveloper()) {
             // can only be edited by other developer users
-            return $loggedIn->isDeveloper();
+            return $loggedIn->isTypeDeveloper();
         }
 
         return true;
@@ -48,7 +48,7 @@ class UserVoter extends AbstractEntityVoter
 
     protected function canDelete(User $user, User $loggedIn): bool
     {
-        if ($user->isDeveloper()) {
+        if ($user->isTypeDeveloper()) {
             // developer user cannot be deleted
             return false;
         }

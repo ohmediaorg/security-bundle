@@ -41,8 +41,9 @@ class UserController extends AbstractController
 
         $loggedIn = $this->getUser();
 
-        if (!$loggedIn->isDeveloper()) {
-            $qb->where('(u.developer IS NULL OR u.developer = 0)');
+        if (!$loggedIn->isTypeDeveloper()) {
+            $qb->where('(u.type <> :developer)')
+                ->setParameter('developer', User::TYPE_DEVELOPER);
         }
 
         return $this->render('@OHMediaSecurity/user/user_index.html.twig', [

@@ -40,9 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $last_name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $developer = null;
-
-    #[ORM\Column(nullable: true)]
     private ?bool $enabled = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -61,10 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $verify_email = null;
 
     #[ORM\Column]
-    private array $entities = [];
-
-    #[ORM\Column(options: ['default' => false])]
-    private ?bool $admin = false;
+    private array $admin_entities = [];
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
@@ -149,18 +143,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return implode(' ', $parts);
     }
 
-    public function isDeveloper(): bool
-    {
-        return (bool) $this->developer;
-    }
-
-    public function setDeveloper(?bool $developer): static
-    {
-        $this->developer = $developer;
-
-        return $this;
-    }
-
     public function isEnabled(): ?bool
     {
         return $this->enabled;
@@ -233,14 +215,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEntities(): array
+    public function getAdminEntities(): array
     {
-        return $this->entities;
+        return $this->admin_entities;
     }
 
-    public function setEntities(array $entities): static
+    public function setAdminEntities(array $admin_entities): static
     {
-        $this->entities = $entities;
+        $this->admin_entities = $admin_entities;
 
         return $this;
     }
@@ -271,18 +253,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
-    }
-
-    public function isAdmin(): ?bool
-    {
-        return $this->admin;
-    }
-
-    public function setAdmin(?bool $admin): static
-    {
-        $this->admin = $admin;
-
-        return $this;
     }
 
     public function getType(): ?string

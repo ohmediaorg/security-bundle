@@ -28,17 +28,22 @@ class EntityChoiceExtension extends AbstractExtension
     {
         $badges = [];
 
-        if ($user->isDeveloper()) {
+        if ($user->isTypeDeveloper()) {
             $badges[] = [
-                'class_name' => 'text-bg-primary',
+                'class_name' => 'text-bg-dark',
                 'text' => 'Developer',
             ];
-        } elseif ($user->isAdmin()) {
+        } elseif ($user->isTypeSuper()) {
+            $badges[] = [
+                'class_name' => 'text-bg-primary',
+                'text' => 'Super Admin',
+            ];
+        } else {
             $badges[] = [
                 'class_name' => 'text-bg-success',
                 'text' => 'Admin',
             ];
-        } else {
+
             $entityChoices = $this->entityChoiceManager->transformEntitiesToEntityChoices(...$user->getEntities());
 
             foreach ($entityChoices as $entityChoice) {

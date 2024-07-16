@@ -78,11 +78,11 @@ class UserType extends AbstractType
             ]);
         }
 
-        if (!$user->isDeveloper() && !$usersMatch) {
-            $builder->add('admin', ChoiceType::class, [
+        if (!$user->isTypeDeveloper() && !$usersMatch) {
+            $builder->add('type', ChoiceType::class, [
                 'choices' => [
-                    'Yes' => true,
-                    'No' => false,
+                    'Super Admin' => User::TYPE_SUPER,
+                    'Admin' => User::TYPE_ADMIN,
                 ],
                 'expanded' => true,
                 'row_attr' => [
@@ -90,13 +90,13 @@ class UserType extends AbstractType
                 ],
             ]);
 
-            $this->addEntitiesField($builder);
+            $this->addAdminEntitiesField($builder);
         }
     }
 
-    private function addEntitiesField(FormBuilderInterface $builder)
+    private function addAdminEntitiesField(FormBuilderInterface $builder)
     {
-        $builder->add('entities', ChoiceType::class, [
+        $builder->add('admin_entities', ChoiceType::class, [
             'label' => 'Permissions',
             'choices' => $this->entityChoiceManager->getEntityChoices(),
             'choice_label' => 'label',
@@ -104,11 +104,11 @@ class UserType extends AbstractType
             'expanded' => true,
             'row_attr' => [
                 'class' => 'fieldset-nostyle',
-                'id' => 'user_entities_container',
+                'id' => 'admin_entities_container',
             ],
         ]);
 
-        $builder->get('entities')
+        $builder->get('admin_entities')
             ->addModelTransformer(new CallbackTransformer(
                 function ($entities) {
                     return $this->entityChoiceManager->transformEntitiesToEntityChoices(...$entities);
