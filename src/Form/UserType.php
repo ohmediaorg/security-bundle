@@ -97,7 +97,7 @@ class UserType extends AbstractType
     private function addAdminEntitiesField(FormBuilderInterface $builder)
     {
         $builder->add('admin_entities', ChoiceType::class, [
-            'label' => 'Permissions',
+            'label' => 'Admin Permissions',
             'choices' => $this->entityChoiceManager->getEntityChoices(),
             'choice_label' => 'label',
             'multiple' => true,
