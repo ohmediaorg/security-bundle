@@ -28,12 +28,12 @@ class UserVoter extends AbstractEntityVoter
 
     protected function canIndex(User $user, User $loggedIn): bool
     {
-        return true;
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 
     protected function canCreate(User $user, User $loggedIn): bool
     {
-        return true;
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 
     protected function canEdit(User $user, User $loggedIn): bool
@@ -43,7 +43,7 @@ class UserVoter extends AbstractEntityVoter
             return $loggedIn->isTypeDeveloper();
         }
 
-        return true;
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 
     protected function canDelete(User $user, User $loggedIn): bool
@@ -54,6 +54,10 @@ class UserVoter extends AbstractEntityVoter
         }
 
         // user cannot delete themselves
-        return $user !== $loggedIn;
+        if ($user === $loggedIn) {
+            return false;
+        }
+
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 }
