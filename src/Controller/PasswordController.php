@@ -34,9 +34,7 @@ class PasswordController extends AbstractController
         if ($loggedIn = $this->getUser()) {
             $this->addFlash('warning', 'You are already logged in and can change your password below.');
 
-            return $this->redirectToRoute('user_edit', [
-                'id' => $loggedIn->getId(),
-            ]);
+            return $this->redirectToRoute('user_profile');
         }
 
         $formBuilder = $this->createFormBuilder(null, [
