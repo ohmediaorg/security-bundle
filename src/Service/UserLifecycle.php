@@ -23,10 +23,25 @@ class UserLifecycle
 
     public function preUpdate(User $user, PreUpdateEventArgs $event)
     {
-        $oldEmail = $event->getOldValue('email');
-        $newEmail = $event->getNewValue('email');
+        if ($event->hasChangedField('verify_token')) {
+            $oldToken = $event->getOldValue('verify_token');
+            $newToken = $event->getNewValue('verify_token');
 
-        if ($oldEmail !== $newEmail) {
+            $emailJustVerified = $oldToken && !$newToken;
+        } else {
+            $emailJustVerified = false;
+        }
+
+        if (!$emailJustVerified && $event->hasChangedField('email')) {
+            $oldEmail = $event->getOldValue('email');
+            $newEmail = $event->getNewValue('email');
+
+            $emailChanged = $oldEmail !== $newEmail;
+        } else {
+            $emailChanged = false;
+        }
+
+        if ($emailChanged) {
             $token = RandomString::get(50, function ($token) {
                 return !$this->userRepository->findOneBy([
                     'verify_token' => $token,

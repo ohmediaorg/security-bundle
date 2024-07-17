@@ -11,6 +11,10 @@ services:
         tags: ["container.service_subscriber", "controller.service_arguments"]
         autowire: true
 
+    OHMedia\SecurityBundle\Controller\ProfileController:
+        tags: ["container.service_subscriber", "controller.service_arguments"]
+        autowire: true
+
     OHMedia\SecurityBundle\Controller\UserController:
         tags: ["container.service_subscriber", "controller.service_arguments"]
         autowire: true
@@ -28,6 +32,10 @@ services:
         arguments: ["@oh_media_security.entity_choice_manager", "%oh_media_timezone.timezone%"]
         tags: ["form.type"]
 
+    OHMedia\SecurityBundle\Form\ProfileType:
+        arguments: ["%oh_media_timezone.timezone%"]
+        tags: ["form.type"]
+
     OHMedia\SecurityBundle\Repository\UserRepository:
         autowire: true
         tags: ["doctrine.repository_service"]
@@ -42,3 +50,15 @@ services:
     OHMedia\SecurityBundle\Twig\EntityChoiceExtension:
         autowire: true
         tags: ["twig.extension"]
+
+    OHMedia\SecurityBundle\Service\UserLifecycle:
+        autowire: true
+        tags:
+            -
+                name: 'doctrine.orm.entity_listener'
+                event: 'preUpdate'
+                entity: 'OHMedia\SecurityBundle\Entity\User'
+            -
+                name: 'doctrine.orm.entity_listener'
+                event: 'postUpdate'
+                entity: 'OHMedia\SecurityBundle\Entity\User'

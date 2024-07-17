@@ -4,6 +4,7 @@ namespace OHMedia\SecurityBundle\Controller;
 
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\EmailBundle\Repository\EmailRepository;
+use OHMedia\SecurityBundle\Form\ProfileType;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -13,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Admin]
-class UserController extends AbstractController
+class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'user_profile', methods: ['GET', 'POST'])]
     public function __invoke(
