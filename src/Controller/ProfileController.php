@@ -46,7 +46,7 @@ class ProfileController extends AbstractController
                     $user->setPassword($hashedPassword);
                 }
 
-                $this->userRepository->save($user, true);
+                $userRepository->save($user, true);
 
                 if ($user->shouldSendVerifyEmail()) {
                     $this->addFlash('notice', 'Changes to your profile were saved successfully. The new email address will need to be verified before that change takes effect.');
