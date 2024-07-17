@@ -38,6 +38,10 @@ class UserVoter extends AbstractEntityVoter
 
     protected function canEdit(User $user, User $loggedIn): bool
     {
+        if (!$this->isStockUserType($user)) {
+            return false;
+        }
+
         if ($user->isTypeDeveloper()) {
             // can only be edited by other developer users
             return $loggedIn->isTypeDeveloper();
@@ -48,6 +52,10 @@ class UserVoter extends AbstractEntityVoter
 
     protected function canDelete(User $user, User $loggedIn): bool
     {
+        if (!$this->isStockUserType($user)) {
+            return false;
+        }
+
         if ($user->isTypeDeveloper()) {
             // developer user cannot be deleted
             return false;
@@ -59,5 +67,10 @@ class UserVoter extends AbstractEntityVoter
         }
 
         return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
+    }
+
+    private function isStockUserType(User $user)
+    {
+        return $user->isTypeDeveloper() || $user->isTypeSuper() || $user->isTypeAdmin();
     }
 }
