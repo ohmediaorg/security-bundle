@@ -157,6 +157,11 @@ The `User` entity attached to the `Member` should have a custom value for `type`
 should be populated accordingly. Leave `entities` as a blank array if the Member
 should only be allowed to log in and view locked content.
 
+The `Member` entity is intended to be separate from the `User` entity as far as
+UI goes. There should be entirely separate routes (ie. `member_index`,
+`member_create`, `member_edit`, `member_delete`, etc.). `User` entities with
+custom `type` values will be excluded from the regular `User` routes.
+
 ## User Type Forms
 
 Create a `MemberUserType` form for handling `User` data under the `Member`:
