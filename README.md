@@ -144,3 +144,76 @@ Editing an admin user will show a selection of Permissions. To add to this
 selection, create a service that implements `OHMedia\SecurityBundle\Service\EntityChoiceInterface`.
 
 You may need to manually tag your service as `oh_media_security.entity_choice`.
+
+# Custom User Type
+
+Start by creating an entity to represent your custom user type (eg. `Member`).
+
+Add a `OneToOne` relationship from `Member` to `User`. Add any fields to `Member`
+that aren't represented in the `User` entity (eg. `phone`).
+
+The `User` entity attached to the `Member` should have a custom value for `type`
+(recommendend to use the value of `Member::class`) and the value for `entities`
+should be populated accordingly. Leave `entities` as a blank array if the Member
+should only be allowed to log in and view locked content.
+
+## User Type Forms
+
+Create a `MemberUserType` form for handling `User` data under the `Member`:
+
+```php
+$builder->add('phone', TelType::class);
+$builder->add('user', MemberUserType::class);
+```
+
+The form can be custom rendered to seamlessly merge the two:
+
+```twig
+{{ form_start(form) }}
+  {{ form_row(form.user.first_name) }}
+  {{ form_row(form.user.last_name) }}
+  {{ form_row(form.user.email) }}
+  {{ form_row(form.phone) }}
+{{ form_end(form) }}
+```
+
+Create a higher priority route for `user_profile` that will display a custom
+form for this user type and otherwise forward to the `ProfileController`.
+
+## User Type Permissions
+
+Let's say a `Member` was allowed to create `Article` entities. You would need to
+make sure the `entities` value of the associated `User` was set as follows:
+
+```php
+$user = new User();
+$user->setType(Member::class);
+$user->setEntities([Article::class]);
+
+$member = new Member();
+$member->setUser($user);
+```
+
+Then you can create a custom `ArticleVoter` will logic like the following:
+
+```php
+protected function canEdit(Article $article, User $loggedIn)
+{
+    if ($loggedIn->isType(Member::class)) {
+        // make sure they are the "owner" of this Article
+    }
+}
+```
+
+Instead of trying to override the existing Article listing, you could create a
+custom listing separate from that which lists out a particular member's articles:
+
+```php
+#[Route('/member/{id}/articles', name: 'member_articles', methods: ['GET'])]
+public function articles(Member $member)
+{
+    // get articles that the Member "owns"
+}
+```
+
+This would require a secondary table to associate `Member` to `Article`.
