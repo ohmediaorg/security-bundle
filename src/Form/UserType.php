@@ -79,15 +79,20 @@ class UserType extends AbstractType
         }
 
         if (!$user->isTypeDeveloper() && !$usersMatch) {
+            $superTooltip = '<span data-bs-toggle="tooltip" data-bs-title="Access to all backend areas." class="bi bi-info-circle-fill"></span>';
+
+            $adminTooltip = '<span data-bs-toggle="tooltip" data-bs-title="Access to select backend areas." class="bi bi-info-circle-fill"></span>';
+
             $builder->add('type', ChoiceType::class, [
                 'choices' => [
-                    'Super Admin' => User::TYPE_SUPER,
-                    'Admin' => User::TYPE_ADMIN,
+                    'Super Admin '.$superTooltip => User::TYPE_SUPER,
+                    'Admin '.$adminTooltip => User::TYPE_ADMIN,
                 ],
                 'expanded' => true,
                 'row_attr' => [
                     'class' => 'fieldset-nostyle',
                 ],
+                'label_html' => true,
             ]);
 
             $this->addEntitiesField($builder);
