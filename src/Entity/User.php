@@ -92,6 +92,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getEmail();
     }
 
+    private ?string $new_password = null;
+
+    public function getNewPassword(): ?string
+    {
+        return $this->new_password;
+    }
+
+    public function setNewPassword(?string $new_password): static
+    {
+        $this->new_password = $new_password;
+
+        return $this;
+    }
+
     public function getPassword(): string
     {
         return (string) $this->password;

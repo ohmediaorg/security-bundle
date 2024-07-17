@@ -10,6 +10,7 @@ use OHMedia\EmailBundle\Util\EmailAddress;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\UtilityBundle\Util\RandomString;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UserLifecycle
@@ -17,12 +18,20 @@ class UserLifecycle
     public function __construct(
         private EmailRepository $emailRepository,
         private UrlGeneratorInterface $urlGenerator,
+        private UserPasswordHasherInterface $passwordHasher,
         private UserRepository $userRepository,
     ) {
     }
 
+    public function prePersist(User $user, PrePersistEventArgs $event)
+    {
+        $this->updatePassword($user);
+    }
+
     public function preUpdate(User $user, PreUpdateEventArgs $event)
     {
+        $this->updatePassword($user);
+
         if (!$user->wasEmailJustVerified() && $event->hasChangedField('email')) {
             $oldEmail = $event->getOldValue('email');
             $newEmail = $event->getNewValue('email');
@@ -63,5 +72,25 @@ class UserLifecycle
 
             $this->emailRepository->save($email, true);
         }
+    }
+
+    private function updatePassword(User $user): void
+    {
+        $newPassword = $user->getNewPassword();
+
+        exit($newPassword);
+
+        if (!$newPassword) {
+            return;
+        }
+
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $newPassword
+        );
+
+        $user->setPassword($hashedPassword);
+
+        $user->setNewPassword(null);
     }
 }

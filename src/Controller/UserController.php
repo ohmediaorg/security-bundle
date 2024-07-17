@@ -4,7 +4,6 @@ namespace OHMedia\SecurityBundle\Controller;
 
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
-use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Form\UserType;
 use OHMedia\SecurityBundle\Repository\UserRepository;
@@ -14,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Admin]
@@ -65,10 +63,8 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/create', name: 'user_create', methods: ['GET', 'POST'])]
-    public function create(
-        Request $request,
-        UserPasswordHasherInterface $passwordHasher,
-    ): Response {
+    public function create(Request $request): Response
+    {
         $user = new User();
 
         $this->denyAccessUnlessGranted(
@@ -87,13 +83,6 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                );
-
-                $user->setPassword($hashedPassword);
-
                 $this->userRepository->save($user, true);
 
                 $this->addFlash('notice', 'Changes to the user were saved successfully.');
@@ -112,12 +101,8 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(
-        EmailRepository $emailRepository,
-        Request $request,
-        User $user,
-        UserPasswordHasherInterface $passwordHasher,
-    ): Response {
+    public function edit(Request $request, User $user): Response
+    {
         $this->denyAccessUnlessGranted(
             UserVoter::EDIT,
             $user,
@@ -134,17 +119,6 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $password = $form->get('password')->getData();
-
-                if ($password) {
-                    $hashedPassword = $passwordHasher->hashPassword(
-                        $user,
-                        $password
-                    );
-
-                    $user->setPassword($hashedPassword);
-                }
-
                 $this->userRepository->save($user, true);
 
                 if ($user->shouldSendVerifyEmail()) {
@@ -167,10 +141,8 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/delete', name: 'user_delete', methods: ['GET', 'POST'])]
-    public function delete(
-        Request $request,
-        User $user,
-    ): Response {
+    public function delete(Request $request, User $user): Response
+    {
         $this->denyAccessUnlessGranted(
             UserVoter::DELETE,
             $user,

@@ -3,14 +3,12 @@
 namespace OHMedia\SecurityBundle\Controller;
 
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
-use OHMedia\EmailBundle\Repository\EmailRepository;
 use OHMedia\SecurityBundle\Form\ProfileType;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Admin]
@@ -18,9 +16,7 @@ class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'user_profile', methods: ['GET', 'POST'])]
     public function __invoke(
-        EmailRepository $emailRepository,
         Request $request,
-        UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository,
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -35,17 +31,6 @@ class ProfileController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $password = $form->get('password')->getData();
-
-                if ($password) {
-                    $hashedPassword = $passwordHasher->hashPassword(
-                        $user,
-                        $password
-                    );
-
-                    $user->setPassword($hashedPassword);
-                }
-
                 $userRepository->save($user, true);
 
                 if ($user->shouldSendVerifyEmail()) {

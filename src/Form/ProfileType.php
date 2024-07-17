@@ -36,14 +36,13 @@ class ProfileType extends AbstractType
                     ? 'New email address awaiting verification: '.$verifyEmail
                     : '',
             ])
-            ->add('password', RepeatedType::class, [
+            ->add('new_password', RepeatedType::class, [
                 'required' => !$user || !$user->getId(),
                 'type' => PasswordType::class,
                 'options' => ['attr' => ['autocomplete' => 'new-password']],
                 'invalid_message' => 'The password fields must match.',
                 'first_options' => ['label' => 'Change Password'],
                 'second_options' => ['label' => 'Repeat Password'],
-                'mapped' => false,
             ])
             ->add('timezone', TimezoneType::class, [
                 'required' => false,
