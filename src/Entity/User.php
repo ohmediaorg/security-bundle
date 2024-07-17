@@ -210,6 +210,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->sendVerifyEmail;
     }
 
+    public function doEmailVerification(string $oldEmail, string $newEmail, string $verifyToken): static
+    {
+        $this->sendVerifyEmail = true;
+        $this->email = $oldEmail;
+        $this->verify_email = $newEmail;
+        $this->verify_token = $verifyToken;
+
+        return $this;
+    }
+
+    private bool $emailJustVerified = false;
+
+    public function wasEmailJustVerified(): bool
+    {
+        return $this->emailJustVerified;
+    }
+
+    public function setEmailVerified(): static
+    {
+        if (!$this->verify_email || !$this->verify_token) {
+            throw new \LogicException('The verify email/token is blank.');
+        }
+
+        $this->emailJustVerified = true;
+        $this->email = $this->verify_email;
+        $this->verify_token = null;
+        $this->verify_email = null;
+
+        return $this;
+    }
+
     public function getVerifyEmail(): ?string
     {
         return $this->verify_email;
@@ -217,8 +248,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setVerifyEmail(?string $verifyEmail): static
     {
-        $this->sendVerifyEmail = $verifyEmail && $verifyEmail !== $this->verify_email;
-
         $this->verify_email = $verifyEmail;
 
         return $this;

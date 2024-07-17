@@ -30,11 +30,7 @@ class VerificationController extends AbstractController
             return $this->redirectToRoute('user_profile');
         }
 
-        $user
-            ->setEmail($user->getVerifyEmail())
-            ->setVerifyToken(null)
-            ->setVerifyEmail(null)
-        ;
+        $user->setEmailVerified();
 
         $userRepository->save($user, true);
 
