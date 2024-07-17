@@ -38,7 +38,7 @@ class EntityChoiceExtension extends AbstractExtension
                 'class_name' => 'text-bg-primary',
                 'text' => 'Super Admin',
             ];
-        } else {
+        } elseif ($user->isTypeAdmin()) {
             $badges[] = [
                 'class_name' => 'text-bg-success',
                 'text' => 'Admin',
