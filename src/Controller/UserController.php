@@ -41,10 +41,17 @@ class UserController extends AbstractController
 
         $loggedIn = $this->getUser();
 
-        if (!$loggedIn->isTypeDeveloper()) {
-            $qb->where('u.type <> :developer')
-                ->setParameter('developer', User::TYPE_DEVELOPER);
+        $types = [
+            User::TYPE_SUPER,
+            User::TYPE_ADMIN,
+        ];
+
+        if ($loggedIn->isTypeDeveloper()) {
+            $types[] = User::TYPE_DEVELOPER;
         }
+
+        $qb->where('u.type IN (:types)')
+            ->setParameter('types', $types);
 
         $qb->addSelect('COALESCE(u.first_name, u.email) AS HIDDEN ord');
 
