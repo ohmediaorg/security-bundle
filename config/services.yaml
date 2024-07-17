@@ -56,6 +56,10 @@ services:
         tags:
             -
                 name: 'doctrine.orm.entity_listener'
+                event: 'prePersist'
+                entity: 'OHMedia\SecurityBundle\Entity\User'
+            -
+                name: 'doctrine.orm.entity_listener'
                 event: 'preUpdate'
                 entity: 'OHMedia\SecurityBundle\Entity\User'
             -

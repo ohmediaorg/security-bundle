@@ -22,6 +22,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const TYPE_SUPER = 'super';
     public const TYPE_ADMIN = 'admin';
 
+    public const PASSWORD_CHANGE = 'PASSWORD_CHANGE';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -101,6 +103,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setNewPassword(?string $new_password): static
     {
+        if ($new_password) {
+            $this->password = self::PASSWORD_CHANGE;
+        }
+
         $this->new_password = $new_password;
 
         return $this;
@@ -298,8 +304,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->new_password = null;
     }
 
     public function getUserIdentifier(): string

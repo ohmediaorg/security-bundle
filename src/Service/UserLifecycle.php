@@ -3,6 +3,7 @@
 namespace OHMedia\SecurityBundle\Service;
 
 use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use OHMedia\EmailBundle\Entity\Email;
 use OHMedia\EmailBundle\Repository\EmailRepository;
@@ -78,9 +79,9 @@ class UserLifecycle
     {
         $newPassword = $user->getNewPassword();
 
-        exit($newPassword);
+        $currentPassword = $user->getPassword();
 
-        if (!$newPassword) {
+        if (!$newPassword || User::PASSWORD_CHANGE !== $currentPassword) {
             return;
         }
 
