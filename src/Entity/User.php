@@ -203,6 +203,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    private bool $sendVerifyEmail = false;
+
+    public function shouldSendVerifyEmail(): bool
+    {
+        return $this->sendVerifyEmail;
+    }
+
     public function getVerifyEmail(): ?string
     {
         return $this->verify_email;
@@ -210,6 +217,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setVerifyEmail(?string $verifyEmail): static
     {
+        $this->sendVerifyEmail = $verifyEmail && $verifyEmail !== $this->verify_email;
+
         $this->verify_email = $verifyEmail;
 
         return $this;
