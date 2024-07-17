@@ -44,7 +44,7 @@ class EntityChoiceExtension extends AbstractExtension
                 'text' => 'Admin',
             ];
 
-            $entityChoices = $this->entityChoiceManager->transformEntitiesToEntityChoices(...$user->getAdminEntities());
+            $entityChoices = $this->entityChoiceManager->transformEntitiesToEntityChoices(...$user->getEntities());
 
             foreach ($entityChoices as $entityChoice) {
                 $badges[] = [

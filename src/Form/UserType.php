@@ -90,13 +90,13 @@ class UserType extends AbstractType
                 ],
             ]);
 
-            $this->addAdminEntitiesField($builder);
+            $this->addEntitiesField($builder);
         }
     }
 
-    private function addAdminEntitiesField(FormBuilderInterface $builder)
+    private function addEntitiesField(FormBuilderInterface $builder)
     {
-        $builder->add('admin_entities', ChoiceType::class, [
+        $builder->add('entities', ChoiceType::class, [
             'label' => 'Admin Permissions',
             'choices' => $this->entityChoiceManager->getEntityChoices(),
             'choice_label' => 'label',
@@ -104,11 +104,11 @@ class UserType extends AbstractType
             'expanded' => true,
             'row_attr' => [
                 'class' => 'fieldset-nostyle',
-                'id' => 'admin_entities_container',
+                'id' => 'user_entities_container',
             ],
         ]);
 
-        $builder->get('admin_entities')
+        $builder->get('entities')
             ->addModelTransformer(new CallbackTransformer(
                 function ($entities) {
                     return $this->entityChoiceManager->transformEntitiesToEntityChoices(...$entities);

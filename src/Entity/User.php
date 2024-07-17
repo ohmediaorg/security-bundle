@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $verify_email = null;
 
     #[ORM\Column]
-    private array $admin_entities = [];
+    private array $entities = [];
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
@@ -215,14 +215,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdminEntities(): array
+    public function getEntities(): array
     {
-        return $this->admin_entities;
+        return $this->entities;
     }
 
-    public function setAdminEntities(array $admin_entities): static
+    public function setEntities(array $entities): static
     {
-        $this->admin_entities = $admin_entities;
+        $this->entities = $entities;
 
         return $this;
     }

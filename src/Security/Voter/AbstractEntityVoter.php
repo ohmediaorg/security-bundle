@@ -48,7 +48,7 @@ abstract class AbstractEntityVoter extends Voter
         }
 
         if (!$loggedIn->isTypeDeveloper() && !$loggedIn->isTypeSuper()) {
-            if (!in_array($this->getEntityClass(), $loggedIn->getAdminEntities())) {
+            if (!in_array($this->getEntityClass(), $loggedIn->getEntities())) {
                 return false;
             }
         }

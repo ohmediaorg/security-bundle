@@ -21,12 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const typeRadioNodeList = form.elements['{{ form.type.vars.full_name }}'];
 
-  const adminEntitiesContainer = document.getElementById('admin_entities_container');
+  const userEntitiesContainer = document.getElementById('user_entities_container');
 
   const userTypeAdmin = {{ constant('OHMedia\\SecurityBundle\\Entity\\User::TYPE_ADMIN')|json_encode|raw }};
 
   function toggleEntities() {
-    adminEntitiesContainer.style.display = userTypeAdmin === typeRadioNodeList.value
+    userEntitiesContainer.style.display = userTypeAdmin === typeRadioNodeList.value
         ? ''
         : 'none';
   }
