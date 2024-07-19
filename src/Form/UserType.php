@@ -76,7 +76,7 @@ class UserType extends AbstractType
                 ],
                 'expanded' => true,
                 'row_attr' => [
-                    'class' => 'fieldset-nostyle',
+                    'class' => 'fieldset-nostyle mb-3',
                 ],
             ]);
         }
@@ -89,7 +89,7 @@ class UserType extends AbstractType
                 ],
                 'expanded' => true,
                 'row_attr' => [
-                    'class' => 'fieldset-nostyle',
+                    'class' => 'fieldset-nostyle mb-3',
                 ],
             ]);
 
@@ -106,7 +106,7 @@ class UserType extends AbstractType
             'multiple' => true,
             'expanded' => true,
             'row_attr' => [
-                'class' => 'fieldset-nostyle',
+                'class' => 'fieldset-nostyle mb-3',
                 'id' => 'user_entities_container',
             ],
         ]);
