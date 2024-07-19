@@ -41,8 +41,6 @@ class CreateUserCommand extends Command
             return Command::INVALID;
         }
 
-        $developer = $io->confirm('Flag this user as a developer');
-
         $user = new User();
 
         $hashedPassword = $this->passwordHasher->hashPassword(
@@ -53,7 +51,7 @@ class CreateUserCommand extends Command
         $user
             ->setEmail($email)
             ->setPassword($hashedPassword)
-            ->setDeveloper($developer)
+            ->setType(User::TYPE_DEVELOPER)
             ->setEnabled(true)
         ;
 

@@ -28,32 +28,49 @@ class UserVoter extends AbstractEntityVoter
 
     protected function canIndex(User $user, User $loggedIn): bool
     {
-        return true;
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 
     protected function canCreate(User $user, User $loggedIn): bool
     {
-        return true;
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 
     protected function canEdit(User $user, User $loggedIn): bool
     {
-        if ($user->isDeveloper()) {
-            // can only be edited by other developer users
-            return $loggedIn->isDeveloper();
+        if (!$this->isStockUserType($user)) {
+            return false;
         }
 
-        return true;
+        if ($user->isTypeDeveloper()) {
+            // can only be edited by other developer users
+            return $loggedIn->isTypeDeveloper();
+        }
+
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
     }
 
     protected function canDelete(User $user, User $loggedIn): bool
     {
-        if ($user->isDeveloper()) {
+        if (!$this->isStockUserType($user)) {
+            return false;
+        }
+
+        if ($user->isTypeDeveloper()) {
             // developer user cannot be deleted
             return false;
         }
 
         // user cannot delete themselves
-        return $user !== $loggedIn;
+        if ($user === $loggedIn) {
+            return false;
+        }
+
+        return $loggedIn->isTypeDeveloper() || $loggedIn->isTypeSuper();
+    }
+
+    private function isStockUserType(User $user)
+    {
+        return $user->isTypeDeveloper() || $user->isTypeSuper() || $user->isTypeAdmin();
     }
 }

@@ -18,6 +18,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use BlameableEntityTrait;
     use TimezoneUserTrait;
 
+    public const TYPE_DEVELOPER = 'developer';
+    public const TYPE_SUPER = 'super';
+    public const TYPE_ADMIN = 'admin';
+
+    public const PASSWORD_CHANGE = 'PASSWORD_CHANGE';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,9 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $last_name = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $developer = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $enabled = null;
@@ -59,8 +62,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $entities = [];
 
-    #[ORM\Column(options: ['default' => false])]
-    private ?bool $admin = false;
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
 
     public function __toString(): string
     {
@@ -89,6 +92,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername(): string
     {
         return $this->getEmail();
+    }
+
+    private ?string $new_password = null;
+
+    public function getNewPassword(): ?string
+    {
+        return $this->new_password;
+    }
+
+    public function setNewPassword(?string $new_password): static
+    {
+        if ($new_password) {
+            $this->password = self::PASSWORD_CHANGE;
+        }
+
+        $this->new_password = $new_password;
+
+        return $this;
     }
 
     public function getPassword(): string
@@ -140,18 +161,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return implode(' ', $parts);
-    }
-
-    public function isDeveloper(): bool
-    {
-        return (bool) $this->developer;
-    }
-
-    public function setDeveloper(?bool $developer): static
-    {
-        $this->developer = $developer;
-
-        return $this;
     }
 
     public function isEnabled(): ?bool
@@ -214,6 +223,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    private bool $sendVerifyEmail = false;
+
+    public function shouldSendVerifyEmail(): bool
+    {
+        return $this->sendVerifyEmail;
+    }
+
+    public function doEmailVerification(string $oldEmail, string $newEmail, string $verifyToken): static
+    {
+        $this->sendVerifyEmail = true;
+        $this->email = $oldEmail;
+        $this->verify_email = $newEmail;
+        $this->verify_token = $verifyToken;
+
+        return $this;
+    }
+
+    private bool $emailJustVerified = false;
+
+    public function wasEmailJustVerified(): bool
+    {
+        return $this->emailJustVerified;
+    }
+
+    public function setEmailVerified(): static
+    {
+        if (!$this->verify_email || !$this->verify_token) {
+            throw new \LogicException('The verify email/token is blank.');
+        }
+
+        $this->emailJustVerified = true;
+        $this->email = $this->verify_email;
+        $this->verify_token = null;
+        $this->verify_email = null;
+
+        return $this;
+    }
+
     public function getVerifyEmail(): ?string
     {
         return $this->verify_email;
@@ -257,8 +304,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->new_password = null;
     }
 
     public function getUserIdentifier(): string
@@ -266,15 +312,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function isAdmin(): ?bool
+    public function getType(): ?string
     {
-        return $this->admin;
+        return $this->type;
     }
 
-    public function setAdmin(?bool $admin): static
+    public function setType(string $type): static
     {
-        $this->admin = $admin;
+        $this->type = $type;
 
         return $this;
+    }
+
+    public function isType(string $type): bool
+    {
+        return $type === $this->type;
+    }
+
+    public function isTypeDeveloper(): bool
+    {
+        return $this->isType(static::TYPE_DEVELOPER);
+    }
+
+    public function isTypeSuper(): bool
+    {
+        return $this->isType(static::TYPE_SUPER);
+    }
+
+    public function isTypeAdmin(): bool
+    {
+        return $this->isType(static::TYPE_ADMIN);
     }
 }
