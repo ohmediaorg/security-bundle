@@ -154,7 +154,7 @@ that aren't represented in the `User` entity (eg. `phone`).
 
 The `User` entity attached to the `Member` should have a custom value for `type`
 (recommendend to use the value of `Member::class`) and the value for `entities`
-should be populated accordingly. Leave `entities` as a blank array if the Member
+should be populated accordingly. Set `entities` as a blank array if the Member
 should only be allowed to log in and view locked content.
 
 The `Member` entity is intended to be separate from the `User` entity as far as
@@ -199,7 +199,7 @@ $member = new Member();
 $member->setUser($user);
 ```
 
-Then you can create a custom `ArticleVoter` will logic like the following:
+Then you can create a custom `ArticleVoter` with logic like the following:
 
 ```php
 protected function canEdit(Article $article, User $loggedIn)
