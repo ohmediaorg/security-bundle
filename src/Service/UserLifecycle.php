@@ -33,46 +33,12 @@ class UserLifecycle
     {
         $this->updatePassword($user);
 
-        if (!$user->wasEmailJustVerified() && $event->hasChangedField('email')) {
-            $oldEmail = $event->getOldValue('email');
-            $newEmail = $event->getNewValue('email');
-
-            $emailChanged = $oldEmail !== $newEmail;
-        } else {
-            $emailChanged = false;
-        }
-
-        if ($emailChanged) {
-            $verifyToken = RandomString::get(50, function ($token) {
-                return !$this->userRepository->findOneBy([
-                    'verify_token' => $token,
-                ]);
-            });
-
-            $user->doEmailVerification($oldEmail, $newEmail, $verifyToken);
-        }
+        $this->handleEmailChange($user, $event);
     }
 
     public function postUpdate(User $user, PostUpdateEventArgs $event)
     {
-        if ($user->shouldSendVerifyEmail()) {
-            $url = $this->urlGenerator->generate('user_verify_email', [
-                'token' => $user->getVerifyToken(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL);
-
-            $to = new EmailAddress($user->getVerifyEmail(), $user->getFullName());
-
-            $email = (new Email())
-                ->setSubject('Verify Email Address')
-                ->setTemplate('@OHMediaSecurity/email/verification_email.html.twig', [
-                    'user' => $user,
-                    'url' => $url,
-                ])
-                ->setTo($to)
-            ;
-
-            $this->emailRepository->save($email, true);
-        }
+        $this->sendEmailVerification($user);
     }
 
     private function updatePassword(User $user): void
@@ -93,5 +59,53 @@ class UserLifecycle
         $user->setPassword($hashedPassword);
 
         $user->setNewPassword(null);
+    }
+
+    private function handleEmailChange(User $user, PreUpdateEventArgs $event): void
+    {
+        if ($user->wasEmailJustVerified()) {
+            return;
+        }
+
+        if (!$event->hasChangedField('email')) {
+            return;
+        }
+
+        $oldEmail = $event->getOldValue('email');
+        $newEmail = $event->getNewValue('email');
+
+        if ($oldEmail !== $newEmail) {
+            $verifyToken = RandomString::get(50, function ($token) {
+                return !$this->userRepository->findOneBy([
+                    'verify_token' => $token,
+                ]);
+            });
+
+            $user->doEmailVerification($oldEmail, $newEmail, $verifyToken);
+        }
+    }
+
+    private function sendEmailVerification(User $user): void
+    {
+        if (!$user->shouldSendVerifyEmail()) {
+            return;
+        }
+
+        $url = $this->urlGenerator->generate('user_verify_email', [
+            'token' => $user->getVerifyToken(),
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $to = new EmailAddress($user->getVerifyEmail(), $user->getFullName());
+
+        $email = (new Email())
+            ->setSubject('Verify Email Address')
+            ->setTemplate('@OHMediaSecurity/email/verification_email.html.twig', [
+                'user' => $user,
+                'url' => $url,
+            ])
+            ->setTo($to)
+        ;
+
+        $this->emailRepository->save($email, true);
     }
 }
