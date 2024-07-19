@@ -164,11 +164,12 @@ custom `type` values will be excluded from the regular `User` routes.
 
 ## User Type Forms
 
-Create a `MemberUserType` form for handling `User` data under the `Member`:
+Utilize `OHMedia\SecurityBundle\Form\ProfileType` form for handling `User` data
+in the `Member` form:
 
 ```php
 $builder->add('phone', TelType::class);
-$builder->add('user', MemberUserType::class);
+$builder->add('user', ProfileType::class);
 ```
 
 The form can be custom rendered to seamlessly merge the two:
