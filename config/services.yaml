@@ -29,11 +29,11 @@ services:
     oh_media_security.entity_choice_manager: '@OHMedia\SecurityBundle\Service\EntityChoiceManager'
 
     OHMedia\SecurityBundle\Form\UserType:
-        arguments: ["@oh_media_security.entity_choice_manager", "%oh_media_timezone.timezone%"]
+        autowire: true
         tags: ["form.type"]
 
     OHMedia\SecurityBundle\Form\ProfileType:
-        arguments: ["%oh_media_timezone.timezone%"]
+        autowire: true
         tags: ["form.type"]
 
     OHMedia\SecurityBundle\Repository\UserRepository:

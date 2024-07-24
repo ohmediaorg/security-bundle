@@ -164,12 +164,11 @@ custom `type` values will be excluded from the regular `User` routes.
 
 ## User Type Forms
 
-Utilize `OHMedia\SecurityBundle\Form\ProfileType` form for handling `User` data
-in the `Member` form:
+You can utilize `OHMedia\SecurityBundle\Form\UserType` in the `Member` form:
 
 ```php
 $builder->add('phone', TelType::class);
-$builder->add('user', ProfileType::class);
+$builder->add('user', UserType::class);
 ```
 
 The form can be custom rendered to seamlessly merge the two:
@@ -184,7 +183,9 @@ The form can be custom rendered to seamlessly merge the two:
 ```
 
 Create a higher priority route for `user_profile` that will display a custom
-form for this user type and otherwise forward to the `ProfileController`.
+form for this user type and otherwise forward to the `ProfileController`. Here
+you can utilize `OHMedia\SecurityBundle\Form\ProfileType` in a custom
+`MemberProfileType` form.
 
 ## User Type Permissions
 
@@ -192,12 +193,19 @@ Let's say a `Member` was allowed to create `Article` entities. You would need to
 make sure the `entities` value of the associated `User` was set as follows:
 
 ```php
-$user = new User();
-$user->setType(Member::class);
-$user->setEntities([Article::class]);
+use OHMedia\SecurityBundle\Entity\User;
 
-$member = new Member();
-$member->setUser($user);
+class Member
+{
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->user->setType(self::class);
+        $this->user->setEntities([
+            Article::class,
+        ]);
+    }
+}
 ```
 
 Then you can create a custom `ArticleVoter` with logic like the following:

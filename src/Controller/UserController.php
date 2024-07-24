@@ -66,6 +66,7 @@ class UserController extends AbstractController
     public function create(Request $request): Response
     {
         $user = new User();
+        $user->setType(User::TYPE_ADMIN);
 
         $this->denyAccessUnlessGranted(
             UserVoter::CREATE,

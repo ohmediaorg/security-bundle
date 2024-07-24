@@ -4,6 +4,7 @@ namespace OHMedia\SecurityBundle\Form;
 
 use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Service\EntityChoiceManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,6 +20,7 @@ class UserType extends AbstractType
 {
     public function __construct(
         private EntityChoiceManager $entityChoiceManager,
+        #[Autowire('%oh_media_timezone.timezone%')]
         private string $defaultTimezone
     ) {
     }
@@ -38,9 +40,11 @@ class UserType extends AbstractType
         $builder
             ->add('first_name', TextType::class, [
                 'required' => false,
+                'label' => 'First Name',
             ])
             ->add('last_name', TextType::class, [
                 'required' => false,
+                'label' => 'Last Name',
             ])
             ->add('email', EmailType::class, [
                 'help' => $verifyEmail
@@ -81,7 +85,9 @@ class UserType extends AbstractType
             ]);
         }
 
-        if (!$user->isTypeDeveloper() && !$usersMatch) {
+        $showPermissions = ($user->isTypeSuper() || $user->isTypeAdmin()) && !$usersMatch;
+
+        if ($showPermissions) {
             $builder->add('type', ChoiceType::class, [
                 'choices' => [
                     'Super Admin' => User::TYPE_SUPER,
