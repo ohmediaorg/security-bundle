@@ -160,7 +160,8 @@ should only be allowed to log in and view locked content.
 The `Member` entity is intended to be separate from the `User` entity as far as
 UI goes. There should be entirely separate routes (ie. `member_index`,
 `member_create`, `member_edit`, `member_delete`, etc.). `User` entities with
-custom `type` values will be excluded from the regular `User` routes.
+custom `type` values will be excluded from the regular `User` routes. Basically,
+the custom entity can be boilerplated.
 
 ## User Type Forms
 
@@ -185,7 +186,8 @@ The form can be custom rendered to seamlessly merge the two:
 Create a higher priority route for `user_profile` that will display a custom
 form for this user type and otherwise forward to the `ProfileController`. Here
 you can utilize `OHMedia\SecurityBundle\Form\ProfileType` in a custom
-`MemberProfileType` form.
+`MemberProfileType` form. This route will need to be loaded after the routes
+in the `security-bundle`.
 
 ## User Type Permissions
 
