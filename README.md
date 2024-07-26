@@ -150,7 +150,8 @@ You may need to manually tag your service as `oh_media_security.entity_choice`.
 Start by creating an entity to represent your custom user type (eg. `Member`).
 
 Add a `OneToOne` relationship from `Member` to `User`. Add any fields to `Member`
-that aren't represented in the `User` entity (eg. `phone`).
+that aren't represented in the `User` entity (eg. `phone`). The `User` entity
+property on the `Member` entity will need the `#[Assert\Valid]` constraint.
 
 The `User` entity attached to the `Member` should have a custom value for `type`
 (recommendend to use the value of `Member::class`) and the value for `entities`
@@ -162,6 +163,17 @@ UI goes. There should be entirely separate routes (ie. `member_index`,
 `member_create`, `member_edit`, `member_delete`, etc.). `User` entities with
 custom `type` values will be excluded from the regular `User` routes. Basically,
 the custom entity can be boilerplated.
+
+In the controller, there would need to be a special flash message for when the
+`User` entity email needs to be verified:
+
+```php
+if ($member->getUser()->shouldSendVerifyEmail()) {
+    $this->addFlash('notice', 'The member was updated successfully. The email address will need to be verified before that change takes effect.');
+} else {
+    $this->addFlash('notice', 'The member was updated successfully.');
+}
+```
 
 ## User Type Forms
 
