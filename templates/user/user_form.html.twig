@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const userEntitiesContainer = document.getElementById('user_entities_container');
 
-  const userTypeAdmin = {{ constant('OHMedia\\SecurityBundle\\Entity\\User::TYPE_ADMIN')|json_encode|raw }};
+  const userTypeAdmin = {{ constant('OHMedia\\SecurityBundle\\Entity\\User::TYPE_ADMIN')|js }};
 
   function toggleEntities() {
     userEntitiesContainer.style.display = userTypeAdmin === typeRadioNodeList.value
