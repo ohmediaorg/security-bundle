@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
+#[UniqueEntity(fields: 'verify_email', errorPath: 'email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use BlameableEntityTrait;
