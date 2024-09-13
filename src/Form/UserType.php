@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserType extends AbstractType
 {
@@ -37,6 +38,12 @@ class UserType extends AbstractType
 
         $passwordLabel = $userExists ? 'Change Password' : 'Password';
 
+        $passwordConstraints = [];
+
+        if (!$userExists) {
+            $passwordConstraints[] = new NotBlank();
+        }
+
         $builder
             ->add('first_name', TextType::class, [
                 'required' => false,
@@ -58,6 +65,7 @@ class UserType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'first_options' => ['label' => $passwordLabel],
                 'second_options' => ['label' => 'Repeat Password'],
+                'constraints' => $passwordConstraints,
             ])
             ->add('timezone', TimezoneType::class, [
                 'required' => false,

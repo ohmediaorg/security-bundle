@@ -10,6 +10,7 @@ use OHMedia\UtilityBundle\Entity\BlameableEntityTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
@@ -30,15 +31,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 180)]
     private ?string $email = null;
 
     #[ORM\Column]
     private string $password;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
     private ?string $first_name = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
     private ?string $last_name = null;
 
     #[ORM\Column(nullable: true)]
@@ -82,7 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
@@ -117,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(?string $password): static
     {
         $this->password = $password;
 
