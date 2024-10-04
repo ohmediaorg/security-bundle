@@ -12,12 +12,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class ProfileType extends AbstractType
 {
     public function __construct(
         #[Autowire('%oh_media_timezone.timezone%')]
-        private string $defaultTimezone
+        private string $defaultTimezone,
+        #[Autowire('%oh_media_security.password_strength%')]
+        private int $passwordStrength,
     ) {
     }
 
@@ -26,6 +29,14 @@ class ProfileType extends AbstractType
         $user = isset($options['data']) ? $options['data'] : null;
 
         $verifyEmail = $user ? $user->getVerifyEmail() : null;
+
+        $passwordConstraints = [];
+
+        if ($this->passwordStrength) {
+            $passwordConstraints[] = new PasswordStrength([
+                'minScore' => $this->passwordStrength,
+            ]);
+        }
 
         $builder
             ->add('first_name', TextType::class, [
@@ -48,6 +59,7 @@ class ProfileType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'first_options' => ['label' => 'Change Password'],
                 'second_options' => ['label' => 'Repeat Password'],
+                'constraints' => $passwordConstraints,
             ])
             ->add('timezone', TimezoneType::class, [
                 'required' => false,
