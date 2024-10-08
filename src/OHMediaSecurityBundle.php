@@ -26,7 +26,7 @@ class OHMediaSecurityBundle extends AbstractBundle
                 ->integerNode('password_strength')
                     ->min(PasswordStrength::STRENGTH_VERY_WEAK)
                     ->max(PasswordStrength::STRENGTH_VERY_STRONG)
-                    ->defaultValue(PasswordStrength::STRENGTH_MEDIUM)
+                    ->defaultValue(PasswordStrength::STRENGTH_VERY_WEAK)
                 ->end()
             ->end()
         ;
