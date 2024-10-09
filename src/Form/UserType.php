@@ -16,13 +16,16 @@ use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class UserType extends AbstractType
 {
     public function __construct(
         private EntityChoiceManager $entityChoiceManager,
         #[Autowire('%oh_media_timezone.timezone%')]
-        private string $defaultTimezone
+        private string $defaultTimezone,
+        #[Autowire('%oh_media_security.password_strength%')]
+        private int $passwordStrength,
     ) {
     }
 
@@ -42,6 +45,12 @@ class UserType extends AbstractType
 
         if (!$userExists) {
             $passwordConstraints[] = new NotBlank();
+        }
+
+        if ($this->passwordStrength) {
+            $passwordConstraints[] = new PasswordStrength([
+                'minScore' => $this->passwordStrength,
+            ]);
         }
 
         $builder
