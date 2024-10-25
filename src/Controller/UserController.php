@@ -9,6 +9,7 @@ use OHMedia\SecurityBundle\Form\UserType;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\SecurityBundle\Security\Voter\UserVoter;
 use OHMedia\UtilityBundle\Form\DeleteType;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,8 +103,10 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user): Response
-    {
+    public function edit(
+        Request $request,
+        #[MapEntity(id: 'id')] User $user
+    ): Response {
         $this->denyAccessUnlessGranted(
             UserVoter::EDIT,
             $user,
@@ -142,8 +145,10 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/delete', name: 'user_delete', methods: ['GET', 'POST'])]
-    public function delete(Request $request, User $user): Response
-    {
+    public function delete(
+        Request $request,
+        #[MapEntity(id: 'id')] User $user
+    ): Response {
         $this->denyAccessUnlessGranted(
             UserVoter::DELETE,
             $user,

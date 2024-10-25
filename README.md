@@ -116,8 +116,10 @@ use App\Security\Voter\PostVoter;
 // ...
 
 #[Route('/post/{id}/publish', name: 'post_publish', methods: ['GET', 'POST'])]
-public function publish(Post $post, Request $request)
-{
+public function publish(
+    #[MapEntity(id: 'id')] Post $post,
+    Request $request,
+): Response {
     $this->denyAccessUnlessGranted(
         PostVoter::PUBLISH,
         $post,
@@ -238,8 +240,9 @@ custom listing separate from that which lists out a particular member's articles
 
 ```php
 #[Route('/member/{id}/articles', name: 'member_articles', methods: ['GET'])]
-public function articles(Member $member)
-{
+public function articles(
+    #[MapEntity(id: 'id')] Member $member,
+): Response {
     // get articles that the Member "owns"
 }
 ```
