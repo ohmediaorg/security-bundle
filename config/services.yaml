@@ -53,15 +53,26 @@ services:
 
     OHMedia\SecurityBundle\Service\UserLifecycle:
         autowire: true
+
+    OHMedia\SecurityBundle\EventListener\UserPrePersist:
+        autowire: true
         tags:
             -
                 name: 'doctrine.orm.entity_listener'
                 event: 'prePersist'
                 entity: 'OHMedia\SecurityBundle\Entity\User'
+
+    OHMedia\SecurityBundle\EventListener\UserPreUpdate:
+        autowire: true
+        tags:
             -
                 name: 'doctrine.orm.entity_listener'
                 event: 'preUpdate'
                 entity: 'OHMedia\SecurityBundle\Entity\User'
+
+    OHMedia\SecurityBundle\EventListener\UserPostUpdate:
+        autowire: true
+        tags:
             -
                 name: 'doctrine.orm.entity_listener'
                 event: 'postUpdate'
