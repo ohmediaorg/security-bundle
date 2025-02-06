@@ -41,10 +41,14 @@
         <tr>
           <td>
             {% if full_name %}
-            {{ full_name }}
-            <small class="text-muted d-block">{{ user.email }}</small>
+              {{ full_name }}
+              <small class="text-muted d-block">{{ user.email }}</small>
             {% else %}
-            {{ user.email }}
+              {{ user.email }}
+            {% endif %}
+
+            {% if not user.enabled %}
+              {{ bootstrap_badge_danger('Disabled') }}
             {% endif %}
           </td>
           <td>{{ user_permissions(user) }}</td>
