@@ -23,7 +23,7 @@ class LoginController extends AbstractController
         if ($this->getUser()) {
             $this->addFlash('warning', 'You are already logged in.');
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('user_profile');
         }
 
         $formBuilder = $this->createFormBuilder(null, [
