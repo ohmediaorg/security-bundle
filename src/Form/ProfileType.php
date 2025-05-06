@@ -30,7 +30,15 @@ class ProfileType extends AbstractType
 
         $verifyEmail = $user ? $user->getVerifyEmail() : null;
 
+        $userExists = $user && $user->getId();
+
+        $passwordLabel = $userExists ? 'Change Password' : 'Password';
+
         $passwordConstraints = [];
+
+        if (!$userExists) {
+            $passwordConstraints[] = new NotBlank();
+        }
 
         if ($this->passwordStrength) {
             $passwordConstraints[] = new PasswordStrength([
@@ -53,11 +61,11 @@ class ProfileType extends AbstractType
                     : '',
             ])
             ->add('new_password', RepeatedType::class, [
-                'required' => !$user || !$user->getId(),
+                'required' => !$userExists,
                 'type' => PasswordType::class,
                 'options' => ['attr' => ['autocomplete' => 'new-password']],
                 'invalid_message' => 'The password fields must match.',
-                'first_options' => ['label' => 'Change Password'],
+                'first_options' => ['label' => $passwordLabel],
                 'second_options' => ['label' => 'Repeat Password'],
                 'constraints' => $passwordConstraints,
             ])
