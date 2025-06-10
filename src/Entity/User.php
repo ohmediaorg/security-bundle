@@ -349,4 +349,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->isType(static::TYPE_ADMIN);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->isTypeDeveloper()
+            || $this->isTypeSuper()
+            || $this->isTypeAdmin();
+    }
 }
