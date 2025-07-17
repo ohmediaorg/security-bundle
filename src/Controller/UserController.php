@@ -79,7 +79,7 @@ class UserController extends AbstractController
             'logged_in' => $this->getUser(),
         ]);
 
-        $form->add('submit', SubmitType::class);
+        $form->add('save', SubmitType::class);
 
         $form->handleRequest($request);
 
@@ -117,7 +117,7 @@ class UserController extends AbstractController
             'logged_in' => $this->getUser(),
         ]);
 
-        $form->add('submit', SubmitType::class);
+        $form->add('save', SubmitType::class);
 
         $form->handleRequest($request);
 
