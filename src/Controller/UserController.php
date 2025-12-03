@@ -2,6 +2,7 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use OHMedia\BackendBundle\Form\MultiSaveType;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\SecurityBundle\Entity\User;
@@ -12,6 +13,7 @@ use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -79,7 +81,7 @@ class UserController extends AbstractController
             'logged_in' => $this->getUser(),
         ]);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -89,7 +91,7 @@ class UserController extends AbstractController
 
                 $this->addFlash('notice', 'Changes to the user were saved successfully.');
 
-                return $this->redirectToRoute('user_index');
+                return $this->redirectForm($user, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -117,7 +119,7 @@ class UserController extends AbstractController
             'logged_in' => $this->getUser(),
         ]);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -131,7 +133,7 @@ class UserController extends AbstractController
                     $this->addFlash('notice', 'Changes to the user were saved successfully.');
                 }
 
-                return $this->redirectToRoute('user_index');
+                return $this->redirectForm($user, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -142,6 +144,21 @@ class UserController extends AbstractController
             'form' => $form->createView(),
             'form_title' => 'Edit User',
         ]);
+    }
+
+    private function redirectForm(User $user, FormInterface $form): Response
+    {
+        $clickedButtonName = $form->getClickedButton()->getName() ?? null;
+
+        if ('keep_editing' === $clickedButtonName) {
+            return $this->redirectToRoute('user_edit', [
+                'id' => $user->getId(),
+            ]);
+        } elseif ('add_another' === $clickedButtonName) {
+            return $this->redirectToRoute('user_create');
+        } else {
+            return $this->redirectToRoute('user_index');
+        }
     }
 
     #[Route('/user/{id}/delete', name: 'user_delete', methods: ['GET', 'POST'])]

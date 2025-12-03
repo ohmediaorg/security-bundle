@@ -38,7 +38,7 @@
         </thead>
         <tbody>
           {% for user in pagination.results %}
-              {{ _self.table_row(user, attributes) }}
+            {{ _self.table_row(user, attributes) }}
           {% else %}
             <tr><td colspan="100%" class="text-center">No users yet</td></tr>
           {% endfor %}
