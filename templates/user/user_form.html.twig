@@ -1,38 +1,38 @@
 {% extends '@OHMediaBackend/form.html.twig' %}
 
 {% block breadcrumbs %}
-{{ bootstrap_breadcrumbs(
-  bootstrap_breadcrumb(bootstrap_icon('person-gear') ~ ' Users', 'user_index'),
-  bootstrap_breadcrumb(user.id ? 'Edit' : 'Create'),
-) }}
+  {{ bootstrap_breadcrumbs(
+    bootstrap_breadcrumb(bootstrap_icon('person-gear') ~ ' Users', 'user_index'),
+    bootstrap_breadcrumb(user.id ? 'Edit' : 'Create'),
+  ) }}
 {% endblock %}
 
 {% block javascripts %}
-{% if form.type is defined %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('form[name={{ form.vars.name }}]');
+  {% if form.type is defined %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[name={{ form.vars.name }}]');
 
-  const typeRadioNodeList = form.elements['{{ form.type.vars.full_name }}'];
+        const typeRadioNodeList = form.elements['{{ form.type.vars.full_name }}'];
 
-  const userEntitiesContainer = document.getElementById('user_entities_container');
+        const userEntitiesContainer = document.getElementById('user_entities_container');
 
-  const userTypeAdmin = {{ constant('OHMedia\\SecurityBundle\\Entity\\User::TYPE_ADMIN')|js }};
+        const userTypeAdmin = {{ constant('OHMedia\\SecurityBundle\\Entity\\User::TYPE_ADMIN')|js }};
 
-  function toggleEntities() {
-    userEntitiesContainer.style.display = userTypeAdmin === typeRadioNodeList.value
-        ? ''
-        : 'none';
-  }
+        function toggleEntities() {
+          userEntitiesContainer.style.display = userTypeAdmin === typeRadioNodeList.value
+              ? ''
+              : 'none';
+        }
 
-  typeRadioNodeList.forEach((radio) => {
-    radio.addEventListener('change', () => {
-      toggleEntities();
-    });
-  });
+        typeRadioNodeList.forEach((radio) => {
+          radio.addEventListener('change', () => {
+            toggleEntities();
+          });
+        });
 
-  toggleEntities();
-});
-</script>
-{% endif %}
+        toggleEntities();
+      });
+    </script>
+  {% endif %}
 {% endblock %}
