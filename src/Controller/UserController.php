@@ -10,7 +10,6 @@ use OHMedia\SecurityBundle\Entity\User;
 use OHMedia\SecurityBundle\Form\UserType;
 use OHMedia\SecurityBundle\Repository\UserRepository;
 use OHMedia\SecurityBundle\Security\Voter\UserVoter;
-use OHMedia\SecurityBundle\Service\EntityChoiceManager;
 use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,10 +25,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Admin]
 class UserController extends AbstractController
 {
-    public function __construct(
-        private EntityChoiceManager $entityChoiceManager,
-        private UserRepository $userRepository,
-    ) {
+    public function __construct(private UserRepository $userRepository)
+    {
     }
 
     #[Route('/users', name: 'user_index', methods: ['GET'])]
