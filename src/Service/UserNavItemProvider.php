@@ -14,7 +14,7 @@ class UserNavItemProvider extends AbstractNavItemProvider
     {
         if ($this->isGranted(UserVoter::INDEX, new User())) {
             return (new NavLink('Users', 'user_index'))
-                ->setIcon('lock-fill');
+                ->setIcon('person-gear');
         }
 
         return null;
