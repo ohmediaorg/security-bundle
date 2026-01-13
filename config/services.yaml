@@ -9,11 +9,7 @@ services:
             - '../src/Entity/'
             - '../src/OHMediaSecurityBundle.php'
 
-    # alias used in EntityChoicePass
-    oh_media_security.entity_choice_manager: '@OHMedia\SecurityBundle\Service\EntityChoiceManager'
-
     OHMedia\SecurityBundle\Service\UserLifecycle:
-        autowire: true
         tags:
             -
                 name: 'doctrine.orm.entity_listener'
