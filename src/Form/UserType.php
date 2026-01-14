@@ -102,7 +102,7 @@ class UserType extends AbstractType
             ]);
         }
 
-        $showPermissions = ($user->isTypeSuper() || $user->isTypeAdmin()) && !$usersMatch;
+        $showPermissions = $user && ($user->isTypeSuper() || $user->isTypeAdmin()) && !$usersMatch;
 
         if ($showPermissions) {
             $builder->add('type', ChoiceType::class, [

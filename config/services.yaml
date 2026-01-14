@@ -1,58 +1,15 @@
 services:
-    OHMedia\SecurityBundle\Command\CreateUserCommand:
+    _defaults:
         autowire: true
-        tags: ["console.command"]
+        autoconfigure: true
 
-    OHMedia\SecurityBundle\Controller\LoginController:
-        tags: ["container.service_subscriber", "controller.service_arguments"]
-        autowire: true
-
-    OHMedia\SecurityBundle\Controller\PasswordController:
-        tags: ["container.service_subscriber", "controller.service_arguments"]
-        autowire: true
-
-    OHMedia\SecurityBundle\Controller\ProfileController:
-        tags: ["container.service_subscriber", "controller.service_arguments"]
-        autowire: true
-
-    OHMedia\SecurityBundle\Controller\UserController:
-        tags: ["container.service_subscriber", "controller.service_arguments"]
-        autowire: true
-
-    OHMedia\SecurityBundle\Controller\VerificationController:
-        tags: ["container.service_subscriber", "controller.service_arguments"]
-        autowire: true
-
-    OHMedia\SecurityBundle\Service\EntityChoiceManager:
-        autowire: true
-
-    oh_media_security.entity_choice_manager: '@OHMedia\SecurityBundle\Service\EntityChoiceManager'
-
-    OHMedia\SecurityBundle\Form\UserType:
-        autowire: true
-        tags: ["form.type"]
-
-    OHMedia\SecurityBundle\Form\ProfileType:
-        autowire: true
-        tags: ["form.type"]
-
-    OHMedia\SecurityBundle\Repository\UserRepository:
-        autowire: true
-        tags: ["doctrine.repository_service"]
-
-    OHMedia\SecurityBundle\Security\Voter\UserVoter:
-        tags: ["security.voter"]
-
-    OHMedia\SecurityBundle\Service\UserNavItemProvider:
-        autowire: true
-        tags: ["oh_media_backend.nav_item_provider"]
-
-    OHMedia\SecurityBundle\Twig\EntityChoiceExtension:
-        autowire: true
-        tags: ["twig.extension"]
+    OHMedia\SecurityBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/OHMediaSecurityBundle.php'
 
     OHMedia\SecurityBundle\Service\UserLifecycle:
-        autowire: true
         tags:
             -
                 name: 'doctrine.orm.entity_listener'
