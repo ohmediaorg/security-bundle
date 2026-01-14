@@ -2,6 +2,8 @@
 
 namespace OHMedia\SecurityBundle\Controller;
 
+use Doctrine\ORM\QueryBuilder;
+use OHMedia\BackendBundle\Form\MultiSaveType;
 use OHMedia\BackendBundle\Routing\Attribute\Admin;
 use OHMedia\BootstrapBundle\Service\Paginator;
 use OHMedia\SecurityBundle\Entity\User;
@@ -11,7 +13,11 @@ use OHMedia\SecurityBundle\Security\Voter\UserVoter;
 use OHMedia\UtilityBundle\Form\DeleteType;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +30,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users', name: 'user_index', methods: ['GET'])]
-    public function index(Paginator $paginator): Response
+    public function index(Paginator $paginator, Request $request): Response
     {
         $this->denyAccessUnlessGranted(
             UserVoter::INDEX,
@@ -52,6 +58,10 @@ class UserController extends AbstractController
 
         $qb->orderBy('ord', 'ASC');
 
+        $searchForm = $this->getSearchForm($request, $loggedIn->isTypeDeveloper());
+
+        $this->applySearch($searchForm, $qb);
+
         return $this->render('@OHMediaSecurity/user/user_index.html.twig', [
             'pagination' => $paginator->paginate($qb, 20),
             'new_user' => new User(),
@@ -60,7 +70,90 @@ class UserController extends AbstractController
                 'delete' => UserVoter::DELETE,
                 'edit' => UserVoter::EDIT,
             ],
+            'search_form' => $searchForm,
         ]);
+    }
+
+    private function getSearchForm(Request $request, bool $showDeveloperType): FormInterface
+    {
+        $formBuilder = $this->container->get('form.factory')
+            ->createNamedBuilder('', FormType::class, null, [
+                'csrf_protection' => false,
+            ]);
+
+        $formBuilder->setMethod('GET');
+
+        $formBuilder->add('search', SearchType::class, [
+            'required' => false,
+            'label' => 'Email, first/last name',
+        ]);
+
+        $typeChoices = [];
+
+        if ($showDeveloperType) {
+            $typeChoices['Developer'] = User::TYPE_DEVELOPER;
+        }
+
+        $typeChoices['Super Admin'] = User::TYPE_SUPER;
+        $typeChoices['Admin'] = User::TYPE_ADMIN;
+
+        $formBuilder->add('type', ChoiceType::class, [
+            'required' => false,
+            'placeholder' => 'Any',
+            'choices' => $typeChoices,
+        ]);
+
+        $formBuilder->add('enabled', ChoiceType::class, [
+            'required' => false,
+            'choices' => [
+                'Yes' => true,
+                'No' => false,
+            ],
+            'placeholder' => 'Any',
+            'data' => true,
+        ]);
+
+        $form = $formBuilder->getForm();
+
+        $form->handleRequest($request);
+
+        return $form;
+    }
+
+    private function applySearch(FormInterface $form, QueryBuilder $qb): void
+    {
+        $search = $form->get('search')->getData();
+
+        if ($search) {
+            $searchFields = [
+                'u.email',
+                'u.first_name',
+                'u.last_name',
+            ];
+
+            $searchLikes = [];
+            foreach ($searchFields as $searchField) {
+                $searchLikes[] = "$searchField LIKE :search";
+            }
+
+            $qb->andWhere('('.implode(' OR ', $searchLikes).')')
+                ->setParameter('search', '%'.$search.'%');
+        }
+
+        $type = $form->get('type')->getData();
+
+        if ($type) {
+            $qb->andWhere('u.type = :type');
+            $qb->setParameter('type', $type);
+        }
+
+        $enabled = $form->get('enabled')->getData();
+
+        if (true === $enabled) {
+            $qb->andWhere('u.enabled = 1');
+        } elseif (false === $enabled) {
+            $qb->andWhere('(u.enabled = 0 OR u.enabled IS NULL)');
+        }
     }
 
     #[Route('/user/create', name: 'user_create', methods: ['GET', 'POST'])]
@@ -79,7 +172,7 @@ class UserController extends AbstractController
             'logged_in' => $this->getUser(),
         ]);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -89,7 +182,7 @@ class UserController extends AbstractController
 
                 $this->addFlash('notice', 'Changes to the user were saved successfully.');
 
-                return $this->redirectToRoute('user_index');
+                return $this->redirectForm($user, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -117,7 +210,7 @@ class UserController extends AbstractController
             'logged_in' => $this->getUser(),
         ]);
 
-        $form->add('save', SubmitType::class);
+        $form->add('save', MultiSaveType::class);
 
         $form->handleRequest($request);
 
@@ -131,7 +224,7 @@ class UserController extends AbstractController
                     $this->addFlash('notice', 'Changes to the user were saved successfully.');
                 }
 
-                return $this->redirectToRoute('user_index');
+                return $this->redirectForm($user, $form);
             }
 
             $this->addFlash('error', 'There are some errors in the form below.');
@@ -142,6 +235,21 @@ class UserController extends AbstractController
             'form' => $form->createView(),
             'form_title' => 'Edit User',
         ]);
+    }
+
+    private function redirectForm(User $user, FormInterface $form): Response
+    {
+        $clickedButtonName = $form->getClickedButton()->getName() ?? null;
+
+        if ('keep_editing' === $clickedButtonName) {
+            return $this->redirectToRoute('user_edit', [
+                'id' => $user->getId(),
+            ]);
+        } elseif ('add_another' === $clickedButtonName) {
+            return $this->redirectToRoute('user_create');
+        } else {
+            return $this->redirectToRoute('user_index');
+        }
     }
 
     #[Route('/user/{id}/delete', name: 'user_delete', methods: ['GET', 'POST'])]

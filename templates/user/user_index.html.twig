@@ -4,79 +4,117 @@
 
 {% block breadcrumbs %}
 {{ bootstrap_breadcrumbs(
-  bootstrap_breadcrumb(bootstrap_icon('lock-fill') ~ ' Users', 'user_index'),
+  bootstrap_breadcrumb(bootstrap_icon('person-gear') ~ ' Users', 'user_index'),
 ) }}
 {% endblock %}
 
 {% block actions %}
-{% if is_granted(attributes.create, new_user) %}
-<a href="{{ path('user_create') }}" class="btn btn-sm btn-primary">
-  {{ bootstrap_icon('plus') }} Add User
-</a>
-{% endif %}
+  {% if is_granted(attributes.create, new_user) %}
+    <a href="{{ path('user_create') }}" class="btn btn-primary">
+      {{ bootstrap_icon('plus-lg') }}
+      Add User
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block main %}
-<div class="card">
-  <div class="card-body">
-    <div class="card-title card-title-with-count">
-      <h1 class="card-title-heading">Users</h1>
-      <div class="card-title-count">
-        {{ bootstrap_badge_primary(pagination.count) }}
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title card-title-with-count">
+        <h1 class="card-title-heading">Users</h1>
+        <div class="card-title-count">
+          {{ bootstrap_badge_primary(pagination.count) }}
+        </div>
       </div>
+
+      {{ form_start(search_form) }}
+        <div class="row align-items-end">
+          <div class="col-lg-4 col-sm-6">
+            {{ form_row(search_form.search) }}
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            {{ form_row(search_form.type) }}
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            {{ form_row(search_form.enabled) }}
+          </div>
+          <div class="col-lg-12 col-sm-6">
+            <button class="btn btn-outline-dark mb-3" type="submit">Search</button>
+            <a class="btn btn-secondary mb-3" href="{{ path('user_index') }}">Reset</a>
+          </div>
+        </div>
+      {{ form_end(search_form) }}
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name/Email</th>
+            <th>Permissions</th>
+            <th>Last Updated</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in pagination.results %}
+            {{ _self.table_row(user, attributes) }}
+          {% else %}
+            <tr><td colspan="100%" class="text-center">No users yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {{ bootstrap_pagination(pagination) }}
+
+      <small>{{ bootstrap_pagination_info(pagination) }}</small>
     </div>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name/Email</th>
-          <th>Permissions</th>
-          <th>Last Updated</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in pagination.results %}
-        {% set full_name = user.fullName %}
-        <tr>
-          <td>
-            {% if full_name %}
-              {{ full_name }}
-              <small class="text-muted d-block">{{ user.email }}</small>
-            {% else %}
-              {{ user.email }}
-            {% endif %}
-
-            {% if not user.enabled %}
-              {{ bootstrap_badge_danger('Disabled') }}
-            {% endif %}
-          </td>
-          <td>{{ user_permissions(user) }}</td>
-          <td>{{ user.updatedAt|datetime }}</td>
-          <td>
-            {% if is_granted(attributes.edit, user) %}
-            <a href="{{ path('user_edit', {id: user.id}) }}" class="btn btn-sm btn-primary btn-action" title="Edit">
-              {{ bootstrap_icon('pen-fill') }}
-              <span class="visually-hidden">Edit</span>
-            </a>
-            {% endif %}
-            {% if is_granted(attributes.delete, user) %}
-            <a href="{{ path('user_delete', {id: user.id}) }}" class="btn btn-sm btn-danger btn-action" title="Delete" data-confirm="Are you sure you want to delete this user?">
-              {{ bootstrap_icon('trash-fill') }}
-              <span class="visually-hidden">Delete</span>
-            </a>
-            {% endif %}
-          </td>
-        </tr>
-        {% else %}
-        <tr><td colspan="100%" class="text-center">No users yet</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    {{ bootstrap_pagination(pagination) }}
-
-    <small>{{ bootstrap_pagination_info(pagination) }}</small>
   </div>
-</div>
 {% endblock %}
+
+{% macro table_row(user, attributes) %}
+  {% set row_actions = [] %}
+
+  {% if is_granted(attributes.edit, user) %}
+    {% set row_actions = row_actions|merge([{
+      route: 'user_edit',
+      route_params: {id: user.id},
+      color: 'secondary',
+      icon: 'pencil',
+      text: 'Edit User',
+    }]) %}
+  {% endif %}
+
+  {% if is_granted(attributes.delete, user) %}
+    {% set row_actions = row_actions|merge([{
+      route: 'user_delete',
+      route_params: {id: user.id},
+      color: 'danger',
+      icon: 'trash',
+      text: 'Delete User',
+      confirm: 'Are you sure you want to delete this user? Clicking OK will take you to a verification step to delete this entry.',
+    }]) %}
+  {% endif %}
+
+  {% set full_name = user.fullName %}
+
+  <tr>
+    <td>
+      {% if full_name %}
+        {{ full_name }}
+        <small class="text-muted d-block">{{ user.email }}</small>
+      {% else %}
+        {{ user.email }}
+      {% endif %}
+
+      {% if not user.enabled %}
+        {{ bootstrap_badge_danger('Disabled') }}
+      {% endif %}
+    </td>
+    <td>{{ user_permissions(user) }}</td>
+    <td>{{ user.updatedAt|datetime }}</td>
+    <td>
+      {% include '@OHMediaBackend/widget/row_actions.html.twig' with {
+        row_actions: row_actions,
+      } only %}
+    </td>
+  </tr>
+{% endmacro %}
