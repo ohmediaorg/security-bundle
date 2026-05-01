@@ -315,6 +315,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->new_password = null;
     }
 
+    // https://symfony.com/doc/7.4/security.html#understanding-how-users-are-refreshed-from-the-session
     public function __serialize(): array
     {
         $this->new_password = null;
