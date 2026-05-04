@@ -309,9 +309,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
         $this->new_password = null;
+    }
+
+    // https://symfony.com/doc/7.4/security.html#understanding-how-users-are-refreshed-from-the-session
+    public function __serialize(): array
+    {
+        $this->new_password = null;
+
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
     }
 
     public function getUserIdentifier(): string
