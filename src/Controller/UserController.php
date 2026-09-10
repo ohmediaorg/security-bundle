@@ -56,7 +56,7 @@ class UserController extends AbstractController
 
         $qb->addSelect('COALESCE(u.first_name, u.email) AS HIDDEN ord');
 
-        $qb->orderBy('ord', 'ASC');
+        $qb->orderBy('ord', \SortDirection::Ascending);
 
         $searchForm = $this->getSearchForm($request, $loggedIn->isTypeDeveloper());
 
